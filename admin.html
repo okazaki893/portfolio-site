@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Portfolio管理</title>
+  <link rel="stylesheet" href="price.css">
+  <style>
+    .admin-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      min-height: 100vh;
+      padding: 40px 60px 60px 340px;
+    }
+
+    .admin-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 48px;
+      font-weight: bold;
+      color: #926bff;
+      letter-spacing: 10px;
+      margin-bottom: 40px;
+      text-shadow: 0 0 40px rgba(146, 107, 255, 0.5);
+    }
+
+    /* Login Form */
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-form {
+      background: rgba(20, 20, 25, 0.9);
+      border: 1px solid rgba(146, 107, 255, 0.3);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-form h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 32px;
+      color: #926bff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 15px;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(146, 107, 255, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .login-form button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .login-form button:hover {
+      box-shadow: 0 0 30px rgba(146, 107, 255, 0.5);
+    }
+
+    .login-error {
+      color: #ff6b6b;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    /* Admin Panel */
+    .admin-panel {
+      display: none;
+    }
+
+    .admin-section {
+      background: rgba(20, 20, 25, 0.8);
+      border: 1px solid rgba(146, 107, 255, 0.2);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .admin-section h3 {
+      font-family: 'Arial', sans-serif;
+      font-size: 20px;
+      color: #926bff;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+
+    .video-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .video-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(10, 10, 15, 0.5);
+      border: 1px solid rgba(146, 107, 255, 0.1);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .video-number {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 70px;
+    }
+
+    .video-number input {
+      width: 45px;
+      padding: 8px;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(146, 107, 255, 0.3);
+      border-radius: 4px;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .video-number input:focus {
+      outline: none;
+      border-color: #926bff;
+    }
+
+    .video-item img {
+      width: 120px;
+      height: 68px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .video-info {
+      flex: 1;
+    }
+
+    .video-info h4 {
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .video-info p {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+    }
+
+    .video-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-edit, .btn-delete {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-edit {
+      background: #926bff;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background: #ff6b6b;
+      color: #fff;
+    }
+
+    .btn-edit:hover, .btn-delete:hover {
+      opacity: 0.8;
+    }
+
+    /* Add Form */
+    .add-form {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(146, 107, 255, 0.2);
+    }
+
+    .add-form input {
+      padding: 12px 15px;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(146, 107, 255, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .add-form button {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    /* Logout Button */
+    .logout-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: rgba(255, 107, 107, 0.8);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .logout-btn:hover {
+      background: #ff6b6b;
+    }
+
+    /* Save Status */
+    .save-status {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      background: rgba(107, 255, 107, 0.9);
+      border-radius: 8px;
+      color: #000;
+      font-size: 14px;
+      display: none;
+      z-index: 100;
+    }
+
+    /* Save Button */
+    .save-button-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 90;
+    }
+
+    .save-all-btn {
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(146, 107, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .save-all-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(146, 107, 255, 0.6);
+    }
+
+    .save-all-btn:active {
+      transform: translateY(0);
+    }
+
+    .save-all-btn.saved {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    }
+
+    /* Edit Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: rgba(20, 20, 25, 0.95);
+      border: 1px solid rgba(146, 107, 255, 0.3);
+      border-radius: 16px;
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .modal-content h3 {
+      color: #926bff;
+      margin-bottom: 20px;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(146, 107, 255, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .modal-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background: #926bff;
+      color: #fff;
+    }
+
+    .btn-cancel {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    /* Tab Navigation */
+    .tab-navigation {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgba(146, 107, 255, 0.3);
+      padding-bottom: 0;
+    }
+
+    .tab-button {
+      padding: 15px 30px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+    }
+
+    .tab-button:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .tab-button.active {
+      color: #926bff;
+      border-bottom-color: #926bff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @media (max-width: 900px) {
+      .admin-container {
+        padding: 20px;
+      }
+
+      .admin-title {
+        font-size: 32px;
+      }
+
+      .video-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-navigation {
+        flex-wrap: wrap;
+      }
+
+      .tab-button {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="price-page">
+    <!-- Animated gradient background -->
+    <div class="gradient-bg"></div>
+    <div class="grid-pattern"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Login Form -->
+    <div class="login-container" id="loginContainer">
+      <div class="login-form">
+        <h2>ADMIN LOGIN</h2>
+        <input type="password" id="passwordInput" placeholder="パスワードを入力">
+        <button onclick="login()">ログイン</button>
+        <p class="login-error" id="loginError"></p>
+      </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+      <button class="logout-btn" onclick="logout()">ログアウト</button>
+
+      <div class="admin-container">
+        <h1 class="admin-title">ADMIN</h1>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+          <button class="tab-button active" onclick="switchTab('top')">TOP</button>
+          <button class="tab-button" onclick="switchTab('mixing')">Mixing</button>
+          <button class="tab-button" onclick="switchTab('3d')">3D Animation</button>
+          <button class="tab-button" onclick="switchTab('music')">Music</button>
+          <button class="tab-button" onclick="switchTab('planning')">Planning</button>
+        </div>
+
+        <!-- TOP Tab Content -->
+        <div class="tab-content active" id="tab-top">
+          <div class="admin-section">
+            <h3>TOPページ モザイク動画管理</h3>
+            <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px; font-size: 14px;">各スロットの動画リンクとサムネイルを編集できます（配置位置は固定）</p>
+            <div class="video-list" id="topVideoList" style="max-height: 600px;"></div>
+          </div>
+
+          <div class="admin-section">
+            <h3>使い方</h3>
+            <ul style="color: rgba(255,255,255,0.7); line-height: 2;">
+              <li>各スロットの「編集」ボタンから動画のリンクとサムネイルを変更できます</li>
+              <li>配置位置・サイズは固定されています</li>
+              <li>カスタムサムネイルを指定しない場合、YouTubeのサムネイルが自動で使用されます</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Mixing Tab Content -->
+        <div class="tab-content" id="tab-mixing">
+          <div class="admin-section">
+            <h3>Mixing Portfolio 動画管理</h3>
+            <div class="video-list" id="mixingVideoList"></div>
+
+            <div class="add-form">
+              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <input type="text" id="newTitle" placeholder="タイトル">
+              <input type="text" id="newYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
+              <input type="text" id="newThumbnail" placeholder="カスタムサムネイル（任意）">
+              <button onclick="addVideo()">追加</button>
+            </div>
+          </div>
+
+          <div class="admin-section">
+            <h3>使い方</h3>
+            <ul style="color: rgba(255,255,255,0.7); line-height: 2;">
+              <li>YouTubeのURLをそのまま貼り付けてください</li>
+              <li>変更は自動的に保存され、Mixingページに反映されます</li>
+              <li>矢印ボタンで表示順を変更できます</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 3D Animation Tab Content -->
+        <div class="tab-content" id="tab-3d">
+          <div class="admin-section">
+            <h3>3D Animation Portfolio 動画管理</h3>
+            <div class="video-list" id="animation3dList"></div>
+
+            <div class="add-form">
+              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <input type="text" id="new3dTitle" placeholder="タイトル">
+              <input type="text" id="new3dYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
+              <button onclick="add3dVideo()">追加</button>
+            </div>
+          </div>
+
+          <div class="admin-section">
+            <h3>使い方</h3>
+            <ul style="color: rgba(255,255,255,0.7); line-height: 2;">
+              <li>YouTubeのURLをそのまま貼り付けてください</li>
+              <li>変更は自動的に保存され、ページに反映されます</li>
+              <li>矢印ボタンで表示順を変更できます</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Music Tab Content -->
+        <div class="tab-content" id="tab-music">
+          <div class="admin-section">
+            <h3>Music Portfolio 音源管理</h3>
+            <div class="video-list" id="musicList"></div>
+
+            <div class="add-form">
+              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <input type="text" id="newMusicTitle" placeholder="曲名">
+              <input type="text" id="newSoundcloudUrl" placeholder="SoundCloudのURL（例: https://soundcloud.com/artist/track）">
+              <button onclick="addMusic()">追加</button>
+            </div>
+          </div>
+
+          <div class="admin-section">
+            <h3>使い方</h3>
+            <ul style="color: rgba(255,255,255,0.7); line-height: 2;">
+              <li>SoundCloudのURLをそのまま貼り付けてください</li>
+              <li>変更は自動的に保存され、ページに反映されます</li>
+              <li>矢印ボタンで表示順を変更できます</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Planning Tab Content -->
+        <div class="tab-content" id="tab-planning">
+          <div class="admin-section">
+            <h3>Planning Progress 作品管理</h3>
+            <div class="video-list" id="planningList"></div>
+
+            <div class="add-form">
+              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <input type="text" id="newPlanningTitle" placeholder="作品タイトル">
+              <input type="text" id="newPlanningYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
+              <button onclick="addPlanning()">追加</button>
+            </div>
+          </div>
+
+          <div class="admin-section">
+            <h3>使い方</h3>
+            <ul style="color: rgba(255,255,255,0.7); line-height: 2;">
+              <li>企画進行を担当した作品のYouTubeのURLを貼り付けてください</li>
+              <li>変更は自動的に保存され、ページに反映されます</li>
+              <li>矢印ボタンで表示順を変更できます</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit TOP Modal -->
+    <div class="modal" id="editTopModal">
+      <div class="modal-content">
+        <h3>TOPスロットを編集</h3>
+        <p id="editTopSlotName" style="color: rgba(255,255,255,0.6); margin-bottom: 15px; font-size: 14px;"></p>
+        <input type="text" id="editTopLink" placeholder="YouTubeのURL">
+        <input type="text" id="editTopThumbnail" placeholder="カスタムサムネイル（任意、空欄でYouTubeサムネ使用）">
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="closeTopModal()">キャンセル</button>
+          <button class="btn-save" onclick="saveTopEdit()">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Mixing Modal -->
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <h3>Mixing動画を編集</h3>
+        <input type="text" id="editTitle" placeholder="タイトル">
+        <input type="text" id="editYoutubeUrl" placeholder="YouTubeのURL">
+        <input type="text" id="editThumbnail" placeholder="カスタムサムネイル（任意）">
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+          <button class="btn-save" onclick="saveEdit()">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Music Modal -->
+    <div class="modal" id="editMusicModal">
+      <div class="modal-content">
+        <h3>音源を編集</h3>
+        <input type="text" id="editMusicTitle" placeholder="曲名">
+        <input type="text" id="editSoundcloudUrl" placeholder="SoundCloudのURL">
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="closeMusicModal()">キャンセル</button>
+          <button class="btn-save" onclick="saveMusicEdit()">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit 3D Animation Modal -->
+    <div class="modal" id="edit3dModal">
+      <div class="modal-content">
+        <h3>3D Animation動画を編集</h3>
+        <input type="text" id="edit3dTitle" placeholder="タイトル">
+        <input type="text" id="edit3dYoutubeUrl" placeholder="YouTubeのURL">
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="close3dModal()">キャンセル</button>
+          <button class="btn-save" onclick="save3dEdit()">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Planning Modal -->
+    <div class="modal" id="editPlanningModal">
+      <div class="modal-content">
+        <h3>Planning作品を編集</h3>
+        <input type="text" id="editPlanningTitle" placeholder="作品タイトル">
+        <input type="text" id="editPlanningYoutubeUrl" placeholder="YouTubeのURL">
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="closePlanningModal()">キャンセル</button>
+          <button class="btn-save" onclick="savePlanningEdit()">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="save-status" id="saveStatus">保存しました</div>
+
+    <!-- Save Button -->
+    <div class="save-button-container" id="saveButtonContainer" style="display: none;">
+      <button class="save-all-btn" onclick="saveAllData()">すべて保存</button>
+    </div>
+  </div>
+
+  <script>
+    // パスワード設定
+    const ADMIN_PASSWORD = 'abc99387';
+
+    // ローカルストレージのキー
+    const STORAGE_KEY = 'portfolio_videos';
+    const MUSIC_STORAGE_KEY = 'portfolio_music';
+    const ANIMATION3D_STORAGE_KEY = 'portfolio_3d_animation';
+    const PLANNING_STORAGE_KEY = 'portfolio_planning';
+    const TOP_STORAGE_KEY = 'portfolio_top_videos';
+
+    // デフォルトの動画データ
+    const defaultVideos = [
+      { id: '3qpLV6US96M', title: '18歳が / 全力で【化けの花】歌ってみた', link: 'https://www.youtube.com/watch?v=3qpLV6US96M' },
+      { id: 'XP-nYV8GAOo', title: "Hell's Greatest Dad/Hazbin Hotel - ver.Rim", link: 'https://www.youtube.com/watch?v=XP-nYV8GAOo' },
+      { id: 'd21zmSD-Oh4', title: '【怜巳】百花繚乱☆スターマイン / 雪乃イト【歌ってみた】', link: 'https://www.youtube.com/watch?v=d21zmSD-Oh4' },
+      { id: '6hn1pNWSCNI', title: '【お化け5人が】HALLOWEEN PARTY/歌ってみた【どるれく】', link: 'https://www.youtube.com/watch?v=6hn1pNWSCNI' },
+      { id: 'Ag9Ay7XJC24', title: '【オリジナルMV】脱法ロック／歌ってみた【あぽす×みぬた】', link: 'https://www.youtube.com/watch?v=Ag9Ay7XJC24' },
+      { id: 'KWbXAIrVWxk', title: 'ファタール / GEMN 歌ってみた 【まいたけxかにちゃん】', link: 'https://www.youtube.com/watch?v=KWbXAIrVWxk' },
+      { id: 'ArdkSMvRqxo', title: 'ハオ / 歌ってみた【みそら】', link: 'https://www.youtube.com/watch?v=ArdkSMvRqxo' },
+      { id: 'khYh9nJxO9o', title: 'Love Forever - ジョアンナ町田×緋赤まい(Cover)', link: 'https://www.youtube.com/watch?v=khYh9nJxO9o' },
+      { id: '2X77fyZSIM4', title: 'アンノウン・マザーグース(wowaka)/尾長真昼cover', link: 'https://www.youtube.com/watch?v=2X77fyZSIM4' },
+      { id: 'VVUW23SBnoE', title: 'セリフありで】キングスレイヤー / あれと【歌ってみた / めるぷれ】', link: 'https://www.youtube.com/watch?v=VVUW23SBnoE' },
+      { id: '-W3QisNkoCQ', title: '【三兄弟で】のだ / 歌ってみた 【まぎすと】', link: 'https://www.youtube.com/watch?v=-W3QisNkoCQ' },
+      { id: 'Et7CpkC1ilI', title: '【ボカデュオ2024】　泡沫　Team 響曲〜kyoma〜', link: 'https://www.youtube.com/watch?v=Et7CpkC1ilI' },
+      { id: 'PBd2yrrnZ-4', title: 'UNDEAD/cover.ネア', link: 'https://www.youtube.com/watch?v=PBd2yrrnZ-4' },
+      { id: 'ZSEfPjaEjEs', title: '【歌ってみた】私は、私達は(Guiano)/尾長真昼cover', link: 'https://www.youtube.com/watch?v=ZSEfPjaEjEs' },
+      { id: 'BAFzZ3hgccU', title: '【ショタカテ配信者が】3周年記念に【しわ】歌ってみた', link: 'https://www.youtube.com/watch?v=BAFzZ3hgccU' },
+      { id: '73K8Q4F-Uo0', title: '【アニメ賭ケグルイOP】Deal with the devil / coverはなまる', link: 'https://www.youtube.com/watch?v=73K8Q4F-Uo0' },
+      { id: 'wXdpFwtZk5A', title: 'Tonight ~月の下眠る君~ - マクドナルド･ジョアンナ･まい (Cover)', link: 'https://www.youtube.com/watch?v=wXdpFwtZk5A' }
+    ];
+
+    let videos = [];
+    let musicList = [];
+    let animation3dList = [];
+    let planningList = [];
+    let topSlots = [];
+    let editIndex = -1;
+    let editMusicIndex = -1;
+    let edit3dIndex = -1;
+    let editPlanningIndex = -1;
+    let editTopIndex = -1;
+
+    // TOPページのスロット定義（位置は固定、動画情報のみ編集可能）
+    const defaultTopSlots = [
+      { slotName: 'スロット1: Deal with the devil（大）', link: 'https://www.youtube.com/watch?v=73K8Q4F-Uo0', customThumbnail: '' },
+      { slotName: 'スロット2: ハオ（縦長）', link: 'https://www.youtube.com/watch?v=ArdkSMvRqxo', customThumbnail: '' },
+      { slotName: 'スロット3: 百花繚乱（横長）', link: 'https://www.youtube.com/watch?v=d21zmSD-Oh4', customThumbnail: '' },
+      { slotName: 'スロット4: のだ（横長）', link: 'https://www.youtube.com/watch?v=-W3QisNkoCQ', customThumbnail: '' },
+      { slotName: 'スロット5: しわ（縦長）', link: 'https://www.youtube.com/watch?v=BAFzZ3hgccU', customThumbnail: '' },
+      { slotName: 'スロット6: HALLOWEEN PARTY（横長）', link: 'https://www.youtube.com/watch?v=6hn1pNWSCNI', customThumbnail: '' },
+      { slotName: 'スロット7: 泡沫（縦長）', link: 'https://www.youtube.com/watch?v=Et7CpkC1ilI', customThumbnail: '' },
+      { slotName: 'スロット8: 脱法ロック（横長）', link: 'https://www.youtube.com/watch?v=Ag9Ay7XJC24', customThumbnail: '' },
+      { slotName: 'スロット9: UNDEAD（縦長）', link: 'https://www.youtube.com/watch?v=PBd2yrrnZ-4', customThumbnail: '' },
+      { slotName: 'スロット10: Hells Greatest Dad（横長）', link: 'https://www.youtube.com/watch?v=XP-nYV8GAOo', customThumbnail: '' },
+      { slotName: 'スロット11: Love Forever（横長）', link: 'https://www.youtube.com/watch?v=khYh9nJxO9o', customThumbnail: '' },
+      { slotName: 'スロット12: アンノウン（縦長）', link: 'https://www.youtube.com/watch?v=2X77fyZSIM4', customThumbnail: '' },
+      { slotName: 'スロット13: Tonight（横長）', link: 'https://www.youtube.com/watch?v=wXdpFwtZk5A', customThumbnail: '' },
+      { slotName: 'スロット14: キングスレイヤー（縦長）', link: 'https://www.youtube.com/watch?v=VVUW23SBnoE', customThumbnail: '' },
+      { slotName: 'スロット15: ファタール（横長）', link: 'https://www.youtube.com/watch?v=KWbXAIrVWxk', customThumbnail: '' },
+      { slotName: 'スロット16: 私は、私達は（横長）', link: 'https://www.youtube.com/watch?v=ZSEfPjaEjEs', customThumbnail: 'onaga-saisho.jpg' },
+      { slotName: 'スロット17: 化けの花（最大）', link: 'https://www.youtube.com/watch?v=3qpLV6US96M', customThumbnail: '' }
+    ];
+
+    // デフォルトの3Dアニメーションデータ
+    const default3dVideos = [
+      { id: 'YlREYofJlZU', title: '3D Animation 1', link: 'https://www.youtube.com/watch?v=YlREYofJlZU' },
+      { id: 'FQwnJEvqYfE', title: '3D Animation 2', link: 'https://www.youtube.com/watch?v=FQwnJEvqYfE' },
+      { id: '_J-Dhutoz_k', title: '3D Animation 3', link: 'https://www.youtube.com/watch?v=_J-Dhutoz_k' }
+    ];
+
+    // 初期化
+    function init() {
+      // TOPスロットデータ
+      const savedTop = localStorage.getItem(TOP_STORAGE_KEY);
+      if (savedTop) {
+        const parsed = JSON.parse(savedTop);
+        // 新しいフォーマット（slotNameを持つ）かチェック
+        if (parsed.length > 0 && parsed[0].slotName) {
+          topSlots = parsed;
+        } else {
+          // 古いフォーマットの場合はリセット
+          topSlots = JSON.parse(JSON.stringify(defaultTopSlots));
+          saveTopSlots();
+        }
+      } else {
+        topSlots = JSON.parse(JSON.stringify(defaultTopSlots));
+        saveTopSlots();
+      }
+
+      // Mixing動画データ
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        videos = JSON.parse(saved);
+      } else {
+        videos = [...defaultVideos];
+        saveVideos();
+      }
+
+      // 音源データ
+      const savedMusic = localStorage.getItem(MUSIC_STORAGE_KEY);
+      if (savedMusic) {
+        musicList = JSON.parse(savedMusic);
+      } else {
+        // デフォルトの音源データ
+        musicList = [
+          { title: '01a1', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F01a1&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/01a1' },
+          { title: '02a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F02a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/02a' },
+          { title: '03a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F03a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/03a' },
+          { title: '04a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F04a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/04a' },
+          { title: '05wav', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F05wav&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/05wav' },
+          { title: '06a1', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F06a1&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/06a1' }
+        ];
+        saveMusic();
+      }
+
+      // 3Dアニメーションデータ
+      const saved3d = localStorage.getItem(ANIMATION3D_STORAGE_KEY);
+      if (saved3d) {
+        animation3dList = JSON.parse(saved3d);
+      } else {
+        animation3dList = [...default3dVideos];
+        save3dVideos();
+      }
+
+      // Planningデータ
+      const savedPlanning = localStorage.getItem(PLANNING_STORAGE_KEY);
+      if (savedPlanning) {
+        planningList = JSON.parse(savedPlanning);
+      } else {
+        // デフォルトのPlanningデータ
+        planningList = [
+          { id: 'UAV_q6xKtu4', title: 'ドキシック/かわいいJKふぁん倶楽部', link: 'https://www.youtube.com/watch?v=UAV_q6xKtu4' }
+        ];
+        savePlanning();
+      }
+
+      // ログイン状態確認
+      if (sessionStorage.getItem('admin_logged_in') === 'true') {
+        showAdminPanel();
+      }
+    }
+
+    // ログイン
+    function login() {
+      const password = document.getElementById('passwordInput').value;
+      if (password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('admin_logged_in', 'true');
+        showAdminPanel();
+      } else {
+        document.getElementById('loginError').textContent = 'パスワードが違います';
+      }
+    }
+
+    // ログアウト
+    function logout() {
+      sessionStorage.removeItem('admin_logged_in');
+      document.getElementById('loginContainer').style.display = 'flex';
+      document.getElementById('adminPanel').style.display = 'none';
+      document.getElementById('saveButtonContainer').style.display = 'none';
+      document.getElementById('passwordInput').value = '';
+    }
+
+    // 管理パネル表示
+    function showAdminPanel() {
+      document.getElementById('loginContainer').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('saveButtonContainer').style.display = 'block';
+      renderTopList();
+      renderVideoList();
+      render3dList();
+      renderMusicList();
+      renderPlanningList();
+    }
+
+    // すべてのデータを保存
+    function saveAllData() {
+      saveTopSlots();
+      saveVideos();
+      save3dVideos();
+      saveMusic();
+      savePlanning();
+
+      // ボタンの見た目を変更
+      const btn = document.querySelector('.save-all-btn');
+      btn.textContent = '保存しました！';
+      btn.classList.add('saved');
+
+      // 2秒後に元に戻す
+      setTimeout(() => {
+        btn.textContent = 'すべて保存';
+        btn.classList.remove('saved');
+      }, 2000);
+
+      showSaveStatus();
+    }
+
+    // 動画リスト表示
+    function renderVideoList() {
+      const list = document.getElementById('mixingVideoList');
+      list.innerHTML = '';
+
+      if (videos.length === 0) {
+        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">動画がまだありません</p>';
+        return;
+      }
+
+      videos.forEach((video, index) => {
+        let thumbnailId = video.id;
+        if (video.link) {
+          const match = video.link.match(/[?&]v=([^&]+)/);
+          if (match) thumbnailId = match[1];
+        }
+
+        const thumbnailUrl = video.customThumbnail || `https://img.youtube.com/vi/${thumbnailId}/mqdefault.jpg`;
+
+        const videoLink = video.link || `https://www.youtube.com/watch?v=${thumbnailId}`;
+
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+          <div class="video-number">
+            <input type="number" value="${index + 1}" min="1" max="${videos.length}" onchange="moveVideoToPosition(${index}, this.value)" title="順番を変更">
+          </div>
+          <a href="${videoLink}" target="_blank" style="display: block;">
+            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/mqdefault.jpg'" style="cursor: pointer;">
+          </a>
+          <div class="video-info">
+            <h4>${video.title}</h4>
+            <p>ID: ${video.id}</p>
+          </div>
+          <div class="video-actions">
+            <button class="btn-edit" onclick="openEdit(${index})">編集</button>
+            <button class="btn-delete" onclick="deleteVideo(${index})">削除</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // YouTubeのURLから動画IDを抽出
+    function extractVideoId(url) {
+      // 様々なYouTube URLパターンに対応
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&\n?#]+)/,
+        /^([a-zA-Z0-9_-]{11})$/  // 動画IDのみの場合
+      ];
+
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) {
+          return match[1];
+        }
+      }
+      return null;
+    }
+
+    // 動画追加
+    function addVideo() {
+      const title = document.getElementById('newTitle').value.trim();
+      const youtubeUrl = document.getElementById('newYoutubeUrl').value.trim();
+      const thumbnail = document.getElementById('newThumbnail').value.trim();
+
+      if (!title || !youtubeUrl) {
+        alert('タイトルとYouTubeのURLは必須です');
+        return;
+      }
+
+      const videoId = extractVideoId(youtubeUrl);
+      if (!videoId) {
+        alert('有効なYouTubeのURLを入力してください');
+        return;
+      }
+
+      const newVideo = {
+        id: videoId,
+        title: title,
+        link: youtubeUrl
+      };
+
+      if (thumbnail) {
+        newVideo.customThumbnail = thumbnail;
+      }
+
+      videos.unshift(newVideo);
+      saveVideos();
+      renderVideoList();
+
+      // フォームクリア
+      document.getElementById('newTitle').value = '';
+      document.getElementById('newYoutubeUrl').value = '';
+      document.getElementById('newThumbnail').value = '';
+
+      showSaveStatus();
+    }
+
+    // 動画削除
+    function deleteVideo(index) {
+      if (confirm(`「${videos[index].title}」を削除しますか？`)) {
+        videos.splice(index, 1);
+        saveVideos();
+        renderVideoList();
+        showSaveStatus();
+      }
+    }
+
+    // Mixing動画を指定位置に移動
+    function moveVideoToPosition(currentIndex, newPosition) {
+      const targetIndex = parseInt(newPosition) - 1;
+      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= videos.length || targetIndex === currentIndex) {
+        renderVideoList(); // 無効な値の場合はリセット
+        return;
+      }
+
+      const item = videos.splice(currentIndex, 1)[0];
+      videos.splice(targetIndex, 0, item);
+      saveVideos();
+      renderVideoList();
+      showSaveStatus();
+    }
+
+    // 編集モーダルを開く
+    function openEdit(index) {
+      editIndex = index;
+      const video = videos[index];
+      document.getElementById('editTitle').value = video.title;
+      document.getElementById('editYoutubeUrl').value = video.link || `https://www.youtube.com/watch?v=${video.id}`;
+      document.getElementById('editThumbnail').value = video.customThumbnail || '';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    // モーダルを閉じる
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none';
+      editIndex = -1;
+    }
+
+    // 編集を保存
+    function saveEdit() {
+      if (editIndex === -1) return;
+
+      const title = document.getElementById('editTitle').value.trim();
+      const youtubeUrl = document.getElementById('editYoutubeUrl').value.trim();
+      const thumbnail = document.getElementById('editThumbnail').value.trim();
+
+      if (!title || !youtubeUrl) {
+        alert('タイトルとYouTubeのURLは必須です');
+        return;
+      }
+
+      const videoId = extractVideoId(youtubeUrl);
+      if (!videoId) {
+        alert('有効なYouTubeのURLを入力してください');
+        return;
+      }
+
+      videos[editIndex] = {
+        id: videoId,
+        title: title,
+        link: youtubeUrl
+      };
+
+      if (thumbnail) {
+        videos[editIndex].customThumbnail = thumbnail;
+      }
+
+      saveVideos();
+      renderVideoList();
+      closeModal();
+      showSaveStatus();
+    }
+
+    // 保存
+    function saveVideos() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+    }
+
+    // ========== TOP管理機能 ==========
+
+    // TOPリスト表示
+    function renderTopList() {
+      const list = document.getElementById('topVideoList');
+      list.innerHTML = '';
+
+      topSlots.forEach((slot, index) => {
+        // リンクからビデオIDを抽出
+        let videoId = '';
+        if (slot.link) {
+          const match = slot.link.match(/[?&]v=([^&]+)/);
+          if (match) videoId = match[1];
+        }
+
+        const thumbnailUrl = slot.customThumbnail || (videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '');
+
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+          <div class="video-number" style="min-width: 40px;">
+            <span style="color: #926bff; font-weight: bold;">${index + 1}</span>
+          </div>
+          ${thumbnailUrl ? `
+            <a href="${slot.link}" target="_blank" style="display: block;">
+              <img src="${thumbnailUrl}" alt="${slot.slotName}" onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'" style="cursor: pointer;">
+            </a>
+          ` : `
+            <div style="width: 120px; height: 68px; background: rgba(146, 107, 255, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+              <span style="color: rgba(255,255,255,0.5);">No Video</span>
+            </div>
+          `}
+          <div class="video-info">
+            <h4>${slot.slotName}</h4>
+            <p style="font-size: 11px; word-break: break-all;">${slot.link || '未設定'}</p>
+            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #926bff;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
+          </div>
+          <div class="video-actions">
+            <button class="btn-edit" onclick="openTopEdit(${index})">編集</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // TOP編集モーダルを開く
+    function openTopEdit(index) {
+      editTopIndex = index;
+      const slot = topSlots[index];
+      document.getElementById('editTopSlotName').textContent = slot.slotName;
+      document.getElementById('editTopLink').value = slot.link || '';
+      document.getElementById('editTopThumbnail').value = slot.customThumbnail || '';
+      document.getElementById('editTopModal').style.display = 'flex';
+    }
+
+    // TOPモーダルを閉じる
+    function closeTopModal() {
+      document.getElementById('editTopModal').style.display = 'none';
+      editTopIndex = -1;
+    }
+
+    // TOP編集を保存
+    function saveTopEdit() {
+      if (editTopIndex === -1) return;
+
+      const link = document.getElementById('editTopLink').value.trim();
+      const thumbnail = document.getElementById('editTopThumbnail').value.trim();
+
+      if (!link) {
+        alert('YouTubeのURLは必須です');
+        return;
+      }
+
+      // URLの基本チェック
+      if (!link.includes('youtube.com') && !link.includes('youtu.be')) {
+        alert('有効なYouTubeのURLを入力してください');
+        return;
+      }
+
+      topSlots[editTopIndex].link = link;
+      topSlots[editTopIndex].customThumbnail = thumbnail;
+
+      saveTopSlots();
+      renderTopList();
+      closeTopModal();
+      showSaveStatus();
+    }
+
+    // TOPスロットデータを保存
+    function saveTopSlots() {
+      localStorage.setItem(TOP_STORAGE_KEY, JSON.stringify(topSlots));
+    }
+
+    // ========== ここまでTOP管理機能 ==========
+
+    // 保存ステータス表示
+    function showSaveStatus() {
+      const status = document.getElementById('saveStatus');
+      status.style.display = 'block';
+      setTimeout(() => {
+        status.style.display = 'none';
+      }, 2000);
+    }
+
+    // ========== Music管理機能 ==========
+
+    // SoundCloudのURLを埋め込みURLに変換
+    function convertToSoundcloudEmbed(url) {
+      // SoundCloudの埋め込みURL形式に変換
+      // https://soundcloud.com/artist/track -> https://w.soundcloud.com/player/?url=...
+      const encodedUrl = encodeURIComponent(url);
+      return `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
+    }
+
+    // 音源リスト表示
+    function renderMusicList() {
+      const list = document.getElementById('musicList');
+      list.innerHTML = '';
+
+      if (musicList.length === 0) {
+        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">音源がまだありません</p>';
+        return;
+      }
+
+      musicList.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+          <div class="video-number">
+            <input type="number" value="${index + 1}" min="1" max="${musicList.length}" onchange="moveMusicToPosition(${index}, this.value)" title="順番を変更">
+          </div>
+          <a href="${track.originalUrl || '#'}" target="_blank" style="display: block; width: 120px; height: 68px; background: rgba(146, 107, 255, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <span style="font-size: 24px;">🎵</span>
+          </a>
+          <div class="video-info">
+            <h4>${track.title}</h4>
+            <p style="font-size: 11px; word-break: break-all;">${track.originalUrl || 'SoundCloud'}</p>
+          </div>
+          <div class="video-actions">
+            <button class="btn-edit" onclick="openMusicEdit(${index})">編集</button>
+            <button class="btn-delete" onclick="deleteMusic(${index})">削除</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // 音源追加
+    function addMusic() {
+      const title = document.getElementById('newMusicTitle').value.trim();
+      const soundcloudUrl = document.getElementById('newSoundcloudUrl').value.trim();
+
+      if (!title || !soundcloudUrl) {
+        alert('曲名とSoundCloudのURLは必須です');
+        return;
+      }
+
+      // SoundCloudのURL検証（基本的なチェック）
+      if (!soundcloudUrl.includes('soundcloud.com')) {
+        alert('有効なSoundCloudのURLを入力してください');
+        return;
+      }
+
+      const embedUrl = convertToSoundcloudEmbed(soundcloudUrl);
+
+      const newTrack = {
+        title: title,
+        embedUrl: embedUrl,
+        originalUrl: soundcloudUrl
+      };
+
+      musicList.unshift(newTrack);
+      saveMusic();
+      renderMusicList();
+
+      // フォームクリア
+      document.getElementById('newMusicTitle').value = '';
+      document.getElementById('newSoundcloudUrl').value = '';
+
+      showSaveStatus();
+    }
+
+    // 音源削除
+    function deleteMusic(index) {
+      if (confirm(`「${musicList[index].title}」を削除しますか？`)) {
+        musicList.splice(index, 1);
+        saveMusic();
+        renderMusicList();
+        showSaveStatus();
+      }
+    }
+
+    // 音源を指定位置に移動
+    function moveMusicToPosition(currentIndex, newPosition) {
+      const targetIndex = parseInt(newPosition) - 1;
+      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= musicList.length || targetIndex === currentIndex) {
+        renderMusicList(); // 無効な値の場合はリセット
+        return;
+      }
+
+      const item = musicList.splice(currentIndex, 1)[0];
+      musicList.splice(targetIndex, 0, item);
+      saveMusic();
+      renderMusicList();
+      showSaveStatus();
+    }
+
+    // 音源編集モーダルを開く
+    function openMusicEdit(index) {
+      editMusicIndex = index;
+      const track = musicList[index];
+      document.getElementById('editMusicTitle').value = track.title;
+      document.getElementById('editSoundcloudUrl').value = track.originalUrl || '';
+      document.getElementById('editMusicModal').style.display = 'flex';
+    }
+
+    // 音源モーダルを閉じる
+    function closeMusicModal() {
+      document.getElementById('editMusicModal').style.display = 'none';
+      editMusicIndex = -1;
+    }
+
+    // 音源編集を保存
+    function saveMusicEdit() {
+      if (editMusicIndex === -1) return;
+
+      const title = document.getElementById('editMusicTitle').value.trim();
+      const soundcloudUrl = document.getElementById('editSoundcloudUrl').value.trim();
+
+      if (!title || !soundcloudUrl) {
+        alert('曲名とSoundCloudのURLは必須です');
+        return;
+      }
+
+      if (!soundcloudUrl.includes('soundcloud.com')) {
+        alert('有効なSoundCloudのURLを入力してください');
+        return;
+      }
+
+      const embedUrl = convertToSoundcloudEmbed(soundcloudUrl);
+
+      musicList[editMusicIndex] = {
+        title: title,
+        embedUrl: embedUrl,
+        originalUrl: soundcloudUrl
+      };
+
+      saveMusic();
+      renderMusicList();
+      closeMusicModal();
+      showSaveStatus();
+    }
+
+    // 音源データを保存
+    function saveMusic() {
+      localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify(musicList));
+    }
+
+    // ========== ここまでMusic管理機能 ==========
+
+    // ========== 3D Animation管理機能 ==========
+
+    // 3Dアニメーションリスト表示
+    function render3dList() {
+      const list = document.getElementById('animation3dList');
+      list.innerHTML = '';
+
+      if (animation3dList.length === 0) {
+        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">動画がまだありません</p>';
+        return;
+      }
+
+      animation3dList.forEach((video, index) => {
+        const thumbnailUrl = `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
+        const videoLink = video.link || `https://www.youtube.com/watch?v=${video.id}`;
+
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+          <div class="video-number">
+            <input type="number" value="${index + 1}" min="1" max="${animation3dList.length}" onchange="move3dToPosition(${index}, this.value)" title="順番を変更">
+          </div>
+          <a href="${videoLink}" target="_blank" style="display: block;">
+            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'" style="cursor: pointer;">
+          </a>
+          <div class="video-info">
+            <h4>${video.title}</h4>
+            <p>ID: ${video.id}</p>
+          </div>
+          <div class="video-actions">
+            <button class="btn-edit" onclick="open3dEdit(${index})">編集</button>
+            <button class="btn-delete" onclick="delete3dVideo(${index})">削除</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // 3D動画追加
+    function add3dVideo() {
+      const title = document.getElementById('new3dTitle').value.trim();
+      const youtubeUrl = document.getElementById('new3dYoutubeUrl').value.trim();
+
+      if (!title || !youtubeUrl) {
+        alert('タイトルとYouTubeのURLは必須です');
+        return;
+      }
+
+      const videoId = extractVideoId(youtubeUrl);
+      if (!videoId) {
+        alert('有効なYouTubeのURLを入力してください');
+        return;
+      }
+
+      const newVideo = {
+        id: videoId,
+        title: title,
+        link: youtubeUrl
+      };
+
+      animation3dList.unshift(newVideo);
+      save3dVideos();
+      render3dList();
+
+      // フォームクリア
+      document.getElementById('new3dTitle').value = '';
+      document.getElementById('new3dYoutubeUrl').value = '';
+
+      showSaveStatus();
+    }
+
+    // 3D動画削除
+    function delete3dVideo(index) {
+      if (confirm(`「${animation3dList[index].title}」を削除しますか？`)) {
+        animation3dList.splice(index, 1);
+        save3dVideos();
+        render3dList();
+        showSaveStatus();
+      }
+    }
+
+    // 3D動画を指定位置に移動
+    function move3dToPosition(currentIndex, newPosition) {
+      const targetIndex = parseInt(newPosition) - 1;
+      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= animation3dList.length || targetIndex === currentIndex) {
+        render3dList(); // 無効な値の場合はリセット
+        return;
+      }
+
+      const item = animation3dList.splice(currentIndex, 1)[0];
+      animation3dList.splice(targetIndex, 0, item);
+      save3dVideos();
+      render3dList();
+      showSaveStatus();
+    }
+
+    // 3D動画編集モーダルを開く
+    function open3dEdit(index) {
+      edit3dIndex = index;
+      const video = animation3dList[index];
+      document.getElementById('edit3dTitle').value = video.title;
+      document.getElementById('edit3dYoutubeUrl').value = video.link || `https://www.youtube.com/watch?v=${video.id}`;
+      document.getElementById('edit3dModal').style.display = 'flex';
+    }
+
+    // 3Dモーダルを閉じる
+    function close3dModal() {
+      document.getElementById('edit3dModal').style.display = 'none';
+      edit3dIndex = -1;
+    }
+
+    // 3D動画編集を保存
+    function save3dEdit() {
+      if (edit3dIndex === -1) return;
+
+      const title = document.getElementById('edit3dTitle').value.trim();
+      const youtubeUrl = document.getElementById('edit3dYoutubeUrl').value.trim();
+
+      if (!title || !youtubeUrl) {
+        alert('タイトルとYouTubeのURLは必須です');
+        return;
+      }
+
+      const videoId = extractVideoId(youtubeUrl);
+      if (!videoId) {
+        alert('有効なYouTubeのURLを入力してください');
+        return;
+      }
+
+      animation3dList[edit3dIndex] = {
+        id: videoId,
+        title: title,
+        link: youtubeUrl
+      };
+
+      save3dVideos();
+      render3dList();
+      close3dModal();
+      showSaveStatus();
+    }
+
+    // 3Dアニメーションデータを保存
+    function save3dVideos() {
+      localStorage.setItem(ANIMATION3D_STORAGE_KEY, JSON.stringify(animation3dList));
+    }
+
+    // ========== ここまで3D Animation管理機能 ==========
+
+    // ========== Planning Progress管理機能 ==========
+
+    // Planningリスト表示
+    function renderPlanningList() {
+      const list = document.getElementById('planningList');
+      list.innerHTML = '';
+
+      if (planningList.length === 0) {
+        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">作品がまだありません</p>';
+        return;
+      }
+
+      planningList.forEach((video, index) => {
+        const thumbnailUrl = `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
+        const videoLink = video.link || `https://www.youtube.com/watch?v=${video.id}`;
+
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+          <div class="video-number">
+            <input type="number" value="${index + 1}" min="1" max="${planningList.length}" onchange="movePlanningToPosition(${index}, this.value)" title="順番を変更">
+          </div>
+          <a href="${videoLink}" target="_blank" style="display: block;">
+            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'" style="cursor: pointer;">
+          </a>
+          <div class="video-info">
+            <h4>${video.title}</h4>
+            <p>ID: ${video.id}</p>
+          </div>
+          <div class="video-actions">
+            <button class="btn-edit" onclick="openPlanningEdit(${index})">編集</button>
+            <button class="btn-delete" onclick="deletePlanning(${index})">削除</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // Planning作品追加
+    function addPlanning() {
+      const title = document.getElementById('newPlanningTitle').value.trim();
+      const youtubeUrl = document.getElementById('newPlanningYoutubeUrl').value.trim();
+
+      if (!title || !youtubeUrl) {
+        alert('作品タイトルとYouTubeのURLは必須です');
+        return;
+      }
+
+      const videoId = extractVideoId(youtubeUrl);
+      if (!videoId) {
+        alert('有効なYouTubeのURLを入力してください');
+        return;
+      }
+
+      const newVideo = {
+        id: videoId,
+        title: title,
+        link: youtubeUrl
+      };
+
+      planningList.unshift(newVideo);
+      savePlanning();
+      renderPlanningList();
+
+      // フォームクリア
+      document.getElementById('newPlanningTitle').value = '';
+      document.getElementById('newPlanningYoutubeUrl').value = '';
+
+      showSaveStatus();
+    }
+
+    // Planning作品削除
+    function deletePlanning(index) {
+      if (confirm(`「${planningList[index].title}」を削除しますか？`)) {
+        planningList.splice(index, 1);
+        savePlanning();
+        renderPlanningList();
+        showSaveStatus();
+      }
+    }
+
+    // Planning作品を指定位置に移動
+    function movePlanningToPosition(currentIndex, newPosition) {
+      const targetIndex = parseInt(newPosition) - 1;
+      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= planningList.length || targetIndex === currentIndex) {
+        renderPlanningList(); // 無効な値の場合はリセット
+        return;
+      }
+
+      const item = planningList.splice(currentIndex, 1)[0];
+      planningList.splice(targetIndex, 0, item);
+      savePlanning();
+      renderPlanningList();
+      showSaveStatus();
+    }
+
+    // Planning編集モーダルを開く
+    function openPlanningEdit(index) {
+      editPlanningIndex = index;
+      const video = planningList[index];
+      document.getElementById('editPlanningTitle').value = video.title;
+      document.getElementById('editPlanningYoutubeUrl').value = video.link || `https://www.youtube.com/watch?v=${video.id}`;
+      document.getElementById('editPlanningModal').style.display = 'flex';
+    }
+
+    // Planningモーダルを閉じる
+    function closePlanningModal() {
+      document.getElementById('editPlanningModal').style.display = 'none';
+      editPlanningIndex = -1;
+    }
+
+    // Planning編集を保存
+    function savePlanningEdit() {
+      if (editPlanningIndex === -1) return;
+
+      const title = document.getElementById('editPlanningTitle').value.trim();
+      const youtubeUrl = document.getElementById('editPlanningYoutubeUrl').value.trim();
+
+      if (!title || !youtubeUrl) {
+        alert('作品タイトルとYouTubeのURLは必須です');
+        return;
+      }
+
+      const videoId = extractVideoId(youtubeUrl);
+      if (!videoId) {
+        alert('有効なYouTubeのURLを入力してください');
+        return;
+      }
+
+      planningList[editPlanningIndex] = {
+        id: videoId,
+        title: title,
+        link: youtubeUrl
+      };
+
+      savePlanning();
+      renderPlanningList();
+      closePlanningModal();
+      showSaveStatus();
+    }
+
+    // Planningデータを保存
+    function savePlanning() {
+      localStorage.setItem(PLANNING_STORAGE_KEY, JSON.stringify(planningList));
+    }
+
+    // ========== ここまでPlanning Progress管理機能 ==========
+
+    // ========== タブ切り替え機能 ==========
+
+    function switchTab(tabName) {
+      // すべてのタブボタンからactiveクラスを削除
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // すべてのタブコンテンツを非表示
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // クリックされたタブボタンにactiveクラスを追加
+      event.target.classList.add('active');
+
+      // 対応するタブコンテンツを表示
+      document.getElementById('tab-' + tabName).classList.add('active');
+    }
+
+    // ========== ここまでタブ切り替え機能 ==========
+
+    // Enterキーでログイン
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        login();
+      }
+    });
+
+    // 初期化実行
+    init();
+  </script>
+</body>
+</html>
