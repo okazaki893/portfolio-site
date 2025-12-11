@@ -1,30 +1,19 @@
-// Theme Toggle Script - with prefers-color-scheme support
+// Theme Toggle Script - default to light mode
 (function() {
-  // Get system preference
-  function getSystemTheme() {
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  }
-
   // Get current effective theme
   function getCurrentTheme() {
     const savedTheme = localStorage.getItem('theme');
-    // If user has manually set a theme, use it; otherwise follow system
+    // If user has manually set a theme, use it; otherwise default to light
     if (savedTheme) {
       return savedTheme;
     }
-    return getSystemTheme();
+    return 'light'; // Default to light mode for new visitors
   }
 
-  // Apply theme - only set data-theme if user has manually overridden
+  // Apply theme
   function applyTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      // User has manually set a preference, apply it
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    } else {
-      // No manual override, remove data-theme to let CSS media query handle it
-      document.documentElement.removeAttribute('data-theme');
-    }
+    const theme = getCurrentTheme();
+    document.documentElement.setAttribute('data-theme', theme);
   }
 
   // Apply theme immediately (before DOM loads to prevent flash)
@@ -57,12 +46,4 @@
     }
   }
 
-  // Listen for system theme changes
-  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
-    // Only respond to system changes if user hasn't manually set a preference
-    if (!localStorage.getItem('theme')) {
-      // CSS will handle the change automatically since there's no data-theme attribute
-      // But we might need to trigger a re-render for any JS-dependent UI
-    }
-  });
 })();
