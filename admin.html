@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Portfolio管理</title>
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="price.css">
+  <script src="theme.js"></script>
   <style>
     .admin-container {
       position: relative;
@@ -18,10 +20,10 @@
       font-family: 'Times New Roman', Times, serif;
       font-size: 48px;
       font-weight: bold;
-      color: #926bff;
+      color: var(--accent-primary, #926bff);
       letter-spacing: 10px;
       margin-bottom: 40px;
-      text-shadow: 0 0 40px rgba(146, 107, 255, 0.5);
+      text-shadow: 0 0 40px var(--accent-glow, rgba(146, 107, 255, 0.5));
     }
 
     /* Login Form */
@@ -37,8 +39,8 @@
     }
 
     .login-form {
-      background: rgba(20, 20, 25, 0.9);
-      border: 1px solid rgba(146, 107, 255, 0.3);
+      background: var(--bg-card, rgba(20, 20, 25, 0.9));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
       border-radius: 16px;
       padding: 40px;
       width: 100%;
@@ -48,7 +50,7 @@
     .login-form h2 {
       font-family: 'Times New Roman', Times, serif;
       font-size: 32px;
-      color: #926bff;
+      color: var(--accent-primary, #926bff);
       text-align: center;
       margin-bottom: 30px;
     }
@@ -56,10 +58,10 @@
     .login-form input {
       width: 100%;
       padding: 15px;
-      background: rgba(10, 10, 15, 0.8);
-      border: 1px solid rgba(146, 107, 255, 0.3);
+      background: var(--input-bg, rgba(10, 10, 15, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 16px;
       margin-bottom: 20px;
     }
@@ -67,10 +69,10 @@
     .login-form button {
       width: 100%;
       padding: 15px;
-      background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%);
+      background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%);
       border: none;
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 16px;
       cursor: pointer;
       transition: box-shadow 0.3s ease;
@@ -93,8 +95,8 @@
     }
 
     .admin-section {
-      background: rgba(20, 20, 25, 0.8);
-      border: 1px solid rgba(146, 107, 255, 0.2);
+      background: var(--bg-card, rgba(20, 20, 25, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
       border-radius: 16px;
       padding: 30px;
       margin-bottom: 30px;
@@ -103,7 +105,7 @@
     .admin-section h3 {
       font-family: 'Arial', sans-serif;
       font-size: 20px;
-      color: #926bff;
+      color: var(--accent-primary, #926bff);
       margin-bottom: 20px;
       letter-spacing: 2px;
     }
@@ -118,8 +120,8 @@
       align-items: center;
       gap: 15px;
       padding: 15px;
-      background: rgba(10, 10, 15, 0.5);
-      border: 1px solid rgba(146, 107, 255, 0.1);
+      background: var(--input-bg, rgba(10, 10, 15, 0.5));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.1));
       border-radius: 8px;
       margin-bottom: 10px;
     }
@@ -134,10 +136,10 @@
     .video-number input {
       width: 45px;
       padding: 8px;
-      background: rgba(10, 10, 15, 0.8);
-      border: 1px solid rgba(146, 107, 255, 0.3);
+      background: var(--input-bg, rgba(10, 10, 15, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
       border-radius: 4px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 14px;
       text-align: center;
     }
@@ -159,13 +161,13 @@
     }
 
     .video-info h4 {
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 14px;
       margin-bottom: 5px;
     }
 
     .video-info p {
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
       font-size: 12px;
     }
 
@@ -184,13 +186,13 @@
     }
 
     .btn-edit {
-      background: #926bff;
-      color: #fff;
+      background: var(--accent-primary, #926bff);
+      color: var(--text-primary, #fff);
     }
 
     .btn-delete {
       background: #ff6b6b;
-      color: #fff;
+      color: var(--text-primary, #fff);
     }
 
     .btn-edit:hover, .btn-delete:hover {
@@ -208,19 +210,19 @@
 
     .add-form input {
       padding: 12px 15px;
-      background: rgba(10, 10, 15, 0.8);
-      border: 1px solid rgba(146, 107, 255, 0.3);
+      background: var(--input-bg, rgba(10, 10, 15, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 14px;
     }
 
     .add-form button {
       padding: 12px 20px;
-      background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%);
+      background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%);
       border: none;
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 14px;
       cursor: pointer;
     }
@@ -240,7 +242,7 @@
       background: rgba(255, 107, 107, 0.8);
       border: none;
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 14px;
       cursor: pointer;
       z-index: 100;
@@ -274,14 +276,14 @@
 
     .save-all-btn {
       padding: 15px 40px;
-      background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%);
+      background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%);
       border: none;
       border-radius: 12px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(146, 107, 255, 0.4);
+      box-shadow: 0 4px 20px var(--accent-muted, rgba(146, 107, 255, 0.4));
       transition: all 0.3s ease;
     }
 
@@ -313,8 +315,8 @@
     }
 
     .modal-content {
-      background: rgba(20, 20, 25, 0.95);
-      border: 1px solid rgba(146, 107, 255, 0.3);
+      background: var(--popup-bg, rgba(20, 20, 25, 0.95));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
       border-radius: 16px;
       padding: 30px;
       width: 100%;
@@ -322,17 +324,17 @@
     }
 
     .modal-content h3 {
-      color: #926bff;
+      color: var(--accent-primary, #926bff);
       margin-bottom: 20px;
     }
 
     .modal-content input {
       width: 100%;
       padding: 12px 15px;
-      background: rgba(10, 10, 15, 0.8);
-      border: 1px solid rgba(146, 107, 255, 0.3);
+      background: var(--input-bg, rgba(10, 10, 15, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary, #fff);
       font-size: 14px;
       margin-bottom: 15px;
     }
@@ -351,13 +353,13 @@
     }
 
     .btn-save {
-      background: #926bff;
-      color: #fff;
+      background: var(--accent-primary, #926bff);
+      color: var(--text-primary, #fff);
     }
 
     .btn-cancel {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
+      background: var(--text-faint, rgba(255, 255, 255, 0.2));
+      color: var(--text-primary, #fff);
     }
 
     /* Tab Navigation */
@@ -374,7 +376,7 @@
       background: transparent;
       border: none;
       border-bottom: 3px solid transparent;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
@@ -383,12 +385,12 @@
     }
 
     .tab-button:hover {
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--text-secondary, rgba(255, 255, 255, 0.8));
     }
 
     .tab-button.active {
-      color: #926bff;
-      border-bottom-color: #926bff;
+      color: var(--accent-primary, #926bff);
+      border-bottom-color: var(--accent-primary, #926bff);
     }
 
     .tab-content {
