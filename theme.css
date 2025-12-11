@@ -249,7 +249,7 @@ html[data-theme="light"] .theme-toggle .moon-icon {
 
 /* Hide theme toggle on mobile (shown in mobile menu instead) */
 @media (max-width: 900px) {
-  .social-icons .theme-toggle {
+  .side-menu > .theme-toggle {
     display: none;
   }
 }
