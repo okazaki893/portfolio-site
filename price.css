@@ -219,8 +219,9 @@ body {
   text-align: center;
   font-size: 15px;
   color: var(--text-secondary, rgba(255, 255, 255, 0.7));
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
   line-height: 1.8;
+  width: 100%;
 }
 
 /* Direct Contact Button */
