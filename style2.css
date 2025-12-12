@@ -866,6 +866,11 @@ body {
   display: none;
 }
 
+/* Mobile Top Icon - hidden by default (desktop) */
+.mobile-top-icon {
+  display: none;
+}
+
 /* ========== Smartphone Responsive ========== */
 @media (max-width: 768px) {
   /* Show hamburger, hide side menu */
@@ -902,6 +907,39 @@ body {
     width: 100%;
     min-height: 100vh;
     padding: 80px 20px 40px 20px;
+  }
+
+  /* Mobile Top Icon - Theme switching */
+  .mobile-top-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .mobile-top-icon img {
+    max-width: 200px;
+    height: auto;
+  }
+
+  /* Light theme: show light icon, hide dark icon */
+  :root[data-theme="light"] .top-icon-light,
+  :root:not([data-theme]) .top-icon-light {
+    display: block;
+  }
+
+  :root[data-theme="light"] .top-icon-dark,
+  :root:not([data-theme]) .top-icon-dark {
+    display: none;
+  }
+
+  /* Dark theme: show dark icon, hide light icon */
+  :root[data-theme="dark"] .top-icon-dark {
+    display: block;
+  }
+
+  :root[data-theme="dark"] .top-icon-light {
+    display: none;
   }
 
   .mobile-mixing-title {
