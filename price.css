@@ -215,6 +215,14 @@ body {
     0 0 80px var(--accent-muted, rgba(146, 107, 255, 0.3));
 }
 
+.page-description {
+  text-align: center;
+  font-size: 15px;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
 /* Direct Contact Button */
 .direct-contact-container {
   display: flex;
