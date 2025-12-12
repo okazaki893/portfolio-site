@@ -468,7 +468,7 @@
   </div>
 
   <script>
-    // BPM Calculator
+    // High-Precision BPM Calculator
     let tapTimes = [];
     let lastTapTime = 0;
     let bpmHistory = [];
@@ -486,13 +486,16 @@
     function calculateBPM() {
       if (tapTimes.length < 2) return null;
 
-      let totalInterval = 0;
-      for (let i = 1; i < tapTimes.length; i++) {
-        totalInterval += tapTimes[i] - tapTimes[i - 1];
-      }
+      // 最初のタップから最後のタップまでの総時間
+      const firstTap = tapTimes[0];
+      const lastTap = tapTimes[tapTimes.length - 1];
+      const totalTime = lastTap - firstTap;
 
-      const averageInterval = totalInterval / (tapTimes.length - 1);
-      const bpm = (60000 / averageInterval).toFixed(2);
+      // 間隔の数 = タップ数 - 1
+      const intervalCount = tapTimes.length - 1;
+
+      // BPM = 60秒 / 平均間隔 = 60000ms * 間隔数 / 総時間
+      const bpm = Math.round((60000 * intervalCount) / totalTime);
       return bpm;
     }
 
@@ -518,6 +521,11 @@
     }
 
     function addToHistory(bpm) {
+      // 同じBPMが連続している場合は追加しない
+      if (bpmHistory.length > 0 && bpmHistory[bpmHistory.length - 1] === bpm) {
+        return;
+      }
+
       bpmHistory.push(bpm);
 
       // 30件を超えたら古い順から削除
@@ -529,7 +537,8 @@
     }
 
     function handleTap() {
-      const now = Date.now();
+      // performance.now()を使用して高精度なタイミングを取得
+      const now = performance.now();
 
       // 2秒以上経過していたらリセット
       if (lastTapTime && (now - lastTapTime) > TIMEOUT) {
@@ -540,11 +549,6 @@
       tapTimes.push(now);
       lastTapTime = now;
       totalTapCount++;
-
-      // 最新の8タップのみ保持（BPM計算用）
-      if (tapTimes.length > 8) {
-        tapTimes.shift();
-      }
 
       tapCountEl.textContent = `タップ数: ${totalTapCount}`;
 
@@ -567,7 +571,17 @@
       renderHistory();
     }
 
-    tapButton.addEventListener('click', handleTap);
+    // マウスとタッチの両方に対応（より確実な記録）
+    tapButton.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      handleTap();
+    });
+
+    tapButton.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handleTap();
+    }, { passive: false });
+
     resetButton.addEventListener('click', resetBPM);
 
     // キーボードでもタップ可能（スペースキー）

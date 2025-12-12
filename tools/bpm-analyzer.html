@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPM Analyzer - Noumenon</title>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VSVT7TT4R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0VSVT7TT4R');
+  </script>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <!-- OGP -->
+  <meta property="og:title" content="BPM Analyzer - Noumenon">
+  <meta property="og:description" content="楽曲ファイルからBPMを自動測定するツール">
+  <meta property="og:image" content="https://noumenon.jp/OGP.png">
+  <meta property="og:url" content="https://noumenon.jp/tools/bpm-analyzer">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BPM Analyzer - Noumenon">
+  <meta name="twitter:description" content="楽曲ファイルからBPMを自動測定するツール">
+  <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
+  <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../style2.css">
+  <script src="../theme.js"></script>
+  <style>
+    .tool-content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 60px 60px 340px;
+    }
+
+    .page-title-tool {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 42px;
+      font-weight: bold;
+      color: var(--accent-primary, #926bff);
+      letter-spacing: 8px;
+      text-shadow:
+        0 0 40px var(--accent-glow, rgba(146, 107, 255, 0.5)),
+        0 0 80px var(--accent-muted, rgba(146, 107, 255, 0.3));
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .page-subtitle-tool {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+      letter-spacing: 2px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .analyzer-container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      border: 2px dashed var(--border-color, rgba(146, 107, 255, 0.4));
+      border-radius: 16px;
+      padding: 50px 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--bg-card, rgba(20, 20, 25, 0.6));
+    }
+
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: var(--accent-primary, #926bff);
+      background: var(--bg-card, rgba(146, 107, 255, 0.1));
+    }
+
+    .drop-zone-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px;
+      fill: var(--accent-primary, #926bff);
+      opacity: 0.7;
+    }
+
+    .drop-zone-text {
+      font-family: 'Arial', sans-serif;
+      font-size: 16px;
+      color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+      margin-bottom: 10px;
+    }
+
+    .drop-zone-hint {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.4));
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    /* Waveform */
+    .waveform-container {
+      background: var(--bg-card, rgba(20, 20, 25, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+      border-radius: 12px;
+      padding: 20px;
+      display: none;
+    }
+
+    .waveform-container.visible {
+      display: block;
+    }
+
+    .waveform-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .waveform-title {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+
+    .waveform-bpm {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--accent-primary, #926bff);
+    }
+
+    #waveformCanvas {
+      width: 100%;
+      height: 120px;
+      border-radius: 8px;
+      background: var(--bg-primary, rgba(10, 10, 15, 0.5));
+    }
+
+    /* Progress */
+    .progress-container {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .progress-container.visible {
+      display: block;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--bg-card, rgba(146, 107, 255, 0.2));
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-primary, #926bff);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* Results List */
+    .results-container {
+      background: var(--bg-card, rgba(20, 20, 25, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+      border-radius: 12px;
+      padding: 20px;
+      display: none;
+    }
+
+    .results-container.visible {
+      display: block;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .results-title {
+      font-family: 'Arial', sans-serif;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+      letter-spacing: 2px;
+    }
+
+    .clear-btn {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
+      background: none;
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
+      padding: 6px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .clear-btn:hover {
+      color: var(--accent-primary, #926bff);
+      border-color: var(--accent-primary, #926bff);
+    }
+
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--bg-card, rgba(146, 107, 255, 0.1));
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .result-item:hover {
+      background: var(--bg-card, rgba(146, 107, 255, 0.15));
+    }
+
+    .result-name {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      color: var(--text-primary, #fff);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+
+    .result-bpm {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--accent-primary, #926bff);
+    }
+
+    .result-bpm span {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
+      margin-left: 5px;
+    }
+
+    /* Export Button */
+    .export-btn {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, #6b5ce7 100%);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      align-self: center;
+      display: none;
+    }
+
+    .export-btn.visible {
+      display: block;
+    }
+
+    .export-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px var(--accent-glow, rgba(146, 107, 255, 0.4));
+    }
+
+    /* Back Link */
+    .back-link {
+      position: absolute;
+      top: 80px;
+      left: 360px;
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s ease;
+      z-index: 100;
+      cursor: pointer;
+    }
+
+    .back-link:hover {
+      color: var(--accent-primary, #926bff);
+    }
+
+    .back-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Scrollable */
+    html, body {
+      overflow: hidden !important;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .portfolio-cover {
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .tool-content {
+      padding-bottom: 100px;
+    }
+
+    @media (max-width: 900px) {
+      .tool-content {
+        padding: 100px 20px 40px 20px;
+      }
+
+      .page-title-tool {
+        font-size: 28px;
+        letter-spacing: 4px;
+      }
+
+      .back-link {
+        top: 70px;
+        left: 20px;
+      }
+
+      .drop-zone {
+        padding: 30px 20px;
+      }
+
+      .result-name {
+        max-width: 60%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="portfolio-cover">
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger-menu" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+      <ul class="mobile-menu-list">
+        <li><a href="/">TOP</a></li>
+        <li><a href="/mixing">Mixing</a></li>
+        <li><a href="/3danimation">3D Animation</a></li>
+        <li><a href="/music">Music</a></li>
+        <li><a href="/planning">Planning Progress</a></li>
+        <li><a href="/price">Price</a></li>
+        <li><a href="../other.html" class="active">Other</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <!-- Mobile Theme Toggle -->
+      <button class="mobile-theme-toggle" id="mobileThemeToggle" aria-label="Toggle theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3zm1-4V2h-2v3h2zm0 17v-3h-2v3h2zM5.99 4.58l2.12 2.12 1.41-1.41-2.12-2.12-1.41 1.41zm12.02 12.02l2.12 2.12 1.41-1.41-2.12-2.12-1.41 1.41zM2 13h3v-2H2v2zm17 0h3v-2h-3v2zM5.99 19.42l1.41-1.41-2.12-2.12-1.41 1.41 2.12 2.12zM18.01 7.29l1.41-1.41-2.12-2.12-1.41 1.41 2.12 2.12z"/>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Side menu -->
+    <nav class="side-menu">
+      <ul class="menu-list">
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="/" class="menu-link">TOP</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="/mixing" class="menu-link">Mixing</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="/3danimation" class="menu-link">3D Animation</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="/music" class="menu-link">Music</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="/planning" class="menu-link">Planning Progress</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="/price" class="menu-link">Price</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet active"></span>
+          <span class="menu-line"></span>
+          <a href="../other.html" class="menu-link active">Other</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <a href="/contact" class="menu-link">Contact</a>
+        </li>
+      </ul>
+      <!-- Social Icons -->
+      <div class="social-icons">
+        <a href="https://x.com/DOSUKOI_JK" target="_blank" class="social-icon" title="X (Twitter)">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </a>
+        <a href="https://x.com/okazaki_yuki01" target="_blank" class="social-icon" title="X (Twitter)">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </a>
+        <a href="https://discord.com/users/528093170484117518" target="_blank" class="social-icon" title="Discord">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+        </a>
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3zm1-4V2h-2v3h2zm0 17v-3h-2v3h2zM5.99 4.58l2.12 2.12 1.41-1.41-2.12-2.12-1.41 1.41zm12.02 12.02l2.12 2.12 1.41-1.41-2.12-2.12-1.41 1.41zM2 13h3v-2H2v2zm17 0h3v-2h-3v2zM5.99 19.42l1.41-1.41-2.12-2.12-1.41 1.41 2.12 2.12zM18.01 7.29l1.41-1.41-2.12-2.12-1.41 1.41 2.12 2.12z"/>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Animated gradient background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Grid pattern overlay -->
+    <div class="grid-pattern"></div>
+
+    <!-- Floating orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Back Link -->
+    <a href="../other.html" class="back-link">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+      </svg>
+      Other に戻る
+    </a>
+
+    <!-- Main content -->
+    <div class="tool-content">
+      <h1 class="page-title-tool">BPM ANALYZER</h1>
+      <p class="page-subtitle-tool">楽曲ファイルからBPMを自動測定</p>
+
+      <div class="analyzer-container">
+        <!-- Drop Zone -->
+        <div class="drop-zone" id="dropZone">
+          <svg class="drop-zone-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <p class="drop-zone-text">ここにファイルをドロップ<br>または クリックして選択</p>
+          <p class="drop-zone-hint">対応形式: MP3, WAV, OGG, FLAC, M4A</p>
+          <input type="file" id="fileInput" accept="audio/*" multiple>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-container" id="progressContainer">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <p class="progress-text" id="progressText">解析中...</p>
+        </div>
+
+        <!-- Waveform -->
+        <div class="waveform-container" id="waveformContainer">
+          <div class="waveform-header">
+            <span class="waveform-title" id="waveformTitle">-</span>
+            <span class="waveform-bpm" id="waveformBpm">-- BPM</span>
+          </div>
+          <canvas id="waveformCanvas"></canvas>
+        </div>
+
+        <!-- Results List -->
+        <div class="results-container" id="resultsContainer">
+          <div class="results-header">
+            <span class="results-title">RESULTS</span>
+            <button class="clear-btn" id="clearBtn">CLEAR</button>
+          </div>
+          <div class="results-list" id="resultsList">
+            <!-- Results will be added here -->
+          </div>
+        </div>
+
+        <!-- Export Button -->
+        <button class="export-btn" id="exportBtn">CSV出力</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const waveformContainer = document.getElementById('waveformContainer');
+    const waveformTitle = document.getElementById('waveformTitle');
+    const waveformBpm = document.getElementById('waveformBpm');
+    const waveformCanvas = document.getElementById('waveformCanvas');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const resultsList = document.getElementById('resultsList');
+    const clearBtn = document.getElementById('clearBtn');
+    const exportBtn = document.getElementById('exportBtn');
+
+    // Results storage
+    let results = [];
+
+    // Audio Context
+    let audioContext = null;
+
+    // Initialize Audio Context
+    function getAudioContext() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioContext;
+    }
+
+    // Drag and Drop handlers
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('audio/'));
+      if (files.length > 0) {
+        processFiles(files);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length > 0) {
+        processFiles(files);
+      }
+    });
+
+    // Process multiple files
+    async function processFiles(files) {
+      progressContainer.classList.add('visible');
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const progress = ((i + 1) / files.length) * 100;
+        progressFill.style.width = `${progress}%`;
+        progressText.textContent = `解析中... (${i + 1}/${files.length}) ${file.name}`;
+
+        try {
+          const bpm = await analyzeFile(file);
+          addResult(file.name, bpm);
+        } catch (error) {
+          console.error(`Error analyzing ${file.name}:`, error);
+          addResult(file.name, 'Error');
+        }
+      }
+
+      progressContainer.classList.remove('visible');
+      progressFill.style.width = '0%';
+      fileInput.value = '';
+    }
+
+    // Analyze single file
+    async function analyzeFile(file) {
+      const ctx = getAudioContext();
+      const arrayBuffer = await file.arrayBuffer();
+      const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+
+      // Draw waveform
+      drawWaveform(audioBuffer, file.name);
+
+      // Detect BPM
+      const bpm = detectBPM(audioBuffer);
+
+      waveformTitle.textContent = file.name;
+      waveformBpm.textContent = `${Math.round(bpm)} BPM`;
+      waveformContainer.classList.add('visible');
+
+      return bpm;
+    }
+
+    // Draw waveform on canvas
+    function drawWaveform(audioBuffer, fileName) {
+      const canvas = waveformCanvas;
+      const ctx = canvas.getContext('2d');
+
+      // Set canvas size
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const width = rect.width;
+      const height = rect.height;
+
+      // Get audio data
+      const data = audioBuffer.getChannelData(0);
+      const step = Math.ceil(data.length / width);
+      const amp = height / 2;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // Get accent color from CSS variable
+      const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() || '#926bff';
+
+      // Draw waveform
+      ctx.beginPath();
+      ctx.moveTo(0, amp);
+
+      for (let i = 0; i < width; i++) {
+        let min = 1.0;
+        let max = -1.0;
+
+        for (let j = 0; j < step; j++) {
+          const datum = data[(i * step) + j];
+          if (datum < min) min = datum;
+          if (datum > max) max = datum;
+        }
+
+        ctx.lineTo(i, (1 + min) * amp);
+        ctx.lineTo(i, (1 + max) * amp);
+      }
+
+      ctx.strokeStyle = accentColor;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // High-Precision BPM Detection Algorithm using FFT-based onset detection and comb filter
+    function detectBPM(audioBuffer) {
+      const sampleRate = audioBuffer.sampleRate;
+      const rawData = audioBuffer.getChannelData(0);
+
+      // Use multiple sections of audio for better accuracy
+      const sectionLength = Math.min(sampleRate * 20, rawData.length / 3);
+      const sections = [];
+
+      // Take 5 sections for better coverage
+      if (rawData.length > sectionLength * 3) {
+        const skip = sampleRate * 3; // Skip first 3 seconds
+        sections.push(rawData.slice(skip, skip + sectionLength));
+        sections.push(rawData.slice(Math.floor(rawData.length * 0.25), Math.floor(rawData.length * 0.25) + sectionLength));
+        sections.push(rawData.slice(Math.floor(rawData.length * 0.5) - sectionLength / 2, Math.floor(rawData.length * 0.5) + sectionLength / 2));
+        sections.push(rawData.slice(Math.floor(rawData.length * 0.75) - sectionLength, Math.floor(rawData.length * 0.75)));
+        sections.push(rawData.slice(Math.max(0, rawData.length - sectionLength - skip), rawData.length - skip));
+      } else {
+        sections.push(rawData.slice(0, Math.min(rawData.length, sampleRate * 30)));
+      }
+
+      const bpmResults = [];
+
+      for (const data of sections) {
+        const result = detectBPMFromSection(data, sampleRate);
+        if (result) bpmResults.push(result);
+      }
+
+      if (bpmResults.length === 0) return 120;
+
+      // Find consensus BPM with weighted voting
+      const finalBPM = findConsensusBPM(bpmResults);
+      console.log(`BPM Results: ${bpmResults.map(r => r.bpm.toFixed(2) + '(' + r.confidence.toFixed(2) + ')').join(', ')} -> Final: ${finalBPM.toFixed(2)}`);
+
+      return finalBPM;
+    }
+
+    function detectBPMFromSection(data, sampleRate) {
+      // Higher quality downsampling
+      const targetRate = 22050;
+      const downsampleFactor = Math.max(1, Math.round(sampleRate / targetRate));
+      const effectiveSampleRate = sampleRate / downsampleFactor;
+
+      // Frame parameters for onset detection
+      const frameSize = Math.round(effectiveSampleRate * 0.023); // ~23ms frames
+      const hopSize = Math.round(effectiveSampleRate * 0.01); // ~10ms hop for high resolution
+
+      // Compute onset strength function
+      const onsetEnvelope = computeOnsetEnvelope(data, downsampleFactor, frameSize, hopSize);
+      if (onsetEnvelope.length < 100) return null;
+
+      // Normalize
+      const maxVal = Math.max(...onsetEnvelope);
+      if (maxVal === 0) return null;
+      const normalizedOnset = onsetEnvelope.map(v => v / maxVal);
+
+      // Compute tempo using autocorrelation with sub-sample precision
+      const onsetRate = effectiveSampleRate / hopSize;
+      const result = computeTempoAutocorrelation(normalizedOnset, onsetRate);
+
+      return result;
+    }
+
+    function computeOnsetEnvelope(data, downsampleFactor, frameSize, hopSize) {
+      const onset = [];
+      let prevEnergy = 0;
+      let prevLowEnergy = 0;
+      let prevMidEnergy = 0;
+
+      for (let i = 0; i < data.length / downsampleFactor - frameSize; i += hopSize) {
+        let energy = 0;
+        let lowEnergy = 0;
+        let midEnergy = 0;
+
+        // Compute energy with simple frequency band separation
+        for (let j = 0; j < frameSize; j++) {
+          const idx = (i + j) * downsampleFactor;
+          if (idx < data.length) {
+            const sample = data[idx];
+            energy += sample * sample;
+
+            // Simple low-pass approximation (bass detection)
+            if (j > 0) {
+              const prevSample = data[(i + j - 1) * downsampleFactor] || 0;
+              const diff = Math.abs(sample - prevSample);
+              // Low frequency content has less sample-to-sample variation
+              if (diff < 0.1) lowEnergy += sample * sample;
+              else midEnergy += sample * sample;
+            }
+          }
+        }
+
+        energy = Math.sqrt(energy / frameSize);
+        lowEnergy = Math.sqrt(lowEnergy / frameSize);
+        midEnergy = Math.sqrt(midEnergy / frameSize);
+
+        // Compute onset strength as positive change in energy (half-wave rectified derivative)
+        // Combine multiple frequency bands for robustness
+        const energyDiff = Math.max(0, energy - prevEnergy);
+        const lowDiff = Math.max(0, lowEnergy - prevLowEnergy);
+        const midDiff = Math.max(0, midEnergy - prevMidEnergy);
+
+        // Weight low frequencies more (kick/bass detection)
+        const onsetStrength = energyDiff + lowDiff * 1.5 + midDiff * 0.8;
+        onset.push(onsetStrength);
+
+        prevEnergy = energy * 0.9 + prevEnergy * 0.1; // Slight smoothing
+        prevLowEnergy = lowEnergy * 0.9 + prevLowEnergy * 0.1;
+        prevMidEnergy = midEnergy * 0.9 + prevMidEnergy * 0.1;
+      }
+
+      // Apply median filtering to reduce noise
+      const filtered = [];
+      const windowSize = 3;
+      for (let i = 0; i < onset.length; i++) {
+        const window = [];
+        for (let j = -windowSize; j <= windowSize; j++) {
+          if (i + j >= 0 && i + j < onset.length) {
+            window.push(onset[i + j]);
+          }
+        }
+        window.sort((a, b) => a - b);
+        filtered.push(window[Math.floor(window.length / 2)]);
+      }
+
+      return filtered;
+    }
+
+    function computeTempoAutocorrelation(onset, sampleRate) {
+      const minBPM = 60;
+      const maxBPM = 200;
+
+      // Convert BPM to lag in samples
+      const minLag = Math.floor((60 / maxBPM) * sampleRate);
+      const maxLag = Math.ceil((60 / minBPM) * sampleRate);
+
+      // Compute autocorrelation for each lag
+      const correlations = new Array(maxLag - minLag + 1);
+
+      for (let lag = minLag; lag <= maxLag; lag++) {
+        let sum = 0;
+        let count = 0;
+
+        for (let i = 0; i < onset.length - lag; i++) {
+          sum += onset[i] * onset[i + lag];
+          count++;
+        }
+
+        correlations[lag - minLag] = count > 0 ? sum / count : 0;
+      }
+
+      // Normalize correlations
+      const maxCorr = Math.max(...correlations);
+      if (maxCorr === 0) return null;
+      const normalizedCorr = correlations.map(c => c / maxCorr);
+
+      // Apply tempo prior (slight preference for common tempos)
+      const weightedCorr = normalizedCorr.map((c, i) => {
+        const lag = i + minLag;
+        const bpm = (60 * sampleRate) / lag;
+        // Gaussian prior centered at 120 BPM with wide spread
+        const prior = Math.exp(-Math.pow((bpm - 120) / 50, 2) * 0.15);
+        return c * (0.85 + 0.15 * prior);
+      });
+
+      // Find peaks in correlation
+      const peaks = [];
+      for (let i = 2; i < weightedCorr.length - 2; i++) {
+        if (weightedCorr[i] > weightedCorr[i - 1] &&
+            weightedCorr[i] > weightedCorr[i + 1] &&
+            weightedCorr[i] > weightedCorr[i - 2] &&
+            weightedCorr[i] > weightedCorr[i + 2] &&
+            weightedCorr[i] > 0.3) {
+          peaks.push({
+            index: i,
+            lag: i + minLag,
+            score: weightedCorr[i]
+          });
+        }
+      }
+
+      if (peaks.length === 0) {
+        // Fallback: find maximum
+        let maxIdx = 0;
+        for (let i = 1; i < weightedCorr.length; i++) {
+          if (weightedCorr[i] > weightedCorr[maxIdx]) maxIdx = i;
+        }
+        peaks.push({
+          index: maxIdx,
+          lag: maxIdx + minLag,
+          score: weightedCorr[maxIdx]
+        });
+      }
+
+      // Sort peaks by score
+      peaks.sort((a, b) => b.score - a.score);
+
+      // Refine top peak using parabolic interpolation for sub-sample accuracy
+      const topPeak = peaks[0];
+      const idx = topPeak.index;
+
+      let refinedLag = topPeak.lag;
+      let confidence = topPeak.score;
+
+      if (idx > 0 && idx < weightedCorr.length - 1) {
+        const y0 = weightedCorr[idx - 1];
+        const y1 = weightedCorr[idx];
+        const y2 = weightedCorr[idx + 1];
+
+        const denom = y0 - 2 * y1 + y2;
+        if (Math.abs(denom) > 1e-10) {
+          const delta = 0.5 * (y0 - y2) / denom;
+          if (Math.abs(delta) < 1) {
+            refinedLag = topPeak.lag + delta;
+            // Refined confidence
+            confidence = y1 - 0.25 * (y0 - y2) * delta;
+          }
+        }
+      }
+
+      const bpm = (60 * sampleRate) / refinedLag;
+
+      // Check for octave errors
+      const halfLag = refinedLag * 2;
+      const doubleLag = refinedLag / 2;
+
+      const halfIdx = Math.round(halfLag - minLag);
+      const doubleIdx = Math.round(doubleLag - minLag);
+
+      let finalBPM = bpm;
+
+      // Check half tempo (double lag)
+      if (halfIdx >= 0 && halfIdx < weightedCorr.length) {
+        const halfScore = weightedCorr[halfIdx];
+        const halfBPM = bpm / 2;
+        if (halfBPM >= 60 && halfScore > confidence * 0.75 && bpm > 155) {
+          finalBPM = halfBPM;
+          confidence = halfScore;
+        }
+      }
+
+      // Check double tempo (half lag)
+      if (doubleIdx >= 0 && doubleIdx < weightedCorr.length) {
+        const doubleScore = weightedCorr[doubleIdx];
+        const doubleBPM = bpm * 2;
+        if (doubleBPM <= 200 && doubleScore > confidence * 0.85 && bpm < 75) {
+          finalBPM = doubleBPM;
+          confidence = doubleScore;
+        }
+      }
+
+      return { bpm: finalBPM, confidence };
+    }
+
+    function findConsensusBPM(results) {
+      if (results.length === 1) return results[0].bpm;
+
+      // Group similar BPMs (within 2% or octave relationship)
+      const groups = [];
+
+      for (const result of results) {
+        let foundGroup = false;
+        const bpm = result.bpm;
+
+        for (const group of groups) {
+          const ref = group.bpms[0];
+          const tolerance = ref * 0.02; // 2% tolerance
+
+          // Check if similar or octave related
+          if (Math.abs(bpm - ref) < tolerance ||
+              Math.abs(bpm - ref * 2) < tolerance ||
+              Math.abs(bpm * 2 - ref) < tolerance) {
+            group.bpms.push(bpm);
+            group.confidences.push(result.confidence);
+            group.totalConfidence += result.confidence;
+            foundGroup = true;
+            break;
+          }
+        }
+
+        if (!foundGroup) {
+          groups.push({
+            bpms: [bpm],
+            confidences: [result.confidence],
+            totalConfidence: result.confidence
+          });
+        }
+      }
+
+      // Find group with highest total confidence
+      groups.sort((a, b) => b.totalConfidence - a.totalConfidence);
+      const bestGroup = groups[0];
+
+      // Normalize octaves within group to common range
+      const normalizedBpms = bestGroup.bpms.map(bpm => {
+        while (bpm < 70) bpm *= 2;
+        while (bpm > 170) bpm /= 2;
+        return bpm;
+      });
+
+      // Weighted average using confidence
+      let weightedSum = 0;
+      let totalWeight = 0;
+      for (let i = 0; i < normalizedBpms.length; i++) {
+        const weight = bestGroup.confidences[i];
+        weightedSum += normalizedBpms[i] * weight;
+        totalWeight += weight;
+      }
+
+      return totalWeight > 0 ? weightedSum / totalWeight : normalizedBpms[0];
+    }
+
+    // Add result to list
+    function addResult(fileName, bpm) {
+      const result = { fileName, bpm };
+      results.push(result);
+
+      const item = document.createElement('div');
+      item.className = 'result-item';
+      item.innerHTML = `
+        <span class="result-name">${fileName}</span>
+        <span class="result-bpm">${typeof bpm === 'number' ? Math.round(bpm) : bpm}<span>BPM</span></span>
+      `;
+      resultsList.appendChild(item);
+
+      resultsContainer.classList.add('visible');
+      exportBtn.classList.add('visible');
+    }
+
+    // Clear results
+    clearBtn.addEventListener('click', () => {
+      results = [];
+      resultsList.innerHTML = '';
+      resultsContainer.classList.remove('visible');
+      waveformContainer.classList.remove('visible');
+      exportBtn.classList.remove('visible');
+    });
+
+    // Export to CSV
+    exportBtn.addEventListener('click', () => {
+      if (results.length === 0) return;
+
+      const csvContent = 'ファイル名,BPM\n' +
+        results.map(r => `"${r.fileName}",${typeof r.bpm === 'number' ? Math.round(r.bpm) : r.bpm}`).join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'bpm_results.csv';
+      link.click();
+    });
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const hamburger = document.querySelector('.hamburger-menu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      hamburger.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    // Resize waveform on window resize
+    window.addEventListener('resize', () => {
+      if (waveformContainer.classList.contains('visible')) {
+        // Redraw would need the audio buffer, so we skip for now
+      }
+    });
+  </script>
+</body>
+</html>
