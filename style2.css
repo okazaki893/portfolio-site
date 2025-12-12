@@ -821,10 +821,12 @@ body {
   background: var(--overlay-bg, rgba(10, 10, 15, 0.98));
   z-index: 1500;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   opacity: 0;
   transition: opacity 0.3s ease;
+  overflow-y: auto;
+  padding: 80px 20px 40px 20px;
 }
 
 .mobile-menu-overlay.active {
@@ -900,26 +902,60 @@ body {
     display: none;
   }
 
+  /* Mobile TOP page - hide decorative elements */
+  .mobile-mixing-grid ~ .gradient-bg,
+  .mobile-mixing-grid ~ .grid-pattern,
+  .mobile-mixing-grid ~ .orb {
+    display: none;
+  }
+
+  .gradient-bg,
+  .grid-pattern,
+  .orb {
+    display: none !important;
+  }
+
+  /* Mobile TOP page - solid background */
+  .portfolio-cover {
+    background: var(--bg-primary, #0a0a0f);
+  }
+
+  :root[data-theme="light"] .portfolio-cover,
+  :root:not([data-theme]) .portfolio-cover {
+    background: #ffffff;
+  }
+
+  :root[data-theme="dark"] .portfolio-cover {
+    background: #000000;
+  }
+
   .mobile-mixing-grid {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     position: relative;
     z-index: 10;
     width: 100%;
     min-height: 100vh;
-    padding: 80px 20px 40px 20px;
+    padding: 0;
   }
 
-  /* Mobile Top Icon - Theme switching */
+  /* Mobile Top Icon - centered */
   .mobile-top-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 30px;
   }
 
   .mobile-top-icon img {
-    max-width: 200px;
+    max-width: 250px;
     height: auto;
+  }
+
+  /* Hide video grid on mobile TOP */
+  .mobile-video-grid {
+    display: none;
   }
 
   /* Light theme: show light icon, hide dark icon */
