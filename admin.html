@@ -577,32 +577,29 @@
               <p style="color: var(--text-dim, rgba(255,255,255,0.5)); text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
             </div>
 
-            <!-- 画像アップロード -->
-            <div class="add-form" style="border-top: none; padding-top: 0; margin-top: 0;">
-              <h4 style="color: var(--text-secondary, rgba(255,255,255,0.8)); margin-bottom: 10px;">画像アップロード</h4>
-              <div style="margin-bottom: 12px;">
-                <label style="color: var(--text-dim, rgba(255,255,255,0.5)); font-size: 13px; display: block; margin-bottom: 6px;">保存先フォルダ（記事タイトルなど）</label>
-                <input type="text" id="imageFolderName" placeholder="例: my-article-title（空欄でルートに保存）" style="padding: 10px 14px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); width: 100%; max-width: 400px; font-size: 14px;">
-              </div>
-              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
-                <button onclick="document.getElementById('imageUploadInput').click()" style="padding: 12px 24px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px;">画像を選択</button>
-                <span id="selectedFileName" style="color: var(--text-dim, rgba(255,255,255,0.5)); font-size: 14px;">ファイルが選択されていません</span>
-                <button onclick="uploadImage()" style="padding: 12px 24px; background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%); border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px; font-weight: bold;">アップロード</button>
-              </div>
-              <div id="uploadedImagePath" style="margin-top: 12px; display: none; padding: 12px; background: rgba(107, 255, 107, 0.1); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 8px;">
-                <p style="color: #6bff6b; font-size: 14px; margin: 0;">アップロード完了: <code id="imagePathCode" style="background: var(--input-bg, rgba(10,10,15,0.8)); padding: 6px 10px; border-radius: 4px; user-select: all; color: var(--text-primary, #fff);">パス</code></p>
-                <button onclick="copyImagePath()" style="margin-top: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">パスをコピー</button>
-              </div>
-            </div>
-
             <div class="add-form">
               <h4 style="color: var(--text-secondary, rgba(255,255,255,0.8)); margin-bottom: 10px;">新規記事作成</h4>
-              <input type="text" id="newArticleTitle" placeholder="記事タイトル">
-              <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/image.jpg）">
+              <input type="text" id="newArticleTitle" placeholder="記事タイトル" oninput="syncFolderName(this.value)">
+              <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/フォルダ名/image.jpg）">
               <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
-              <textarea id="newArticleBody" placeholder="本文（Markdown形式）&#10;&#10;画像を挿入する場合: ![画像の説明](/content/uploads/ファイル名.jpg)" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical; font-family: monospace;"></textarea>
-              <button onclick="createArticle()">記事を作成</button>
+              <textarea id="newArticleBody" placeholder="本文（Markdown形式）&#10;&#10;画像を挿入する場合: ![画像の説明](/content/uploads/フォルダ名/ファイル名.jpg)" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical; font-family: monospace;"></textarea>
+
+              <!-- 画像アップロード（記事フォーム内） -->
+              <div style="margin-top: 15px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px;">
+                <p style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px; margin: 0 0 10px 0;">画像アップロード → <span id="folderPreview" style="color: var(--accent-primary, #926bff);">/content/uploads/</span></p>
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                  <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
+                  <button type="button" onclick="document.getElementById('imageUploadInput').click()" style="padding: 10px 20px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px;">画像を選択</button>
+                  <span id="selectedFileName" style="color: var(--text-dim, rgba(255,255,255,0.5)); font-size: 14px;">ファイルが選択されていません</span>
+                  <button type="button" onclick="uploadImage()" style="padding: 10px 20px; background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%); border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px; font-weight: bold;">アップロード</button>
+                </div>
+                <div id="uploadedImagePath" style="margin-top: 12px; display: none; padding: 12px; background: rgba(107, 255, 107, 0.1); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 8px;">
+                  <p style="color: #6bff6b; font-size: 14px; margin: 0;">アップロード完了: <code id="imagePathCode" style="background: var(--input-bg, rgba(10,10,15,0.8)); padding: 6px 10px; border-radius: 4px; user-select: all; color: var(--text-primary, #fff);">パス</code></p>
+                  <button type="button" onclick="copyImagePath()" style="margin-top: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">パスをコピー</button>
+                </div>
+              </div>
+
+              <button onclick="createArticle()" style="margin-top: 15px;">記事を作成</button>
             </div>
           </div>
 
@@ -2050,6 +2047,23 @@
     // ========== 画像アップロード機能 ==========
 
     const UPLOADS_PATH = 'content/uploads';
+    let currentFolderName = '';
+
+    // 記事タイトルからフォルダ名を同期
+    function syncFolderName(title) {
+      if (title.trim()) {
+        // タイトルをスラッグ化（日本語対応）
+        currentFolderName = title.trim()
+          .toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^a-zA-Z0-9\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf-]/g, '')
+          .replace(/^-+|-+$/g, '');
+        document.getElementById('folderPreview').textContent = `/content/uploads/${currentFolderName}/`;
+      } else {
+        currentFolderName = '';
+        document.getElementById('folderPreview').textContent = '/content/uploads/';
+      }
+    }
 
     // ファイル選択時にファイル名を表示
     document.addEventListener('DOMContentLoaded', function() {
@@ -2078,10 +2092,10 @@
         return;
       }
 
-      // フォルダ名を取得（空白除去、特殊文字を置換）
-      let folderName = document.getElementById('imageFolderName').value.trim();
-      if (folderName) {
-        folderName = folderName.replace(/[^a-zA-Z0-9._\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf-]/g, '-').replace(/^-+|-+$/g, '');
+      // 記事タイトルが入力されていない場合は警告
+      if (!currentFolderName) {
+        alert('先に記事タイトルを入力してください');
+        return;
       }
 
       // ファイル名を生成（日時 + 元のファイル名）
@@ -2089,10 +2103,8 @@
       const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
       const fileName = `${timestamp}_${safeFileName}`;
 
-      // アップロードパスを決定
-      const uploadPath = folderName
-        ? `${UPLOADS_PATH}/${folderName}/${fileName}`
-        : `${UPLOADS_PATH}/${fileName}`;
+      // アップロードパスを決定（記事タイトルのフォルダに保存）
+      const uploadPath = `${UPLOADS_PATH}/${currentFolderName}/${fileName}`;
 
       try {
         // ファイルをBase64に変換
@@ -2106,7 +2118,7 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            message: folderName ? `Upload image to ${folderName}: ${fileName}` : `Upload image: ${fileName}`,
+            message: `Upload image to ${currentFolderName}: ${fileName}`,
             content: base64Content,
             branch: GITHUB_BRANCH
           })
