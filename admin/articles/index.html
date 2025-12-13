@@ -72,6 +72,32 @@
       box-shadow: 0 4px 20px rgba(146, 107, 255, 0.2) !important;
     }
 
+    /* 記事一覧の幅を調整 */
+    [class*="EntriesCollection"],
+    [class*="Entries"] {
+      max-width: 800px !important;
+      margin: 0 auto !important;
+    }
+
+    /* 記事カードのスタイル */
+    [class*="ListCard"] {
+      display: flex !important;
+      align-items: center !important;
+      padding: 12px !important;
+      margin-bottom: 10px !important;
+    }
+
+    /* サムネイル画像のスタイル */
+    [class*="ListCard"] img,
+    [class*="CardImage"] {
+      width: 80px !important;
+      height: 80px !important;
+      object-fit: cover !important;
+      border-radius: 8px !important;
+      margin-right: 16px !important;
+      flex-shrink: 0 !important;
+    }
+
     /* テキスト */
     [class*="Card"] h2,
     [class*="ListCardTitle"],
