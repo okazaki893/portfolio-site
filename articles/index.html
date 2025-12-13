@@ -36,8 +36,13 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       padding: 60px 60px 100px 340px;
+    }
+
+    .back-link-container {
+      width: 100%;
+      max-width: 800px;
     }
 
     .article-wrapper {
@@ -381,12 +386,14 @@
 
     <!-- Main content -->
     <div class="article-content">
-      <a href="../other" class="back-link">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-        </svg>
-        Back to Other
-      </a>
+      <div class="back-link-container">
+        <a href="../other" class="back-link">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
+          Back to Other
+        </a>
+      </div>
 
       <div id="articleContainer">
         <p class="loading">Loading...</p>
@@ -499,7 +506,7 @@
               </div>
             ` : ''}
             <div class="article-body">${htmlContent}</div>
-            ${article.category ? `<span class="article-category">${article.category}</span>` : ''}
+            ${article.category ? `<span class="article-category">#${article.category}</span>` : ''}
           </div>
         `;
       } catch (error) {
