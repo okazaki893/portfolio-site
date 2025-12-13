@@ -6,7 +6,7 @@
   <title>記事管理 - Noumenon</title>
   <link rel="icon" type="image/png" href="../../favicon.png">
   <style>
-    /* Noumenon カスタムテーマ */
+    /* Noumenon カスタムテーマ - 色のみ */
     :root {
       --accent-primary: #926bff;
       --accent-secondary: #6b5ce7;
@@ -16,32 +16,24 @@
       --text-primary: #ffffff;
       --text-secondary: rgba(255, 255, 255, 0.8);
       --text-muted: rgba(255, 255, 255, 0.5);
-      --border-color: rgba(146, 107, 255, 0.3);
     }
 
-    /* 全体の背景 */
     body {
       background: var(--bg-dark) !important;
     }
 
-    /* アプリコンテナ */
     #nc-root {
       background: var(--bg-dark) !important;
     }
 
-    /* ヘッダーを非表示 */
-    [class*="AppHeader"],
-    header {
-      display: none !important;
+    [class*="AppHeader"] {
+      background: var(--bg-card) !important;
     }
 
-    /* サイドバー */
     [class*="Sidebar"] {
       background: var(--bg-card) !important;
-      border-right: none !important;
     }
 
-    /* サイドバーのリンク */
     [class*="SidebarNavLink"] {
       color: var(--text-secondary) !important;
     }
@@ -52,19 +44,16 @@
       color: var(--accent-primary) !important;
     }
 
-    /* メインコンテンツ */
     [class*="MainView"],
     [class*="CollectionView"],
     [class*="EditorInterface"] {
       background: var(--bg-dark) !important;
     }
 
-    /* カード・パネル */
     [class*="Card"],
     [class*="ListCard"],
     [class*="EntryListing"] {
       background: var(--bg-card) !important;
-      border: none !important;
       border-radius: 12px !important;
     }
 
@@ -72,65 +61,6 @@
       box-shadow: 0 4px 20px rgba(146, 107, 255, 0.2) !important;
     }
 
-    /* 記事一覧コンテナ */
-    [class*="EntriesCollection"],
-    [class*="Entries"] {
-      max-width: 800px !important;
-      margin: 120px auto 0 !important;
-      padding: 20px !important;
-      background: var(--bg-card) !important;
-      border-radius: 16px !important;
-    }
-
-    /* グリッドビュー - 3列表示 */
-    [class*="CardsGrid"] {
-      display: grid !important;
-      grid-template-columns: repeat(3, 1fr) !important;
-      gap: 16px !important;
-    }
-
-    /* グリッドビューのカード */
-    [class*="CardsGrid"] a {
-      display: flex !important;
-      flex-direction: column !important;
-      padding: 12px !important;
-      background: var(--bg-card) !important;
-      border-radius: 8px !important;
-      text-decoration: none !important;
-    }
-
-    /* カードのグラデーションを削除 */
-    [class*="CardsGrid"] a::before,
-    [class*="CardsGrid"] a::after,
-    [class*="Card"]::before,
-    [class*="Card"]::after {
-      display: none !important;
-    }
-
-    /* カード内の要素の背景を透明に */
-    [class*="CardsGrid"] a > div {
-      background: transparent !important;
-    }
-
-    /* リストビュー - 縦に並べる */
-    [class*="EntryListing"]:not([class*="CardsGrid"]) {
-      display: flex !important;
-      flex-direction: column !important;
-    }
-
-    /* リストビューのカード */
-    [class*="ListCard"] {
-      width: 100% !important;
-      padding: 16px !important;
-      margin-bottom: 8px !important;
-    }
-
-    /* リストビューではサムネイル非表示 */
-    [class*="ListCard"] .custom-thumbnail {
-      display: none !important;
-    }
-
-    /* テキスト */
     [class*="Card"] h2,
     [class*="ListCardTitle"],
     [class*="EditorControlPane"] label {
@@ -142,15 +72,11 @@
       color: var(--text-muted) !important;
     }
 
-    /* 入力フィールド */
     input[type="text"],
     input[type="email"],
     input[type="password"],
     textarea,
-    select,
-    [class*="ControlInput"],
-    [class*="TextField"] input,
-    [class*="TextArea"] textarea {
+    select {
       background: var(--bg-input) !important;
       border: 1px solid rgba(255, 255, 255, 0.1) !important;
       border-radius: 8px !important;
@@ -165,7 +91,6 @@
       outline: none !important;
     }
 
-    /* ボタン - プライマリ */
     [class*="Button"][class*="primary"],
     button[class*="primary"],
     [class*="PublishButton"] {
@@ -173,31 +98,13 @@
       border: none !important;
       border-radius: 8px !important;
       color: white !important;
-      font-weight: bold !important;
     }
 
-    [class*="Button"][class*="primary"]:hover,
-    button[class*="primary"]:hover {
-      box-shadow: 0 4px 20px rgba(146, 107, 255, 0.4) !important;
-    }
-
-    /* ボタン - セカンダリ */
-    [class*="Button"]:not([class*="primary"]),
-    button:not([class*="primary"]) {
-      background: var(--bg-input) !important;
-      border: none !important;
-      border-radius: 8px !important;
-      color: var(--text-secondary) !important;
-    }
-
-    /* ツールバー */
     [class*="Toolbar"],
     [class*="EditorToolbar"] {
       background: var(--bg-card) !important;
-      border-bottom: none !important;
     }
 
-    /* Markdownエディタ */
     [class*="EditorPane"],
     [class*="RawEditor"],
     .CodeMirror {
@@ -205,43 +112,23 @@
       color: var(--text-primary) !important;
     }
 
-    .CodeMirror-gutters {
-      background: var(--bg-card) !important;
-      border-right: none !important;
-    }
-
-    /* プレビューパネル */
     [class*="PreviewPane"] {
       background: var(--bg-card) !important;
       color: var(--text-primary) !important;
     }
 
-    /* ドロップダウン・セレクト */
     [class*="Dropdown"],
     [class*="Select__menu"] {
       background: var(--bg-card) !important;
-      border: none !important;
       border-radius: 8px !important;
     }
 
-    [class*="Select__option"]:hover {
-      background: rgba(146, 107, 255, 0.2) !important;
-    }
-
-    /* モーダル */
     [class*="Modal"],
     [class*="Dialog"] {
       background: var(--bg-card) !important;
-      border: none !important;
       border-radius: 16px !important;
     }
 
-    /* ローディング */
-    [class*="Loader"] {
-      color: var(--accent-primary) !important;
-    }
-
-    /* スクロールバー */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -252,123 +139,25 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: var(--border-color);
+      background: rgba(146, 107, 255, 0.3);
       border-radius: 4px;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-primary);
-    }
-
-    /* ログインページ */
     [class*="Login"] {
       background: var(--bg-dark) !important;
     }
 
     [class*="LoginButton"] {
       background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%) !important;
-      border: none !important;
       border-radius: 8px !important;
     }
 
-    /* タイトル */
     h1, h2, h3 {
       color: var(--text-primary) !important;
     }
 
-    /* リンク */
     a {
       color: var(--accent-primary) !important;
-    }
-
-    a:hover {
-      color: var(--accent-secondary) !important;
-    }
-
-    /* サイドバーの「コンテンツ」ヘッダーを非表示 */
-    [class*="SidebarHeading"],
-    [class*="Sidebar"] > div:first-child > span,
-    [class*="Sidebar"] h2 {
-      display: none !important;
-    }
-
-    /* サイドバーのテキストを小文字に */
-    [class*="SidebarNavLink"] {
-      text-transform: none !important;
-    }
-
-    /* 右上の「新規作成」ボタンを非表示 */
-    [class*="AppHeader"] [class*="Button"],
-    [class*="AppHeader"] button,
-    header [class*="CreateButton"] {
-      display: none !important;
-    }
-
-    /* 中央のArticlesヘッダーボックスを非表示 */
-    [class*="CollectionTop"],
-    [class*="ViewHeader"],
-    [class*="CollectionHeader"] {
-      display: none !important;
-    }
-
-    /* ツールバー（ソート、グリッド等）の位置調整 */
-    [class*="CollectionControls"],
-    [class*="ViewControls"],
-    [class*="ControlBar"] {
-      position: fixed !important;
-      top: 50px !important;
-      right: 30px !important;
-      z-index: 9999 !important;
-      display: flex !important;
-      gap: 12px !important;
-      align-items: center !important;
-    }
-
-    /* ツールバー内のすべてのボタンを表示 */
-    [class*="CollectionControls"] button,
-    [class*="ViewControls"] button,
-    [class*="ControlBar"] button,
-    [class*="CollectionControls"] > *,
-    [class*="ViewControls"] > *,
-    [class*="ControlBar"] > * {
-      display: flex !important;
-      margin: 0 !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-
-    /* カスタム新規作成ボタン */
-    #custom-create-btn {
-      position: fixed;
-      top: 50px;
-      left: calc(50% + 100px);
-      transform: translateX(-50%);
-      z-index: 10000;
-      background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(146, 107, 255, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    #custom-create-btn:hover {
-      box-shadow: 0 6px 25px rgba(146, 107, 255, 0.6);
-      transform: translateX(-50%) translateY(-2px);
-    }
-
-    /* グリッドビューのサムネイル */
-    .custom-thumbnail {
-      width: 100% !important;
-      height: 80px !important;
-      object-fit: cover !important;
-      border-radius: 6px !important;
-      margin-top: 8px !important;
-      display: block !important;
     }
   </style>
 </head>
@@ -410,79 +199,6 @@
       pre { background: #1a1a24; padding: 16px; border-radius: 8px; overflow-x: auto; }
       blockquote { border-left: 4px solid #926bff; padding-left: 16px; margin-left: 0; color: rgba(255,255,255,0.8); }
     `);
-
-    // カスタム新規作成ボタンを追加
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        const createBtn = document.createElement('button');
-        createBtn.id = 'custom-create-btn';
-        createBtn.textContent = '新規作成';
-        createBtn.onclick = function() {
-          window.location.hash = '#/collections/articles/new';
-        };
-        document.body.appendChild(createBtn);
-
-        // エディタ画面ではボタンを非表示
-        function checkEditorPage() {
-          const hash = window.location.hash;
-          if (hash.includes('/new') || hash.includes('/entries/')) {
-            createBtn.style.display = 'none';
-          } else {
-            createBtn.style.display = 'block';
-          }
-        }
-
-        checkEditorPage();
-        window.addEventListener('hashchange', checkEditorPage);
-      }, 1000);
-    });
-
-    // サムネイル表示機能（グリッドビューのみ）
-    let thumbnailMap = {};
-
-    async function loadThumbnails() {
-      try {
-        const response = await fetch('/content/articles.json');
-        if (!response.ok) return;
-        const articles = await response.json();
-        articles.forEach(article => {
-          if (article.thumbnail) {
-            thumbnailMap[article.title] = article.thumbnail;
-          }
-        });
-      } catch (e) {
-        console.log('Thumbnail loading error:', e);
-      }
-    }
-
-    function addThumbnails() {
-      // グリッドビューのカードのみ対象
-      const gridContainer = document.querySelector('[class*="CardsGrid"]');
-      if (!gridContainer) return;
-
-      const cards = gridContainer.querySelectorAll('a[href*="articles"]');
-      cards.forEach(card => {
-        if (card.querySelector('.custom-thumbnail')) return;
-
-        const titleEl = card.querySelector('h2, [class*="Title"], div');
-        if (!titleEl) return;
-
-        const titleText = titleEl.textContent || '';
-        const title = titleText.split(' - ')[0].trim();
-        const thumbnail = thumbnailMap[title];
-
-        if (thumbnail) {
-          const img = document.createElement('img');
-          img.src = thumbnail;
-          img.className = 'custom-thumbnail';
-          card.appendChild(img);
-        }
-      });
-    }
-
-    // 初期ロードとサムネイル追加
-    loadThumbnails();
-    setInterval(addThumbnails, 1500);
   </script>
 </body>
 </html>
