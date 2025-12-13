@@ -390,7 +390,6 @@
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="tools">TOOLS</button>
           <button class="tab-btn" data-tab="articles">ARTICLES</button>
-          <button class="tab-btn" data-tab="videos">VIDEOS</button>
         </div>
 
         <!-- Tools Tab Content -->
@@ -410,16 +409,6 @@
               <!-- 記事はJavaScriptで読み込み -->
             </div>
             <p class="no-items" id="noArticles" style="display: none;">記事はまだありません</p>
-          </div>
-        </div>
-
-        <!-- Videos Tab Content -->
-        <div class="tab-content" id="videosTab">
-          <div class="section-container">
-            <div class="other-grid" id="videosGrid">
-              <!-- 動画はJavaScriptで読み込み -->
-            </div>
-            <p class="no-items" id="noVideos" style="display: none;">動画はまだありません</p>
           </div>
         </div>
       </div>
@@ -443,9 +432,13 @@
       }
     ];
 
-    // 記事・動画データ（JSONから読み込み）
+    // 記事データ
     let articles = [];
-    let videos = [];
+
+    // GitHub設定
+    const GITHUB_REPO = 'okazaki893/portfolio-site';
+    const GITHUB_BRANCH = 'main';
+    const ARTICLES_PATH = 'content/articles';
 
     // アイコンSVG
     const toolIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -454,10 +447,6 @@
 
     const articleIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-    </svg>`;
-
-    const videoIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zM10 8v6l5-3z"/>
     </svg>`;
 
     // ツールカード生成
@@ -489,37 +478,6 @@
           </div>
         </a>
       `;
-    }
-
-    // 動画カード生成
-    function createVideoCard(item) {
-      // YouTubeのサムネイルを取得
-      const videoId = extractYouTubeId(item.youtube_url);
-      const thumbnailUrl = videoId
-        ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
-        : item.thumbnail;
-
-      const thumbnailHtml = thumbnailUrl
-        ? `<div class="card-thumbnail"><img src="${thumbnailUrl}" alt="${item.title}"></div>`
-        : `<div class="card-icon">${videoIconSVG}</div>`;
-
-      return `
-        <a href="${item.youtube_url}" target="_blank" class="other-card">
-          ${thumbnailHtml}
-          <div class="card-content">
-            <h3 class="card-title">${item.title}</h3>
-            <p class="card-description">${item.description || ''}</p>
-            <span class="card-tag">${item.category}</span>
-          </div>
-        </a>
-      `;
-    }
-
-    // YouTube URLからIDを抽出
-    function extractYouTubeId(url) {
-      if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
-      return match ? match[1] : null;
     }
 
     // ツールを表示
@@ -556,43 +514,100 @@
       grid.innerHTML = sorted.map(article => createArticleCard(article)).join('');
     }
 
-    // 動画を表示
-    function renderVideos() {
-      const grid = document.getElementById('videosGrid');
-      const noVideos = document.getElementById('noVideos');
+    // フロントマターをパース
+    function parseFrontMatter(content) {
+      const match = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!match) return {};
 
-      if (videos.length === 0) {
-        noVideos.style.display = 'block';
-        grid.style.display = 'none';
-        return;
-      }
+      const frontMatter = match[1];
+      const meta = {};
 
-      noVideos.style.display = 'none';
-      grid.style.display = 'grid';
-      // 日付順にソート（新しい順）
-      const sorted = [...videos].sort((a, b) => new Date(b.date) - new Date(a.date));
-      grid.innerHTML = sorted.map(video => createVideoCard(video)).join('');
+      frontMatter.split('\n').forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > -1) {
+          const key = line.substring(0, colonIndex).trim();
+          let value = line.substring(colonIndex + 1).trim();
+          if ((value.startsWith('"') && value.endsWith('"')) ||
+              (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+          }
+          meta[key] = value;
+        }
+      });
+
+      return meta;
     }
 
-    // JSONファイルから記事データを読み込み
-    async function loadContent() {
+    // GitHubから記事を読み込み
+    async function loadArticles() {
+      const grid = document.getElementById('articlesGrid');
+
       try {
-        // JSONファイルから記事を読み込み
-        const response = await fetch('content/articles.json');
-        if (response.ok) {
-          articles = await response.json();
+        // GitHubからファイル一覧を取得
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}?ref=${GITHUB_BRANCH}`);
+
+        if (response.status === 404) {
+          articles = [];
+          renderArticles();
+          return;
         }
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch articles');
+        }
+
+        const files = await response.json();
+        articles = [];
+
+        // 各Markdownファイルの情報を取得
+        for (const file of files) {
+          if (file.name.endsWith('.md')) {
+            try {
+              const contentRes = await fetch(file.url);
+              const contentData = await contentRes.json();
+
+              // UTF-8でBase64デコード
+              const binaryString = atob(contentData.content.replace(/\n/g, ''));
+              const bytes = new Uint8Array(binaryString.length);
+              for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+              }
+              const content = new TextDecoder('utf-8').decode(bytes);
+              const meta = parseFrontMatter(content);
+
+              articles.push({
+                slug: file.name.replace('.md', ''),
+                title: meta.title || 'Untitled',
+                date: meta.date || new Date().toISOString(),
+                thumbnail: meta.thumbnail || '',
+                summary: meta.summary || ''
+              });
+            } catch (e) {
+              console.error('Error loading article:', file.name, e);
+            }
+          }
+        }
+
+        renderArticles();
+
       } catch (error) {
         console.error('Error loading articles:', error);
+        // フォールバック: JSONファイルから読み込み
+        try {
+          const jsonResponse = await fetch('content/articles.json');
+          if (jsonResponse.ok) {
+            articles = await jsonResponse.json();
+            renderArticles();
+          }
+        } catch (e) {
+          console.error('Fallback also failed:', e);
+        }
       }
-
-      renderArticles();
-      renderVideos();
     }
 
     // 初期化
     renderTools();
-    loadContent();
+    loadArticles();
 
     // Tab switching
     function switchTab(tabName) {
@@ -609,6 +624,17 @@
         content.classList.remove('active');
       });
       document.getElementById(tabName + 'Tab').classList.add('active');
+
+      // タブ状態を保存
+      localStorage.setItem('other_active_tab', tabName);
+    }
+
+    // 保存されたタブ状態を復元
+    function restoreTab() {
+      const savedTab = localStorage.getItem('other_active_tab');
+      if (savedTab) {
+        switchTab(savedTab);
+      }
     }
 
     // Add click listeners to tab buttons
@@ -617,6 +643,9 @@
         switchTab(btn.dataset.tab);
       });
     });
+
+    // 保存されたタブを復元
+    restoreTab();
 
     // Mobile menu toggle
     function toggleMobileMenu() {
