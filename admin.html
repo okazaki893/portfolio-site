@@ -601,12 +601,6 @@
             <div class="add-form">
               <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規記事追加</h4>
               <input type="text" id="newArticleTitle" placeholder="記事タイトル">
-              <select id="newArticleCategory" style="padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px;">
-                <option value="音楽">音楽</option>
-                <option value="DTM">DTM</option>
-                <option value="動画制作">動画制作</option>
-                <option value="その他">その他</option>
-              </select>
               <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像URL（任意）">
               <input type="text" id="newArticleSummary" placeholder="概要（任意）">
               <textarea id="newArticleBody" placeholder="本文（Markdown形式で記述可能）" style="padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical;"></textarea>
@@ -699,12 +693,6 @@
       <div class="modal-content" style="max-width: 600px;">
         <h3>記事を編集</h3>
         <input type="text" id="editArticleTitle" placeholder="記事タイトル">
-        <select id="editArticleCategory" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; margin-bottom: 15px;">
-          <option value="音楽">音楽</option>
-          <option value="DTM">DTM</option>
-          <option value="動画制作">動画制作</option>
-          <option value="その他">その他</option>
-        </select>
         <input type="text" id="editArticleThumbnail" placeholder="サムネイル画像URL（任意）">
         <input type="text" id="editArticleSummary" placeholder="概要（任意）">
         <textarea id="editArticleBody" placeholder="本文（Markdown形式）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical; margin-bottom: 15px;"></textarea>
@@ -1715,7 +1703,7 @@
           `}
           <div class="video-info">
             <h4>${article.title}</h4>
-            <p style="font-size: 11px;">${dateStr} | ${article.category}</p>
+            <p style="font-size: 11px;">${dateStr}</p>
             <p style="font-size: 11px; color: rgba(255,255,255,0.5);">${article.summary ? article.summary.substring(0, 50) + '...' : ''}</p>
           </div>
           <div class="video-actions">
@@ -1730,7 +1718,6 @@
     // 記事追加
     function addArticle() {
       const title = document.getElementById('newArticleTitle').value.trim();
-      const category = document.getElementById('newArticleCategory').value;
       const thumbnail = document.getElementById('newArticleThumbnail').value.trim();
       const summary = document.getElementById('newArticleSummary').value.trim();
       const body = document.getElementById('newArticleBody').value.trim();
@@ -1749,7 +1736,6 @@
         slug: generateSlug(title),
         title: title,
         date: new Date().toISOString(),
-        category: category,
         thumbnail: thumbnail || null,
         summary: summary || '',
         body: body
@@ -1761,7 +1747,6 @@
 
       // フォームクリア
       document.getElementById('newArticleTitle').value = '';
-      document.getElementById('newArticleCategory').value = '音楽';
       document.getElementById('newArticleThumbnail').value = '';
       document.getElementById('newArticleSummary').value = '';
       document.getElementById('newArticleBody').value = '';
@@ -1784,7 +1769,6 @@
       editArticleIndex = index;
       const article = articlesList[index];
       document.getElementById('editArticleTitle').value = article.title;
-      document.getElementById('editArticleCategory').value = article.category;
       document.getElementById('editArticleThumbnail').value = article.thumbnail || '';
       document.getElementById('editArticleSummary').value = article.summary || '';
       document.getElementById('editArticleBody').value = article.body || '';
@@ -1802,7 +1786,6 @@
       if (editArticleIndex === -1) return;
 
       const title = document.getElementById('editArticleTitle').value.trim();
-      const category = document.getElementById('editArticleCategory').value;
       const thumbnail = document.getElementById('editArticleThumbnail').value.trim();
       const summary = document.getElementById('editArticleSummary').value.trim();
       const body = document.getElementById('editArticleBody').value.trim();
@@ -1821,7 +1804,6 @@
       articlesList[editArticleIndex] = {
         ...articlesList[editArticleIndex],
         title: title,
-        category: category,
         thumbnail: thumbnail || null,
         summary: summary || '',
         body: body
