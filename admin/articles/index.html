@@ -76,7 +76,7 @@
     [class*="EntriesCollection"],
     [class*="Entries"] {
       max-width: 800px !important;
-      margin: 100px auto 0 !important;
+      margin: 120px auto 0 !important;
       padding: 20px !important;
       background: var(--bg-card) !important;
       border-radius: 16px !important;
@@ -320,15 +320,21 @@
       right: 30px !important;
       z-index: 9999 !important;
       display: flex !important;
-      gap: 10px !important;
+      gap: 12px !important;
       align-items: center !important;
     }
 
-    /* ツールバー内のボタンが重ならないように */
+    /* ツールバー内のすべてのボタンを表示 */
     [class*="CollectionControls"] button,
     [class*="ViewControls"] button,
-    [class*="ControlBar"] button {
+    [class*="ControlBar"] button,
+    [class*="CollectionControls"] > *,
+    [class*="ViewControls"] > *,
+    [class*="ControlBar"] > * {
+      display: flex !important;
       margin: 0 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
     /* カスタム新規作成ボタン */
