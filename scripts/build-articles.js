@@ -57,7 +57,6 @@ function buildArticlesList() {
       title: meta.title || 'Untitled',
       date: meta.date || new Date().toISOString(),
       thumbnail: meta.thumbnail || null,
-      category: meta.category || 'その他',
       summary: meta.summary || ''
     });
   }

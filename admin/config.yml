@@ -28,6 +28,5 @@ collections:
       - { label: "タイトル", name: "title", widget: "string" }
       - { label: "公開日", name: "date", widget: "datetime" }
       - { label: "サムネイル", name: "thumbnail", widget: "image", required: false }
-      - { label: "カテゴリー", name: "category", widget: "select", options: ["音楽", "DTM", "動画制作", "その他"] }
       - { label: "概要", name: "summary", widget: "text", required: false }
       - { label: "本文", name: "body", widget: "markdown" }

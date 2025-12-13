@@ -474,7 +474,6 @@
           <button class="tab-button" onclick="switchTab('3d')">3D Animation</button>
           <button class="tab-button" onclick="switchTab('music')">Music</button>
           <button class="tab-button" onclick="switchTab('planning')">Planning</button>
-          <button class="tab-button" onclick="switchTab('articles')">Articles</button>
         </div>
 
         <!-- TOP Tab Content -->
@@ -552,23 +551,6 @@
 
         </div>
 
-        <!-- Articles Tab Content -->
-        <div class="tab-content" id="tab-articles">
-          <div class="admin-section">
-            <h3>Articles 記事管理</h3>
-            <div class="video-list" id="articlesList"></div>
-
-            <div class="add-form">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規記事追加</h4>
-              <input type="text" id="newArticleTitle" placeholder="記事タイトル">
-              <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像URL（任意）">
-              <input type="text" id="newArticleSummary" placeholder="概要（任意）">
-              <textarea id="newArticleBody" placeholder="本文（Markdown形式で記述可能）" style="padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical;"></textarea>
-              <button onclick="addArticle()">記事を追加</button>
-            </div>
-          </div>
-
-        </div>
       </div>
     </div>
 
@@ -639,21 +621,6 @@
       </div>
     </div>
 
-    <!-- Edit Article Modal -->
-    <div class="modal" id="editArticleModal">
-      <div class="modal-content" style="max-width: 600px;">
-        <h3>記事を編集</h3>
-        <input type="text" id="editArticleTitle" placeholder="記事タイトル">
-        <input type="text" id="editArticleThumbnail" placeholder="サムネイル画像URL（任意）">
-        <input type="text" id="editArticleSummary" placeholder="概要（任意）">
-        <textarea id="editArticleBody" placeholder="本文（Markdown形式）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical; margin-bottom: 15px;"></textarea>
-        <div class="modal-buttons">
-          <button class="btn-cancel" onclick="closeArticleModal()">キャンセル</button>
-          <button class="btn-save" onclick="saveArticleEdit()">保存</button>
-        </div>
-      </div>
-    </div>
-
     <div class="save-status" id="saveStatus">保存しました</div>
 
     <!-- Save Button -->
@@ -672,7 +639,6 @@
     const ANIMATION3D_STORAGE_KEY = 'portfolio_3d_animation';
     const PLANNING_STORAGE_KEY = 'portfolio_planning';
     const TOP_STORAGE_KEY = 'portfolio_top_videos';
-    const ARTICLES_STORAGE_KEY = 'portfolio_articles';
 
     // デフォルトの動画データ
     const defaultVideos = [
@@ -700,13 +666,11 @@
     let animation3dList = [];
     let planningList = [];
     let topSlots = [];
-    let articlesList = [];
     let editIndex = -1;
     let editMusicIndex = -1;
     let edit3dIndex = -1;
     let editPlanningIndex = -1;
     let editTopIndex = -1;
-    let editArticleIndex = -1;
 
     // TOPページのスロット定義（位置は固定、動画情報のみ編集可能）
     const defaultTopSlots = [
@@ -802,15 +766,6 @@
         savePlanning();
       }
 
-      // 記事データ
-      const savedArticles = localStorage.getItem(ARTICLES_STORAGE_KEY);
-      if (savedArticles) {
-        articlesList = JSON.parse(savedArticles);
-      } else {
-        articlesList = [];
-        saveArticles();
-      }
-
       // ログイン状態確認
       if (sessionStorage.getItem('admin_logged_in') === 'true') {
         showAdminPanel();
@@ -847,7 +802,6 @@
       render3dList();
       renderMusicList();
       renderPlanningList();
-      renderArticlesList();
     }
 
     // すべてのデータを保存
@@ -857,7 +811,6 @@
       save3dVideos();
       saveMusic();
       savePlanning();
-      saveArticles();
 
       // ボタンの見た目を変更
       const btn = document.querySelector('.save-all-btn');
@@ -1608,170 +1561,6 @@
     }
 
     // ========== ここまでPlanning Progress管理機能 ==========
-
-    // ========== Articles管理機能 ==========
-
-    // スラッグを生成
-    function generateSlug(title) {
-      const timestamp = Date.now();
-      const cleanTitle = title
-        .toLowerCase()
-        .replace(/[^\w\s\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/g, '')
-        .replace(/\s+/g, '-')
-        .substring(0, 30);
-      return `${cleanTitle}-${timestamp}`;
-    }
-
-    // 記事リスト表示
-    function renderArticlesList() {
-      const list = document.getElementById('articlesList');
-      list.innerHTML = '';
-
-      if (articlesList.length === 0) {
-        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">記事がまだありません</p>';
-        return;
-      }
-
-      // 日付順にソート（新しい順）
-      const sorted = [...articlesList].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      sorted.forEach((article, sortedIndex) => {
-        const originalIndex = articlesList.findIndex(a => a.slug === article.slug);
-        const dateStr = new Date(article.date).toLocaleDateString('ja-JP');
-
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `
-          <div class="video-number" style="min-width: 40px;">
-            <span style="color: #926bff; font-weight: bold;">${sortedIndex + 1}</span>
-          </div>
-          ${article.thumbnail ? `
-            <img src="${article.thumbnail}" alt="${article.title}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">
-          ` : `
-            <div style="width: 120px; height: 68px; background: rgba(146, 107, 255, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 24px;">📝</span>
-            </div>
-          `}
-          <div class="video-info">
-            <h4>${article.title}</h4>
-            <p style="font-size: 11px;">${dateStr}</p>
-            <p style="font-size: 11px; color: rgba(255,255,255,0.5);">${article.summary ? article.summary.substring(0, 50) + '...' : ''}</p>
-          </div>
-          <div class="video-actions">
-            <button class="btn-edit" onclick="openArticleEdit(${originalIndex})">編集</button>
-            <button class="btn-delete" onclick="deleteArticle(${originalIndex})">削除</button>
-          </div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    // 記事追加
-    function addArticle() {
-      const title = document.getElementById('newArticleTitle').value.trim();
-      const thumbnail = document.getElementById('newArticleThumbnail').value.trim();
-      const summary = document.getElementById('newArticleSummary').value.trim();
-      const body = document.getElementById('newArticleBody').value.trim();
-
-      if (!title) {
-        alert('タイトルは必須です');
-        return;
-      }
-
-      if (!body) {
-        alert('本文は必須です');
-        return;
-      }
-
-      const newArticle = {
-        slug: generateSlug(title),
-        title: title,
-        date: new Date().toISOString(),
-        thumbnail: thumbnail || null,
-        summary: summary || '',
-        body: body
-      };
-
-      articlesList.unshift(newArticle);
-      saveArticles();
-      renderArticlesList();
-
-      // フォームクリア
-      document.getElementById('newArticleTitle').value = '';
-      document.getElementById('newArticleThumbnail').value = '';
-      document.getElementById('newArticleSummary').value = '';
-      document.getElementById('newArticleBody').value = '';
-
-      showSaveStatus();
-    }
-
-    // 記事削除
-    function deleteArticle(index) {
-      if (confirm(`「${articlesList[index].title}」を削除しますか？`)) {
-        articlesList.splice(index, 1);
-        saveArticles();
-        renderArticlesList();
-        showSaveStatus();
-      }
-    }
-
-    // 記事編集モーダルを開く
-    function openArticleEdit(index) {
-      editArticleIndex = index;
-      const article = articlesList[index];
-      document.getElementById('editArticleTitle').value = article.title;
-      document.getElementById('editArticleThumbnail').value = article.thumbnail || '';
-      document.getElementById('editArticleSummary').value = article.summary || '';
-      document.getElementById('editArticleBody').value = article.body || '';
-      document.getElementById('editArticleModal').style.display = 'flex';
-    }
-
-    // 記事モーダルを閉じる
-    function closeArticleModal() {
-      document.getElementById('editArticleModal').style.display = 'none';
-      editArticleIndex = -1;
-    }
-
-    // 記事編集を保存
-    function saveArticleEdit() {
-      if (editArticleIndex === -1) return;
-
-      const title = document.getElementById('editArticleTitle').value.trim();
-      const thumbnail = document.getElementById('editArticleThumbnail').value.trim();
-      const summary = document.getElementById('editArticleSummary').value.trim();
-      const body = document.getElementById('editArticleBody').value.trim();
-
-      if (!title) {
-        alert('タイトルは必須です');
-        return;
-      }
-
-      if (!body) {
-        alert('本文は必須です');
-        return;
-      }
-
-      // 既存の記事を更新（slugとdateは維持）
-      articlesList[editArticleIndex] = {
-        ...articlesList[editArticleIndex],
-        title: title,
-        thumbnail: thumbnail || null,
-        summary: summary || '',
-        body: body
-      };
-
-      saveArticles();
-      renderArticlesList();
-      closeArticleModal();
-      showSaveStatus();
-    }
-
-    // 記事データを保存
-    function saveArticles() {
-      localStorage.setItem(ARTICLES_STORAGE_KEY, JSON.stringify(articlesList));
-    }
-
-    // ========== ここまでArticles管理機能 ==========
 
     // ========== タブ切り替え機能 ==========
 

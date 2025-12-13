@@ -8,7 +8,12 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nAdd Other page with BPM measurement tool\n\n- Add Other menu item to all pages navigation\n- Create Other page with tabs for Tools and Articles\n- Add BPM measurement tool with tap/space functionality\n- Display BPM with 2 decimal places and history tracking\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push)",
       "Bash(dir:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(echo:*)",
+      "Bash(node:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "WebFetch(domain:note.com)"
     ]
   }
 }

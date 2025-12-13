@@ -574,16 +574,17 @@
       grid.innerHTML = sorted.map(video => createVideoCard(video)).join('');
     }
 
-    // localStorageから記事データを読み込み
-    function loadContent() {
-      // localStorageから記事を読み込み
-      const savedArticles = localStorage.getItem('portfolio_articles');
-      if (savedArticles) {
-        articles = JSON.parse(savedArticles);
+    // JSONファイルから記事データを読み込み
+    async function loadContent() {
+      try {
+        // JSONファイルから記事を読み込み
+        const response = await fetch('content/articles.json');
+        if (response.ok) {
+          articles = await response.json();
+        }
+      } catch (error) {
+        console.error('Error loading articles:', error);
       }
-
-      // localStorageから動画を読み込み（将来用）
-      // 現在は空のまま
 
       renderArticles();
       renderVideos();
