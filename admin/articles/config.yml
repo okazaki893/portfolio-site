@@ -15,8 +15,8 @@ locale: "ja"
 collections:
   # 記事コレクション
   - name: "articles"
-    label: "ARTICLES"
-    label_singular: "Article"
+    label: "Articles"
+    label_singular: "記事"
     folder: "content/articles"
     create: true
     slug: "{{slug}}"

@@ -227,6 +227,40 @@
     a:hover {
       color: var(--accent-secondary) !important;
     }
+
+    /* サイドバーの「コンテンツ」ヘッダーを非表示 */
+    [class*="SidebarHeading"],
+    [class*="Sidebar"] > div:first-child > span,
+    [class*="Sidebar"] h2 {
+      display: none !important;
+    }
+
+    /* 右上の「新規作成」ボタンを非表示 */
+    [class*="AppHeader"] [class*="Button"],
+    [class*="AppHeader"] button,
+    header [class*="CreateButton"],
+    [class*="CollectionTop"] > [class*="Button"]:last-child {
+      display: none !important;
+    }
+
+    /* 記事一覧上部の作成ボタンのスタイル修正 */
+    [class*="ObjectWidgetTopBar"],
+    [class*="ListCardTop"],
+    [class*="TopBar"] {
+      background: var(--bg-card) !important;
+    }
+
+    /* 「Articlesを作成」ボタンの背景を修正 */
+    [class*="CollectionTop"],
+    [class*="ViewHeader"] {
+      background: var(--bg-dark) !important;
+    }
+
+    [class*="CollectionTop"] [class*="Button"],
+    [class*="ViewHeader"] [class*="Button"] {
+      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%) !important;
+      border: none !important;
+    }
   </style>
 </head>
 <body>
@@ -267,6 +301,22 @@
       pre { background: #1a1a24; padding: 16px; border-radius: 8px; overflow-x: auto; }
       blockquote { border-left: 4px solid #926bff; padding-left: 16px; margin-left: 0; color: rgba(255,255,255,0.8); }
     `);
+
+    // ボタンテキストを「新規作成」に変更
+    const observer = new MutationObserver(function(mutations) {
+      const buttons = document.querySelectorAll('button, [class*="Button"]');
+      buttons.forEach(function(btn) {
+        if (btn.textContent.includes('を作成') || btn.textContent.includes('New')) {
+          btn.textContent = '新規作成';
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
   </script>
 </body>
 </html>
