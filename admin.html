@@ -474,6 +474,7 @@
           <button class="tab-button" onclick="switchTab('3d')">3D Animation</button>
           <button class="tab-button" onclick="switchTab('music')">Music</button>
           <button class="tab-button" onclick="switchTab('planning')">Planning</button>
+          <button class="tab-button" onclick="switchTab('articles')">Articles</button>
         </div>
 
         <!-- TOP Tab Content -->
@@ -551,6 +552,58 @@
 
         </div>
 
+        <!-- Articles Tab Content -->
+        <div class="tab-content" id="tab-articles">
+          <div class="admin-section">
+            <h3>記事管理</h3>
+
+            <!-- GitHub認証状態 -->
+            <div id="githubAuthStatus" style="margin-bottom: 20px; padding: 15px; background: rgba(146, 107, 255, 0.1); border-radius: 8px;">
+              <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <span id="authStatusText" style="color: rgba(255,255,255,0.6);">GitHub未認証</span>
+                <div id="tokenInputContainer">
+                  <input type="password" id="githubTokenInput" placeholder="GitHub Personal Access Token" style="padding: 8px 12px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 6px; color: #fff; width: 280px;">
+                  <button onclick="saveGitHubToken()" style="margin-left: 8px; padding: 8px 16px; background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer;">保存</button>
+                </div>
+                <button id="githubLogoutBtn" onclick="logoutGitHub()" style="display: none; padding: 8px 16px; background: rgba(255, 107, 107, 0.8); border: none; border-radius: 6px; color: #fff; cursor: pointer;">ログアウト</button>
+              </div>
+              <p style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 10px;">
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=Portfolio%20Admin" target="_blank" style="color: #926bff;">GitHub でトークンを作成</a>（repo スコープが必要です）
+              </p>
+            </div>
+
+            <!-- 記事一覧 -->
+            <div class="video-list" id="articlesList" style="max-height: 500px;">
+              <p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
+            </div>
+
+            <!-- 画像アップロード -->
+            <div class="add-form" style="border-top: none; padding-top: 0; margin-top: 0;">
+              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">画像アップロード</h4>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
+                <button onclick="document.getElementById('imageUploadInput').click()" style="padding: 12px 20px; background: rgba(146, 107, 255, 0.2); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; cursor: pointer;">画像を選択</button>
+                <span id="selectedFileName" style="color: rgba(255,255,255,0.5); font-size: 13px;">ファイルが選択されていません</span>
+                <button onclick="uploadImage()" style="padding: 12px 20px; background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%); border: none; border-radius: 8px; color: #fff; cursor: pointer;">アップロード</button>
+              </div>
+              <div id="uploadedImagePath" style="margin-top: 10px; display: none;">
+                <p style="color: #6bff6b; font-size: 13px;">アップロード完了: <code id="imagePathCode" style="background: rgba(10,10,15,0.8); padding: 4px 8px; border-radius: 4px; user-select: all;"></code></p>
+                <button onclick="copyImagePath()" style="margin-top: 5px; padding: 6px 12px; background: rgba(146, 107, 255, 0.3); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-size: 12px;">パスをコピー</button>
+              </div>
+            </div>
+
+            <div class="add-form">
+              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規記事作成</h4>
+              <input type="text" id="newArticleTitle" placeholder="記事タイトル">
+              <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/image.jpg）">
+              <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
+              <textarea id="newArticleBody" placeholder="本文（Markdown形式）&#10;&#10;画像を挿入する場合: ![画像の説明](/content/uploads/ファイル名.jpg)" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 200px; resize: vertical; font-family: monospace;"></textarea>
+              <button onclick="createArticle()">記事を作成</button>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
 
@@ -617,6 +670,23 @@
         <div class="modal-buttons">
           <button class="btn-cancel" onclick="closePlanningModal()">キャンセル</button>
           <button class="btn-save" onclick="savePlanningEdit()">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Article Modal -->
+    <div class="modal" id="editArticleModal">
+      <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+        <h3>記事を編集</h3>
+        <input type="hidden" id="editArticleSlug">
+        <input type="hidden" id="editArticleSha">
+        <input type="text" id="editArticleTitle" placeholder="タイトル">
+        <input type="text" id="editArticleThumbnail" placeholder="サムネイル画像パス（任意）">
+        <textarea id="editArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
+        <textarea id="editArticleBody" placeholder="本文（Markdown形式）" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 300px; resize: vertical; font-family: monospace;"></textarea>
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="closeArticleModal()">キャンセル</button>
+          <button class="btn-save" onclick="saveArticleEdit()">保存</button>
         </div>
       </div>
     </div>
@@ -1584,6 +1654,514 @@
 
     // ========== ここまでタブ切り替え機能 ==========
 
+    // ========== Articles管理機能（GitHub API） ==========
+
+    const GITHUB_REPO = 'okazaki893/portfolio-site';
+    const GITHUB_BRANCH = 'main';
+    const ARTICLES_PATH = 'content/articles';
+    const GITHUB_TOKEN_KEY = 'github_access_token';
+
+    let articlesList = [];
+
+    // GitHub Personal Access Tokenを保存
+    async function saveGitHubToken() {
+      const token = document.getElementById('githubTokenInput').value.trim();
+      if (!token) {
+        alert('トークンを入力してください');
+        return;
+      }
+
+      // トークンの有効性をチェック
+      try {
+        const response = await fetch('https://api.github.com/user', {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if (!response.ok) {
+          alert('無効なトークンです');
+          return;
+        }
+
+        localStorage.setItem(GITHUB_TOKEN_KEY, token);
+        document.getElementById('githubTokenInput').value = '';
+        updateAuthStatus(true);
+        loadArticles();
+
+      } catch (error) {
+        console.error('Token validation error:', error);
+        alert('トークンの検証に失敗しました');
+      }
+    }
+
+    // 認証状態を更新
+    function updateAuthStatus(authenticated) {
+      const statusText = document.getElementById('authStatusText');
+      const tokenInputContainer = document.getElementById('tokenInputContainer');
+      const logoutBtn = document.getElementById('githubLogoutBtn');
+
+      if (authenticated) {
+        statusText.textContent = 'GitHub認証済み';
+        statusText.style.color = '#6bff6b';
+        tokenInputContainer.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+      } else {
+        statusText.textContent = 'GitHub未認証';
+        statusText.style.color = 'rgba(255,255,255,0.6)';
+        tokenInputContainer.style.display = 'block';
+        logoutBtn.style.display = 'none';
+      }
+    }
+
+    // GitHubログアウト
+    function logoutGitHub() {
+      localStorage.removeItem(GITHUB_TOKEN_KEY);
+      updateAuthStatus(false);
+      articlesList = [];
+      renderArticlesList();
+    }
+
+    // 記事一覧を取得
+    async function loadArticles() {
+      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+      if (!token) {
+        renderArticlesList();
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}?ref=${GITHUB_BRANCH}`, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if (response.status === 404) {
+          // フォルダが存在しない場合
+          articlesList = [];
+          renderArticlesList();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch articles');
+        }
+
+        const files = await response.json();
+        articlesList = [];
+
+        // 各Markdownファイルの情報を取得
+        for (const file of files) {
+          if (file.name.endsWith('.md')) {
+            const contentRes = await fetch(file.url, {
+              headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+              }
+            });
+            const contentData = await contentRes.json();
+            const content = atob(contentData.content);
+            const meta = parseArticleFrontMatter(content);
+
+            articlesList.push({
+              slug: file.name.replace('.md', ''),
+              sha: contentData.sha,
+              title: meta.title || 'Untitled',
+              date: meta.date || new Date().toISOString(),
+              thumbnail: meta.thumbnail || '',
+              summary: meta.summary || '',
+              body: extractArticleBody(content)
+            });
+          }
+        }
+
+        // 日付順でソート（新しい順）
+        articlesList.sort((a, b) => new Date(b.date) - new Date(a.date));
+        renderArticlesList();
+
+      } catch (error) {
+        console.error('Error loading articles:', error);
+        document.getElementById('articlesList').innerHTML = '<p style="color: #ff6b6b; text-align: center; padding: 20px;">記事の読み込みに失敗しました</p>';
+      }
+    }
+
+    // フロントマターをパース
+    function parseArticleFrontMatter(content) {
+      const match = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!match) return {};
+
+      const frontMatter = match[1];
+      const meta = {};
+
+      frontMatter.split('\n').forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > -1) {
+          const key = line.substring(0, colonIndex).trim();
+          let value = line.substring(colonIndex + 1).trim();
+          if ((value.startsWith('"') && value.endsWith('"')) ||
+              (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+          }
+          meta[key] = value;
+        }
+      });
+
+      return meta;
+    }
+
+    // 本文を抽出
+    function extractArticleBody(content) {
+      const match = content.match(/^---\n[\s\S]*?\n---\n([\s\S]*)$/);
+      return match ? match[1].trim() : content;
+    }
+
+    // 記事一覧を表示
+    function renderArticlesList() {
+      const list = document.getElementById('articlesList');
+
+      if (articlesList.length === 0) {
+        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">記事がまだありません</p>';
+        return;
+      }
+
+      list.innerHTML = '';
+
+      articlesList.forEach((article, index) => {
+        const date = new Date(article.date).toLocaleDateString('ja-JP');
+
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+          <div class="video-number" style="min-width: 40px;">
+            <span style="color: #926bff; font-weight: bold;">${index + 1}</span>
+          </div>
+          ${article.thumbnail ? `
+            <img src="${article.thumbnail}" alt="${article.title}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">
+          ` : `
+            <div style="width: 120px; height: 68px; background: rgba(146, 107, 255, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 24px;">📝</span>
+            </div>
+          `}
+          <div class="video-info">
+            <h4>${article.title}</h4>
+            <p>${date}</p>
+            ${article.summary ? `<p style="font-size: 11px; color: rgba(255,255,255,0.5);">${article.summary.substring(0, 50)}${article.summary.length > 50 ? '...' : ''}</p>` : ''}
+          </div>
+          <div class="video-actions">
+            <button class="btn-edit" onclick="openArticleEdit(${index})">編集</button>
+            <button class="btn-delete" onclick="deleteArticle(${index})">削除</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    // 記事を作成
+    async function createArticle() {
+      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+      if (!token) {
+        alert('GitHubで認証してください');
+        return;
+      }
+
+      const title = document.getElementById('newArticleTitle').value.trim();
+      const thumbnail = document.getElementById('newArticleThumbnail').value.trim();
+      const summary = document.getElementById('newArticleSummary').value.trim();
+      const body = document.getElementById('newArticleBody').value.trim();
+
+      if (!title) {
+        alert('タイトルは必須です');
+        return;
+      }
+
+      // スラッグを生成（日本語対応）
+      const slug = title.toLowerCase()
+        .replace(/[^\w\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'article-' + Date.now();
+
+      const date = new Date().toISOString();
+
+      // Markdownコンテンツを生成
+      let content = `---\ntitle: "${title}"\ndate: ${date}\n`;
+      if (thumbnail) content += `thumbnail: "${thumbnail}"\n`;
+      if (summary) content += `summary: "${summary}"\n`;
+      content += `---\n\n${body}`;
+
+      try {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}/${slug}.md`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Add article: ${title}`,
+            content: btoa(unescape(encodeURIComponent(content))),
+            branch: GITHUB_BRANCH
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create article');
+        }
+
+        // フォームをクリア
+        document.getElementById('newArticleTitle').value = '';
+        document.getElementById('newArticleThumbnail').value = '';
+        document.getElementById('newArticleSummary').value = '';
+        document.getElementById('newArticleBody').value = '';
+
+        showSaveStatus();
+        loadArticles();
+
+      } catch (error) {
+        console.error('Error creating article:', error);
+        alert('記事の作成に失敗しました');
+      }
+    }
+
+    // 記事編集モーダルを開く
+    function openArticleEdit(index) {
+      const article = articlesList[index];
+      document.getElementById('editArticleSlug').value = article.slug;
+      document.getElementById('editArticleSha').value = article.sha;
+      document.getElementById('editArticleTitle').value = article.title;
+      document.getElementById('editArticleThumbnail').value = article.thumbnail || '';
+      document.getElementById('editArticleSummary').value = article.summary || '';
+      document.getElementById('editArticleBody').value = article.body || '';
+      document.getElementById('editArticleModal').style.display = 'flex';
+    }
+
+    // 記事モーダルを閉じる
+    function closeArticleModal() {
+      document.getElementById('editArticleModal').style.display = 'none';
+    }
+
+    // 記事編集を保存
+    async function saveArticleEdit() {
+      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+      if (!token) {
+        alert('GitHubで認証してください');
+        return;
+      }
+
+      const slug = document.getElementById('editArticleSlug').value;
+      const sha = document.getElementById('editArticleSha').value;
+      const title = document.getElementById('editArticleTitle').value.trim();
+      const thumbnail = document.getElementById('editArticleThumbnail').value.trim();
+      const summary = document.getElementById('editArticleSummary').value.trim();
+      const body = document.getElementById('editArticleBody').value.trim();
+
+      if (!title) {
+        alert('タイトルは必須です');
+        return;
+      }
+
+      // 既存の記事を見つけて日付を保持
+      const existingArticle = articlesList.find(a => a.slug === slug);
+      const date = existingArticle ? existingArticle.date : new Date().toISOString();
+
+      // Markdownコンテンツを生成
+      let content = `---\ntitle: "${title}"\ndate: ${date}\n`;
+      if (thumbnail) content += `thumbnail: "${thumbnail}"\n`;
+      if (summary) content += `summary: "${summary}"\n`;
+      content += `---\n\n${body}`;
+
+      try {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}/${slug}.md`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Update article: ${title}`,
+            content: btoa(unescape(encodeURIComponent(content))),
+            sha: sha,
+            branch: GITHUB_BRANCH
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update article');
+        }
+
+        closeArticleModal();
+        showSaveStatus();
+        loadArticles();
+
+      } catch (error) {
+        console.error('Error updating article:', error);
+        alert('記事の更新に失敗しました');
+      }
+    }
+
+    // 記事を削除
+    async function deleteArticle(index) {
+      const article = articlesList[index];
+
+      if (!confirm(`「${article.title}」を削除しますか？`)) {
+        return;
+      }
+
+      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+      if (!token) {
+        alert('GitHubで認証してください');
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}/${article.slug}.md`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Delete article: ${article.title}`,
+            sha: article.sha,
+            branch: GITHUB_BRANCH
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete article');
+        }
+
+        showSaveStatus();
+        loadArticles();
+
+      } catch (error) {
+        console.error('Error deleting article:', error);
+        alert('記事の削除に失敗しました');
+      }
+    }
+
+    // ========== 画像アップロード機能 ==========
+
+    const UPLOADS_PATH = 'content/uploads';
+
+    // ファイル選択時にファイル名を表示
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageInput = document.getElementById('imageUploadInput');
+      if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+          const fileName = e.target.files[0]?.name || 'ファイルが選択されていません';
+          document.getElementById('selectedFileName').textContent = fileName;
+        });
+      }
+    });
+
+    // 画像をアップロード
+    async function uploadImage() {
+      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+      if (!token) {
+        alert('GitHubで認証してください');
+        return;
+      }
+
+      const fileInput = document.getElementById('imageUploadInput');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert('画像ファイルを選択してください');
+        return;
+      }
+
+      // ファイル名を生成（日時 + 元のファイル名）
+      const timestamp = Date.now();
+      const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const fileName = `${timestamp}_${safeFileName}`;
+
+      try {
+        // ファイルをBase64に変換
+        const base64Content = await fileToBase64(file);
+
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${UPLOADS_PATH}/${fileName}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Upload image: ${fileName}`,
+            content: base64Content,
+            branch: GITHUB_BRANCH
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to upload image');
+        }
+
+        // アップロード成功
+        const imagePath = `/${UPLOADS_PATH}/${fileName}`;
+        document.getElementById('imagePathCode').textContent = imagePath;
+        document.getElementById('uploadedImagePath').style.display = 'block';
+
+        // フォームをリセット
+        fileInput.value = '';
+        document.getElementById('selectedFileName').textContent = 'ファイルが選択されていません';
+
+        showSaveStatus();
+
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('画像のアップロードに失敗しました');
+      }
+    }
+
+    // ファイルをBase64に変換
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // data:image/xxx;base64, の部分を除去
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // 画像パスをコピー
+    function copyImagePath() {
+      const path = document.getElementById('imagePathCode').textContent;
+      navigator.clipboard.writeText(path).then(() => {
+        alert('パスをコピーしました');
+      }).catch(() => {
+        // フォールバック
+        const textArea = document.createElement('textarea');
+        textArea.value = path;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('パスをコピーしました');
+      });
+    }
+
+    // ========== ここまで画像アップロード機能 ==========
+
+    // 初期化時にGitHub認証状態をチェック
+    function initArticles() {
+      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+      if (token) {
+        updateAuthStatus(true);
+        loadArticles();
+      }
+    }
+
+    // ========== ここまでArticles管理機能 ==========
+
     // Enterキーでログイン
     document.getElementById('passwordInput').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
@@ -1593,6 +2171,7 @@
 
     // 初期化実行
     init();
+    initArticles();
   </script>
 </body>
 </html>
