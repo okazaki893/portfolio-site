@@ -165,6 +165,23 @@
       fill: var(--accent-primary, #926bff);
     }
 
+    .card-thumbnail {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .card-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .other-card:hover .card-thumbnail img {
+      transform: scale(1.05);
+    }
+
     .card-content {
       padding: 20px;
     }
@@ -376,6 +393,7 @@
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="tools">TOOLS</button>
           <button class="tab-btn" data-tab="articles">ARTICLES</button>
+          <button class="tab-btn" data-tab="videos">VIDEOS</button>
         </div>
 
         <!-- Tools Tab Content -->
@@ -397,12 +415,22 @@
             <p class="no-items" id="noArticles" style="display: none;">記事はまだありません</p>
           </div>
         </div>
+
+        <!-- Videos Tab Content -->
+        <div class="tab-content" id="videosTab">
+          <div class="section-container">
+            <div class="other-grid" id="videosGrid">
+              <!-- 動画はJavaScriptで読み込み -->
+            </div>
+            <p class="no-items" id="noVideos" style="display: none;">動画はまだありません</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // サンプルデータ（後で編集可能）
+    // ツールデータ
     const tools = [
       {
         title: 'BPM測定（タップ）',
@@ -418,30 +446,28 @@
       }
     ];
 
-    const articles = [
-      // {
-      //   title: '記事タイトル',
-      //   description: '記事の説明',
-      //   link: 'https://example.com',
-      //   tag: 'Tutorial'
-      // }
-    ];
+    // 記事・動画データ（JSONから読み込み）
+    let articles = [];
+    let videos = [];
 
-    // ツールアイコンSVG
+    // アイコンSVG
     const toolIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
     </svg>`;
 
-    // 記事アイコンSVG
     const articleIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
     </svg>`;
 
-    // カードを生成
-    function createCard(item, iconSVG) {
+    const videoIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zM10 8v6l5-3z"/>
+    </svg>`;
+
+    // ツールカード生成
+    function createToolCard(item) {
       return `
-        <a href="${item.link}" target="_blank" class="other-card">
-          <div class="card-icon">${iconSVG}</div>
+        <a href="${item.link}" class="other-card">
+          <div class="card-icon">${toolIconSVG}</div>
           <div class="card-content">
             <h3 class="card-title">${item.title}</h3>
             <p class="card-description">${item.description}</p>
@@ -449,6 +475,55 @@
           </div>
         </a>
       `;
+    }
+
+    // 記事カード生成
+    function createArticleCard(item) {
+      const thumbnailHtml = item.thumbnail
+        ? `<div class="card-thumbnail"><img src="${item.thumbnail}" alt="${item.title}"></div>`
+        : `<div class="card-icon">${articleIconSVG}</div>`;
+
+      return `
+        <a href="articles/${item.slug}" class="other-card">
+          ${thumbnailHtml}
+          <div class="card-content">
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-description">${item.summary || ''}</p>
+            <span class="card-tag">${item.category}</span>
+          </div>
+        </a>
+      `;
+    }
+
+    // 動画カード生成
+    function createVideoCard(item) {
+      // YouTubeのサムネイルを取得
+      const videoId = extractYouTubeId(item.youtube_url);
+      const thumbnailUrl = videoId
+        ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+        : item.thumbnail;
+
+      const thumbnailHtml = thumbnailUrl
+        ? `<div class="card-thumbnail"><img src="${thumbnailUrl}" alt="${item.title}"></div>`
+        : `<div class="card-icon">${videoIconSVG}</div>`;
+
+      return `
+        <a href="${item.youtube_url}" target="_blank" class="other-card">
+          ${thumbnailHtml}
+          <div class="card-content">
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-description">${item.description || ''}</p>
+            <span class="card-tag">${item.category}</span>
+          </div>
+        </a>
+      `;
+    }
+
+    // YouTube URLからIDを抽出
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+      return match ? match[1] : null;
     }
 
     // ツールを表示
@@ -464,7 +539,7 @@
 
       noTools.style.display = 'none';
       grid.style.display = 'grid';
-      grid.innerHTML = tools.map(tool => createCard(tool, toolIconSVG)).join('');
+      grid.innerHTML = tools.map(tool => createToolCard(tool)).join('');
     }
 
     // 記事を表示
@@ -480,12 +555,58 @@
 
       noArticles.style.display = 'none';
       grid.style.display = 'grid';
-      grid.innerHTML = articles.map(article => createCard(article, articleIconSVG)).join('');
+      // 日付順にソート（新しい順）
+      const sorted = [...articles].sort((a, b) => new Date(b.date) - new Date(a.date));
+      grid.innerHTML = sorted.map(article => createArticleCard(article)).join('');
+    }
+
+    // 動画を表示
+    function renderVideos() {
+      const grid = document.getElementById('videosGrid');
+      const noVideos = document.getElementById('noVideos');
+
+      if (videos.length === 0) {
+        noVideos.style.display = 'block';
+        grid.style.display = 'none';
+        return;
+      }
+
+      noVideos.style.display = 'none';
+      grid.style.display = 'grid';
+      // 日付順にソート（新しい順）
+      const sorted = [...videos].sort((a, b) => new Date(b.date) - new Date(a.date));
+      grid.innerHTML = sorted.map(video => createVideoCard(video)).join('');
+    }
+
+    // JSONファイルからデータを読み込み
+    async function loadContent() {
+      try {
+        // 記事を読み込み
+        const articlesRes = await fetch('content/articles.json');
+        if (articlesRes.ok) {
+          articles = await articlesRes.json();
+        }
+      } catch (e) {
+        console.log('Articles not loaded:', e);
+      }
+
+      try {
+        // 動画を読み込み
+        const videosRes = await fetch('content/videos.json');
+        if (videosRes.ok) {
+          videos = await videosRes.json();
+        }
+      } catch (e) {
+        console.log('Videos not loaded:', e);
+      }
+
+      renderArticles();
+      renderVideos();
     }
 
     // 初期化
     renderTools();
-    renderArticles();
+    loadContent();
 
     // Tab switching
     function switchTab(tabName) {

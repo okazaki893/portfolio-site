@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Noumenon</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // Netlify Identity設定
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+
+    // YouTube埋め込みプレビュー用カスタムウィジェット
+    CMS.registerEditorComponent({
+      id: "youtube",
+      label: "YouTube",
+      fields: [
+        { name: "id", label: "YouTube Video ID", widget: "string" }
+      ],
+      pattern: /{{< youtube (\S+) >}}/,
+      fromBlock: function(match) {
+        return { id: match[1] };
+      },
+      toBlock: function(obj) {
+        return '{{< youtube ' + obj.id + ' >}}';
+      },
+      toPreview: function(obj) {
+        return '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + obj.id + '" frameborder="0" allowfullscreen></iframe>';
+      }
+    });
+  </script>
+</body>
+</html>
