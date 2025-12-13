@@ -254,24 +254,16 @@
       display: none !important;
     }
 
-    /* ツールバー（ソート、グリッド、ハンバーガーメニュー）を下げる */
-    [class*="CollectionControls"],
-    [class*="ViewControls"],
-    [class*="ControlBar"] {
-      margin-top: 60px !important;
-    }
-
-    /* カスタム新規作成ボタン */
+    /* カスタム新規作成ボタン - ヘッダー右側に配置 */
     #custom-create-btn {
       position: fixed;
-      top: 120px;
-      left: calc(50% + 100px);
-      transform: translateX(-50%);
+      top: 12px;
+      right: 20px;
       z-index: 10000;
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
       color: white;
       border: none;
-      padding: 12px 24px;
+      padding: 10px 20px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: bold;
@@ -282,7 +274,7 @@
 
     #custom-create-btn:hover {
       box-shadow: 0 6px 25px rgba(146, 107, 255, 0.6);
-      transform: translateX(-50%) translateY(-2px);
+      transform: translateY(-2px);
     }
   </style>
 </head>
