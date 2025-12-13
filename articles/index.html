@@ -36,8 +36,13 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       padding: 60px 60px 100px 340px;
+    }
+
+    .article-wrapper {
+      width: 100%;
+      max-width: 800px;
     }
 
     .article-header {
@@ -48,13 +53,10 @@
 
     .article-category {
       display: inline-block;
-      padding: 6px 16px;
-      background: var(--accent-dim, rgba(146, 107, 255, 0.2));
-      border-radius: 20px;
       font-family: 'Arial', sans-serif;
-      font-size: 14px;
-      color: var(--accent-primary, #926bff);
-      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
+      margin-top: 40px;
     }
 
     .article-title {
@@ -486,17 +488,19 @@
 
         // 記事を表示
         container.innerHTML = `
-          <div class="article-header">
-            ${article.category ? `<span class="article-category">${article.category}</span>` : ''}
-            <h1 class="article-title">${article.title || 'Untitled'}</h1>
-            ${article.date ? `<p class="article-meta">${formatDate(article.date)}</p>` : ''}
-          </div>
-          ${article.thumbnail ? `
-            <div class="article-thumbnail">
-              <img src="${article.thumbnail}" alt="${article.title}">
+          <div class="article-wrapper">
+            <div class="article-header">
+              <h1 class="article-title">${article.title || 'Untitled'}</h1>
+              ${article.date ? `<p class="article-meta">${formatDate(article.date)}</p>` : ''}
             </div>
-          ` : ''}
-          <div class="article-body">${htmlContent}</div>
+            ${article.thumbnail ? `
+              <div class="article-thumbnail">
+                <img src="${article.thumbnail}" alt="${article.title}">
+              </div>
+            ` : ''}
+            <div class="article-body">${htmlContent}</div>
+            ${article.category ? `<span class="article-category">${article.category}</span>` : ''}
+          </div>
         `;
       } catch (error) {
         console.error('Error loading article:', error);
