@@ -257,8 +257,9 @@
     /* カスタム新規作成ボタン */
     #custom-create-btn {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 10000;
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
       color: white;
@@ -274,7 +275,7 @@
 
     #custom-create-btn:hover {
       box-shadow: 0 6px 25px rgba(146, 107, 255, 0.6);
-      transform: translateY(-2px);
+      transform: translateX(-50%) translateY(-2px);
     }
   </style>
 </head>
