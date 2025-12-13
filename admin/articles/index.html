@@ -29,16 +29,16 @@
       background: var(--bg-dark) !important;
     }
 
-    /* ヘッダー */
-    [class*="AppHeader"] {
-      background: var(--bg-card) !important;
-      border-bottom: 1px solid var(--border-color) !important;
+    /* ヘッダーを非表示 */
+    [class*="AppHeader"],
+    header {
+      display: none !important;
     }
 
     /* サイドバー */
     [class*="Sidebar"] {
       background: var(--bg-card) !important;
-      border-right: 1px solid var(--border-color) !important;
+      border-right: none !important;
     }
 
     /* サイドバーのリンク */
@@ -64,12 +64,11 @@
     [class*="ListCard"],
     [class*="EntryListing"] {
       background: var(--bg-card) !important;
-      border: 1px solid var(--border-color) !important;
+      border: none !important;
       border-radius: 12px !important;
     }
 
     [class*="ListCard"]:hover {
-      border-color: var(--accent-primary) !important;
       box-shadow: 0 4px 20px rgba(146, 107, 255, 0.2) !important;
     }
 
@@ -95,7 +94,7 @@
     [class*="TextField"] input,
     [class*="TextArea"] textarea {
       background: var(--bg-input) !important;
-      border: 1px solid var(--border-color) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
       border-radius: 8px !important;
       color: var(--text-primary) !important;
     }
@@ -128,7 +127,7 @@
     [class*="Button"]:not([class*="primary"]),
     button:not([class*="primary"]) {
       background: var(--bg-input) !important;
-      border: 1px solid var(--border-color) !important;
+      border: none !important;
       border-radius: 8px !important;
       color: var(--text-secondary) !important;
     }
@@ -137,7 +136,7 @@
     [class*="Toolbar"],
     [class*="EditorToolbar"] {
       background: var(--bg-card) !important;
-      border-bottom: 1px solid var(--border-color) !important;
+      border-bottom: none !important;
     }
 
     /* Markdownエディタ */
@@ -150,7 +149,7 @@
 
     .CodeMirror-gutters {
       background: var(--bg-card) !important;
-      border-right: 1px solid var(--border-color) !important;
+      border-right: none !important;
     }
 
     /* プレビューパネル */
@@ -163,7 +162,7 @@
     [class*="Dropdown"],
     [class*="Select__menu"] {
       background: var(--bg-card) !important;
-      border: 1px solid var(--border-color) !important;
+      border: none !important;
       border-radius: 8px !important;
     }
 
@@ -175,7 +174,7 @@
     [class*="Modal"],
     [class*="Dialog"] {
       background: var(--bg-card) !important;
-      border: 1px solid var(--border-color) !important;
+      border: none !important;
       border-radius: 16px !important;
     }
 
@@ -254,22 +253,16 @@
       display: none !important;
     }
 
-    /* ツールバー（ソート、グリッド、ハンバーガー）をArticlesと同じ高さに */
-    [class*="CollectionControls"],
-    [class*="ViewControls"],
-    [class*="ControlBar"] {
-      position: fixed !important;
-      top: 70px !important;
-      right: 20px !important;
-      z-index: 9999;
+    /* メインコンテンツエリアを上に */
+    [class*="Main"] {
+      padding-top: 20px !important;
     }
 
-    /* カスタム新規作成ボタン - 中央、Articlesと同じ高さ */
+    /* カスタム新規作成ボタン */
     #custom-create-btn {
       position: fixed;
-      top: 70px;
-      left: calc(50% + 100px);
-      transform: translateX(-50%);
+      top: 100px;
+      left: 240px;
       z-index: 10000;
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
       color: white;
@@ -285,7 +278,7 @@
 
     #custom-create-btn:hover {
       box-shadow: 0 6px 25px rgba(146, 107, 255, 0.6);
-      transform: translateX(-50%) translateY(-2px);
+      transform: translateY(-2px);
     }
   </style>
 </head>
