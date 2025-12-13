@@ -1682,6 +1682,7 @@
     const GITHUB_REPO = 'okazaki893/portfolio-site';
     const GITHUB_BRANCH = 'main';
     const ARTICLES_PATH = 'content/articles';
+    const UPLOADS_PATH = 'content/uploads';
     const GITHUB_TOKEN_KEY = 'github_access_token';
 
     let articlesList = [];
@@ -2100,6 +2101,20 @@
           console.log('No image folder found or already deleted');
         }
 
+        // 最新のSHAを取得（他の場所で変更されている可能性があるため）
+        const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}/${article.slug}.md?ref=${GITHUB_BRANCH}`, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        if (!getResponse.ok) {
+          throw new Error('記事ファイルが見つかりません');
+        }
+
+        const fileData = await getResponse.json();
+
         // 記事ファイルを削除
         const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}/${article.slug}.md`, {
           method: 'DELETE',
@@ -2110,13 +2125,14 @@
           },
           body: JSON.stringify({
             message: `Delete article: ${article.title}`,
-            sha: article.sha,
+            sha: fileData.sha,
             branch: GITHUB_BRANCH
           })
         });
 
         if (!response.ok) {
-          throw new Error('Failed to delete article');
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to delete article');
         }
 
         showSaveStatus();
@@ -2124,13 +2140,12 @@
 
       } catch (error) {
         console.error('Error deleting article:', error);
-        alert('記事の削除に失敗しました');
+        alert('記事の削除に失敗しました: ' + error.message);
       }
     }
 
     // ========== 画像アップロード機能 ==========
 
-    const UPLOADS_PATH = 'content/uploads';
     let currentFolderName = '';
 
     // 記事タイトルからフォルダ名を同期
