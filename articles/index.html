@@ -445,7 +445,7 @@
     }
 
     // 記事を読み込んで表示
-    async function loadArticle() {
+    function loadArticle() {
       const container = document.getElementById('articleContainer');
       const slug = getArticleSlug();
 
@@ -455,40 +455,45 @@
       }
 
       try {
-        const response = await fetch(`../content/articles/${slug}.md`);
-        if (!response.ok) {
+        // localStorageから記事を取得
+        const savedArticles = localStorage.getItem('portfolio_articles');
+        if (!savedArticles) {
+          throw new Error('No articles found');
+        }
+
+        const articles = JSON.parse(savedArticles);
+        const article = articles.find(a => a.slug === slug);
+
+        if (!article) {
           throw new Error('Article not found');
         }
 
-        const content = await response.text();
-        const { meta, body } = parseFrontMatter(content);
-
         // タイトルを更新
-        document.title = `${meta.title || 'Article'} - Noumenon`;
+        document.title = `${article.title || 'Article'} - Noumenon`;
 
         // OGPを更新
-        document.getElementById('ogTitle').content = `${meta.title} - Noumenon`;
-        document.getElementById('ogDescription').content = meta.summary || '';
-        document.getElementById('twTitle').content = `${meta.title} - Noumenon`;
-        document.getElementById('twDescription').content = meta.summary || '';
-        if (meta.thumbnail) {
-          document.getElementById('ogImage').content = meta.thumbnail;
-          document.getElementById('twImage').content = meta.thumbnail;
+        document.getElementById('ogTitle').content = `${article.title} - Noumenon`;
+        document.getElementById('ogDescription').content = article.summary || '';
+        document.getElementById('twTitle').content = `${article.title} - Noumenon`;
+        document.getElementById('twDescription').content = article.summary || '';
+        if (article.thumbnail) {
+          document.getElementById('ogImage').content = article.thumbnail;
+          document.getElementById('twImage').content = article.thumbnail;
         }
 
         // Markdownをパース
-        const htmlContent = marked.parse(body);
+        const htmlContent = marked.parse(article.body || '');
 
         // 記事を表示
         container.innerHTML = `
           <div class="article-header">
-            ${meta.category ? `<span class="article-category">${meta.category}</span>` : ''}
-            <h1 class="article-title">${meta.title || 'Untitled'}</h1>
-            ${meta.date ? `<p class="article-meta">${formatDate(meta.date)}</p>` : ''}
+            ${article.category ? `<span class="article-category">${article.category}</span>` : ''}
+            <h1 class="article-title">${article.title || 'Untitled'}</h1>
+            ${article.date ? `<p class="article-meta">${formatDate(article.date)}</p>` : ''}
           </div>
-          ${meta.thumbnail ? `
+          ${article.thumbnail ? `
             <div class="article-thumbnail">
-              <img src="${meta.thumbnail}" alt="${meta.title}">
+              <img src="${article.thumbnail}" alt="${article.title}">
             </div>
           ` : ''}
           <div class="article-body">${htmlContent}</div>
