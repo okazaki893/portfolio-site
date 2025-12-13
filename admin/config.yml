@@ -13,16 +13,17 @@ locale: "ja"
 
 # コレクション定義
 collections:
-  # 記事コレクション（Markdownファイル）
+  # 記事コレクション
   - name: "articles"
-    label: "記事"
+    label: "ARTICLES"
+    label_singular: "Article"
     folder: "content/articles"
     create: true
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
     editor:
-      preview: false
+      preview: true
     fields:
       - { label: "タイトル", name: "title", widget: "string" }
       - { label: "公開日", name: "date", widget: "datetime" }
@@ -30,28 +31,3 @@ collections:
       - { label: "カテゴリー", name: "category", widget: "select", options: ["音楽", "DTM", "動画制作", "その他"] }
       - { label: "概要", name: "summary", widget: "text", required: false }
       - { label: "本文", name: "body", widget: "markdown" }
-
-  # 動画リンクコレクション
-  - name: "videos"
-    label: "動画"
-    folder: "content/videos"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - { label: "タイトル", name: "title", widget: "string" }
-      - { label: "公開日", name: "date", widget: "datetime" }
-      - { label: "YouTube URL", name: "youtube_url", widget: "string" }
-      - { label: "サムネイル", name: "thumbnail", widget: "image", required: false }
-      - { label: "カテゴリー", name: "category", widget: "select", options: ["MV", "チュートリアル", "ライブ", "その他"] }
-      - { label: "説明", name: "description", widget: "markdown", required: false }
-
-  # サイト設定
-  - name: "settings"
-    label: "設定"
-    files:
-      - label: "サイト情報"
-        name: "site"
-        file: "content/settings/site.json"
-        fields:
-          - { label: "サイト名", name: "site_name", widget: "string" }
-          - { label: "説明", name: "description", widget: "text" }
