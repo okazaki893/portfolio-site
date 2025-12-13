@@ -253,16 +253,19 @@
       display: none !important;
     }
 
-    /* メインコンテンツエリアを上に */
-    [class*="Main"] {
-      padding-top: 20px !important;
+    /* ツールバー（ソート、グリッド、ハンバーガー）を少し下に */
+    [class*="CollectionControls"],
+    [class*="ViewControls"],
+    [class*="ControlBar"] {
+      margin-top: 30px !important;
     }
 
-    /* カスタム新規作成ボタン */
+    /* カスタム新規作成ボタン - ArticlesとソートMenuの中間 */
     #custom-create-btn {
       position: fixed;
-      top: 100px;
-      left: 240px;
+      top: 55px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 10000;
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
       color: white;
@@ -278,7 +281,7 @@
 
     #custom-create-btn:hover {
       box-shadow: 0 6px 25px rgba(146, 107, 255, 0.6);
-      transform: translateY(-2px);
+      transform: translateX(-50%) translateY(-2px);
     }
   </style>
 </head>
