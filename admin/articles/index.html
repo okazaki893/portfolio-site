@@ -90,10 +90,26 @@
     }
 
     /* グリッドビューのカード */
-    [class*="CardsGrid"] [class*="Card"] {
+    [class*="CardsGrid"] a {
       display: flex !important;
       flex-direction: column !important;
       padding: 12px !important;
+      background: var(--bg-card) !important;
+      border-radius: 8px !important;
+      text-decoration: none !important;
+    }
+
+    /* カードのグラデーションを削除 */
+    [class*="CardsGrid"] a::before,
+    [class*="CardsGrid"] a::after,
+    [class*="Card"]::before,
+    [class*="Card"]::after {
+      display: none !important;
+    }
+
+    /* カード内の要素の背景を透明に */
+    [class*="CardsGrid"] a > div {
+      background: transparent !important;
     }
 
     /* リストビュー - 縦に並べる */
