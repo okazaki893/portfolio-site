@@ -22,8 +22,7 @@ collections:
     slug: "{{slug}}"
     extension: "md"
     format: "frontmatter"
-    summary: "{{title}}"
-    summary_fields: ["thumbnail", "title", "date"]
+    summary: "{{title}} - {{date | date('YYYY/MM/DD')}}"
     editor:
       preview: true
     fields:
