@@ -114,19 +114,6 @@
       display: none !important;
     }
 
-    /* ツールバー（ソート等）をボックス外の右上に */
-    [class*="CollectionControls"],
-    [class*="ViewControls"],
-    [class*="ControlBar"] {
-      position: fixed !important;
-      top: 20px !important;
-      right: 40px !important;
-      z-index: 9999 !important;
-      background: var(--bg-card) !important;
-      padding: 8px 12px !important;
-      border-radius: 8px !important;
-    }
-
     /* テキスト */
     [class*="Card"] h2,
     [class*="ListCardTitle"],
@@ -308,13 +295,21 @@
       display: none !important;
     }
 
-    /* カスタム新規作成ボタン - ボックス外の真ん中 */
-    #custom-create-btn {
+    /* カスタムツールバー領域 */
+    #custom-toolbar {
       position: fixed;
-      top: 20px;
-      left: calc(50% + 100px);
-      transform: translateX(-50%);
+      top: 15px;
+      left: 220px;
+      right: 20px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       z-index: 10000;
+    }
+
+    /* カスタム新規作成ボタン */
+    #custom-create-btn {
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
       color: white;
       border: none;
@@ -329,7 +324,14 @@
 
     #custom-create-btn:hover {
       box-shadow: 0 6px 25px rgba(146, 107, 255, 0.6);
-      transform: translateX(-50%) translateY(-2px);
+      transform: translateY(-2px);
+    }
+
+    /* CMSのツールバーを非表示（カスタムで置き換え） */
+    [class*="CollectionControls"],
+    [class*="ViewControls"],
+    [class*="ControlBar"] {
+      display: none !important;
     }
   </style>
 </head>
@@ -372,25 +374,31 @@
       blockquote { border-left: 4px solid #926bff; padding-left: 16px; margin-left: 0; color: rgba(255,255,255,0.8); }
     `);
 
-    // カスタム新規作成ボタンを追加
+    // カスタムツールバーを追加
     window.addEventListener('load', function() {
       setTimeout(function() {
-        // ボタンを作成
+        // ツールバーコンテナを作成
+        const toolbar = document.createElement('div');
+        toolbar.id = 'custom-toolbar';
+
+        // 新規作成ボタンを作成
         const createBtn = document.createElement('button');
         createBtn.id = 'custom-create-btn';
         createBtn.textContent = '新規作成';
         createBtn.onclick = function() {
           window.location.hash = '#/collections/articles/new';
         };
-        document.body.appendChild(createBtn);
 
-        // エディタ画面ではボタンを非表示
+        toolbar.appendChild(createBtn);
+        document.body.appendChild(toolbar);
+
+        // エディタ画面ではツールバーを非表示
         function checkEditorPage() {
           const hash = window.location.hash;
           if (hash.includes('/new') || hash.includes('/entries/')) {
-            createBtn.style.display = 'none';
+            toolbar.style.display = 'none';
           } else {
-            createBtn.style.display = 'block';
+            toolbar.style.display = 'flex';
           }
         }
 
