@@ -254,11 +254,18 @@
       display: none !important;
     }
 
+    /* ツールバー（ソート、グリッド、ハンバーガーメニュー）を下げる */
+    [class*="CollectionControls"],
+    [class*="ViewControls"],
+    [class*="ControlBar"] {
+      margin-top: 60px !important;
+    }
+
     /* カスタム新規作成ボタン */
     #custom-create-btn {
       position: fixed;
-      top: 70px;
-      left: 50%;
+      top: 120px;
+      left: calc(50% + 100px);
       transform: translateX(-50%);
       z-index: 10000;
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
