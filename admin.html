@@ -558,46 +558,46 @@
             <h3>記事管理</h3>
 
             <!-- GitHub認証状態 -->
-            <div id="githubAuthStatus" style="margin-bottom: 20px; padding: 15px; background: rgba(146, 107, 255, 0.1); border-radius: 8px;">
+            <div id="githubAuthStatus" style="margin-bottom: 20px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px;">
               <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                <span id="authStatusText" style="color: rgba(255,255,255,0.6);">GitHub未認証</span>
+                <span id="authStatusText" style="color: var(--text-dim, rgba(255,255,255,0.5)); font-weight: bold;">GitHub未認証</span>
                 <div id="tokenInputContainer">
-                  <input type="password" id="githubTokenInput" placeholder="GitHub Personal Access Token" style="padding: 8px 12px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 6px; color: #fff; width: 280px;">
-                  <button onclick="saveGitHubToken()" style="margin-left: 8px; padding: 8px 16px; background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer;">保存</button>
+                  <input type="password" id="githubTokenInput" placeholder="GitHub Personal Access Token" style="padding: 10px 14px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); width: 300px; font-size: 14px;">
+                  <button onclick="saveGitHubToken()" style="margin-left: 10px; padding: 10px 20px; background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%); border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px; font-weight: bold;">認証</button>
                 </div>
-                <button id="githubLogoutBtn" onclick="logoutGitHub()" style="display: none; padding: 8px 16px; background: rgba(255, 107, 107, 0.8); border: none; border-radius: 6px; color: #fff; cursor: pointer;">ログアウト</button>
+                <button id="githubLogoutBtn" onclick="logoutGitHub()" style="display: none; padding: 10px 20px; background: #ff6b6b; border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px;">ログアウト</button>
               </div>
-              <p style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 10px;">
-                <a href="https://github.com/settings/tokens/new?scopes=repo&description=Portfolio%20Admin" target="_blank" style="color: #926bff;">GitHub でトークンを作成</a>（repo スコープが必要です）
+              <p style="font-size: 12px; color: var(--text-dim, rgba(255,255,255,0.5)); margin-top: 12px;">
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=Portfolio%20Admin" target="_blank" style="color: var(--accent-primary, #926bff); text-decoration: underline;">GitHub でトークンを作成</a>（repo スコープが必要です）
               </p>
             </div>
 
             <!-- 記事一覧 -->
             <div class="video-list" id="articlesList" style="max-height: 500px;">
-              <p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
+              <p style="color: var(--text-dim, rgba(255,255,255,0.5)); text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
             </div>
 
             <!-- 画像アップロード -->
             <div class="add-form" style="border-top: none; padding-top: 0; margin-top: 0;">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">画像アップロード</h4>
-              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <h4 style="color: var(--text-secondary, rgba(255,255,255,0.8)); margin-bottom: 10px;">画像アップロード</h4>
+              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                 <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
-                <button onclick="document.getElementById('imageUploadInput').click()" style="padding: 12px 20px; background: rgba(146, 107, 255, 0.2); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; cursor: pointer;">画像を選択</button>
-                <span id="selectedFileName" style="color: rgba(255,255,255,0.5); font-size: 13px;">ファイルが選択されていません</span>
-                <button onclick="uploadImage()" style="padding: 12px 20px; background: linear-gradient(135deg, #926bff 0%, #6b92ff 100%); border: none; border-radius: 8px; color: #fff; cursor: pointer;">アップロード</button>
+                <button onclick="document.getElementById('imageUploadInput').click()" style="padding: 12px 24px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px;">画像を選択</button>
+                <span id="selectedFileName" style="color: var(--text-dim, rgba(255,255,255,0.5)); font-size: 14px;">ファイルが選択されていません</span>
+                <button onclick="uploadImage()" style="padding: 12px 24px; background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%); border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px; font-weight: bold;">アップロード</button>
               </div>
-              <div id="uploadedImagePath" style="margin-top: 10px; display: none;">
-                <p style="color: #6bff6b; font-size: 13px;">アップロード完了: <code id="imagePathCode" style="background: rgba(10,10,15,0.8); padding: 4px 8px; border-radius: 4px; user-select: all;"></code></p>
-                <button onclick="copyImagePath()" style="margin-top: 5px; padding: 6px 12px; background: rgba(146, 107, 255, 0.3); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-size: 12px;">パスをコピー</button>
+              <div id="uploadedImagePath" style="margin-top: 12px; display: none; padding: 12px; background: rgba(107, 255, 107, 0.1); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 8px;">
+                <p style="color: #6bff6b; font-size: 14px; margin: 0;">アップロード完了: <code id="imagePathCode" style="background: var(--input-bg, rgba(10,10,15,0.8)); padding: 6px 10px; border-radius: 4px; user-select: all; color: var(--text-primary, #fff);">パス</code></p>
+                <button onclick="copyImagePath()" style="margin-top: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">パスをコピー</button>
               </div>
             </div>
 
             <div class="add-form">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規記事作成</h4>
+              <h4 style="color: var(--text-secondary, rgba(255,255,255,0.8)); margin-bottom: 10px;">新規記事作成</h4>
               <input type="text" id="newArticleTitle" placeholder="記事タイトル">
               <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/image.jpg）">
-              <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
-              <textarea id="newArticleBody" placeholder="本文（Markdown形式）&#10;&#10;画像を挿入する場合: ![画像の説明](/content/uploads/ファイル名.jpg)" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 200px; resize: vertical; font-family: monospace;"></textarea>
+              <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
+              <textarea id="newArticleBody" placeholder="本文（Markdown形式）&#10;&#10;画像を挿入する場合: ![画像の説明](/content/uploads/ファイル名.jpg)" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical; font-family: monospace;"></textarea>
               <button onclick="createArticle()">記事を作成</button>
             </div>
           </div>
@@ -682,8 +682,8 @@
         <input type="hidden" id="editArticleSha">
         <input type="text" id="editArticleTitle" placeholder="タイトル">
         <input type="text" id="editArticleThumbnail" placeholder="サムネイル画像パス（任意）">
-        <textarea id="editArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
-        <textarea id="editArticleBody" placeholder="本文（Markdown形式）" style="width: 100%; padding: 12px 15px; background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(146, 107, 255, 0.3); border-radius: 8px; color: #fff; font-size: 14px; min-height: 300px; resize: vertical; font-family: monospace;"></textarea>
+        <textarea id="editArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
+        <textarea id="editArticleBody" placeholder="本文（Markdown形式）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 300px; resize: vertical; font-family: monospace;"></textarea>
         <div class="modal-buttons">
           <button class="btn-cancel" onclick="closeArticleModal()">キャンセル</button>
           <button class="btn-save" onclick="saveArticleEdit()">保存</button>
