@@ -405,6 +405,11 @@
   </div>
 
   <script>
+    // GitHub設定
+    const GITHUB_REPO = 'okazaki893/portfolio-site';
+    const GITHUB_BRANCH = 'main';
+    const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}`;
+
     // URLからスラッグを取得
     function getArticleSlug() {
       const path = window.location.pathname;
@@ -456,6 +461,24 @@
       });
     }
 
+    // 画像パスをGitHub raw URLに変換
+    function convertImagePaths(html) {
+      // /content/uploads/ で始まるパスをGitHub raw URLに変換
+      return html.replace(/src="\/content\/uploads\//g, `src="${GITHUB_RAW_BASE}/content/uploads/`);
+    }
+
+    // サムネイルパスを変換
+    function convertThumbnailPath(path) {
+      if (!path) return '';
+      if (path.startsWith('/content/uploads/')) {
+        return `${GITHUB_RAW_BASE}${path}`;
+      }
+      if (path.startsWith('content/uploads/')) {
+        return `${GITHUB_RAW_BASE}/${path}`;
+      }
+      return path;
+    }
+
     // 記事を読み込んで表示
     async function loadArticle() {
       const container = document.getElementById('articleContainer');
@@ -467,30 +490,44 @@
       }
 
       try {
-        // Markdownファイルを取得
-        const response = await fetch(`../content/articles/${slug}.md`);
+        // GitHub APIから記事を取得
+        const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/content/articles/${slug}.md?ref=${GITHUB_BRANCH}`;
+        const response = await fetch(apiUrl);
+
         if (!response.ok) {
           throw new Error('Article not found');
         }
 
-        const content = await response.text();
+        const data = await response.json();
+
+        // UTF-8でBase64デコード
+        const binaryString = atob(data.content.replace(/\n/g, ''));
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const content = new TextDecoder('utf-8').decode(bytes);
+
         const { meta, body } = parseFrontMatter(content);
 
         // タイトルを更新
         document.title = `${meta.title || 'Article'} - Noumenon`;
 
         // OGPを更新
+        const thumbnailUrl = convertThumbnailPath(meta.thumbnail);
         document.getElementById('ogTitle').content = `${meta.title} - Noumenon`;
         document.getElementById('ogDescription').content = meta.summary || '';
         document.getElementById('twTitle').content = `${meta.title} - Noumenon`;
         document.getElementById('twDescription').content = meta.summary || '';
-        if (meta.thumbnail) {
-          document.getElementById('ogImage').content = meta.thumbnail;
-          document.getElementById('twImage').content = meta.thumbnail;
+        if (thumbnailUrl) {
+          document.getElementById('ogImage').content = thumbnailUrl;
+          document.getElementById('twImage').content = thumbnailUrl;
         }
 
         // Markdownをパース
-        const htmlContent = marked.parse(body || '');
+        let htmlContent = marked.parse(body || '');
+        // 画像パスをGitHub raw URLに変換
+        htmlContent = convertImagePaths(htmlContent);
 
         // 記事を表示
         container.innerHTML = `
@@ -499,9 +536,9 @@
               <h1 class="article-title">${meta.title || 'Untitled'}</h1>
               ${meta.date ? `<p class="article-meta">${formatDate(meta.date)}</p>` : ''}
             </div>
-            ${meta.thumbnail ? `
+            ${thumbnailUrl ? `
               <div class="article-thumbnail">
-                <img src="${meta.thumbnail}" alt="${meta.title}">
+                <img src="${thumbnailUrl}" alt="${meta.title}">
               </div>
             ` : ''}
             <div class="article-body">${htmlContent}</div>
