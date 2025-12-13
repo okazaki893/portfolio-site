@@ -1,10 +1,10 @@
 [
   {
-    "slug": "2024-01-01-sample",
+    "slug": "sample-article",
     "title": "サンプル記事",
-    "date": "2024-01-01",
-    "category": "その他",
-    "summary": "これはサンプル記事です。管理画面から編集・削除できます。",
-    "thumbnail": ""
+    "date": "2024-12-13T12:00:00.000Z",
+    "thumbnail": null,
+    "category": "DTM",
+    "summary": "これはサンプル記事です。CMSから記事を追加・編集できます。"
   }
 ]

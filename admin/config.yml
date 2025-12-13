@@ -13,12 +13,16 @@ locale: "ja"
 
 # コレクション定義
 collections:
-  # 記事コレクション
+  # 記事コレクション（Markdownファイル）
   - name: "articles"
     label: "記事"
     folder: "content/articles"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    editor:
+      preview: false
     fields:
       - { label: "タイトル", name: "title", widget: "string" }
       - { label: "公開日", name: "date", widget: "datetime" }
