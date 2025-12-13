@@ -75,39 +75,56 @@
     /* 記事一覧コンテナ */
     [class*="EntriesCollection"],
     [class*="Entries"] {
-      max-width: 900px !important;
-      margin: 0 auto !important;
+      max-width: 800px !important;
+      margin: 60px auto 0 !important;
       padding: 20px !important;
+      background: var(--bg-card) !important;
+      border-radius: 16px !important;
     }
 
     /* グリッドビュー - 3列表示 */
     [class*="CardsGrid"] {
       display: grid !important;
       grid-template-columns: repeat(3, 1fr) !important;
-      gap: 20px !important;
-      max-width: 900px !important;
+      gap: 16px !important;
     }
 
     /* グリッドビューのカード */
     [class*="CardsGrid"] [class*="Card"] {
-      min-height: 180px !important;
       display: flex !important;
       flex-direction: column !important;
+      padding: 12px !important;
     }
 
     /* リストビュー - 縦に並べる */
     [class*="EntryListing"]:not([class*="CardsGrid"]) {
       display: flex !important;
       flex-direction: column !important;
-      max-width: 700px !important;
-      margin: 0 auto !important;
     }
 
     /* リストビューのカード */
     [class*="ListCard"] {
       width: 100% !important;
       padding: 16px !important;
-      margin-bottom: 12px !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* リストビューではサムネイル非表示 */
+    [class*="ListCard"] .custom-thumbnail {
+      display: none !important;
+    }
+
+    /* ツールバー（ソート等）をボックス外の右上に */
+    [class*="CollectionControls"],
+    [class*="ViewControls"],
+    [class*="ControlBar"] {
+      position: fixed !important;
+      top: 20px !important;
+      right: 40px !important;
+      z-index: 9999 !important;
+      background: var(--bg-card) !important;
+      padding: 8px 12px !important;
+      border-radius: 8px !important;
     }
 
     /* テキスト */
@@ -291,24 +308,17 @@
       display: none !important;
     }
 
-    /* ツールバー（ソート、グリッド、ハンバーガー）を下に */
-    [class*="CollectionControls"],
-    [class*="ViewControls"],
-    [class*="ControlBar"] {
-      margin-top: 80px !important;
-    }
-
-    /* カスタム新規作成ボタン - エントリがありませんの真上 */
+    /* カスタム新規作成ボタン - ボックス外の真ん中 */
     #custom-create-btn {
       position: fixed;
-      top: 200px;
+      top: 20px;
       left: calc(50% + 100px);
       transform: translateX(-50%);
       z-index: 10000;
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 24px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: bold;
@@ -389,7 +399,7 @@
       }, 1000);
     });
 
-    // サムネイル表示機能
+    // サムネイル表示機能（グリッドビューのみ）
     async function addThumbnails() {
       try {
         const response = await fetch('/content/articles.json');
@@ -403,7 +413,11 @@
           }
         });
 
-        const cards = document.querySelectorAll('[class*="ListCard"], [class*="Card"][href*="articles"]');
+        // グリッドビューのカードのみ対象
+        const gridContainer = document.querySelector('[class*="CardsGrid"]');
+        if (!gridContainer) return;
+
+        const cards = gridContainer.querySelectorAll('[class*="Card"]');
         cards.forEach(card => {
           if (card.querySelector('.custom-thumbnail')) return;
 
@@ -417,10 +431,8 @@
             const img = document.createElement('img');
             img.src = thumbnail;
             img.className = 'custom-thumbnail';
-            img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:6px;margin-right:12px;flex-shrink:0;';
-            card.insertBefore(img, card.firstChild);
-            card.style.display = 'flex';
-            card.style.alignItems = 'center';
+            img.style.cssText = 'width:100%;height:100px;object-fit:cover;border-radius:8px;margin-top:8px;';
+            card.appendChild(img);
           }
         });
       } catch (e) {
