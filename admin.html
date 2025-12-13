@@ -1635,7 +1635,7 @@
 
     // ========== タブ切り替え機能 ==========
 
-    function switchTab(tabName) {
+    function switchTab(tabName, saveState = true) {
       // すべてのタブボタンからactiveクラスを削除
       document.querySelectorAll('.tab-button').forEach(btn => {
         btn.classList.remove('active');
@@ -1646,12 +1646,34 @@
         content.classList.remove('active');
       });
 
-      // クリックされたタブボタンにactiveクラスを追加
-      event.target.classList.add('active');
+      // 対応するタブボタンにactiveクラスを追加
+      const tabButton = document.querySelector(`.tab-button[onclick*="'${tabName}'"]`);
+      if (tabButton) {
+        tabButton.classList.add('active');
+      }
 
       // 対応するタブコンテンツを表示
       document.getElementById('tab-' + tabName).classList.add('active');
+
+      // タブ状態を保存
+      if (saveState) {
+        localStorage.setItem('admin_active_tab', tabName);
+      }
     }
+
+    // 保存されたタブ状態を復元
+    function restoreTab() {
+      const savedTab = localStorage.getItem('admin_active_tab');
+      if (savedTab) {
+        const tabContent = document.getElementById('tab-' + savedTab);
+        if (tabContent) {
+          switchTab(savedTab, false);
+        }
+      }
+    }
+
+    // ページ読み込み時にタブを復元
+    document.addEventListener('DOMContentLoaded', restoreTab);
 
     // ========== ここまでタブ切り替え機能 ==========
 
