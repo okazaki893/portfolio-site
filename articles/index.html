@@ -463,8 +463,16 @@
 
     // 画像パスをGitHub raw URLに変換
     function convertImagePaths(html) {
-      // /content/uploads/ で始まるパスをGitHub raw URLに変換
-      return html.replace(/src="\/content\/uploads\//g, `src="${GITHUB_RAW_BASE}/content/uploads/`);
+      // 様々なパターンに対応
+      // 1. src="/content/uploads/..." (先頭スラッシュあり、ダブルクォート)
+      html = html.replace(/src="\/content\/uploads\//g, `src="${GITHUB_RAW_BASE}/content/uploads/`);
+      // 2. src="content/uploads/..." (先頭スラッシュなし、ダブルクォート)
+      html = html.replace(/src="content\/uploads\//g, `src="${GITHUB_RAW_BASE}/content/uploads/`);
+      // 3. src='/content/uploads/...' (先頭スラッシュあり、シングルクォート)
+      html = html.replace(/src='\/content\/uploads\//g, `src='${GITHUB_RAW_BASE}/content/uploads/`);
+      // 4. src='content/uploads/...' (先頭スラッシュなし、シングルクォート)
+      html = html.replace(/src='content\/uploads\//g, `src='${GITHUB_RAW_BASE}/content/uploads/`);
+      return html;
     }
 
     // サムネイルパスを変換
