@@ -253,18 +253,18 @@
       display: none !important;
     }
 
-    /* ツールバー（ソート、グリッド、ハンバーガー）を少し下に */
+    /* ツールバー（ソート、グリッド、ハンバーガー）を下に */
     [class*="CollectionControls"],
     [class*="ViewControls"],
     [class*="ControlBar"] {
-      margin-top: 30px !important;
+      margin-top: 80px !important;
     }
 
-    /* カスタム新規作成ボタン - ArticlesとソートMenuの中間 */
+    /* カスタム新規作成ボタン - エントリがありませんの真上 */
     #custom-create-btn {
       position: fixed;
-      top: 55px;
-      left: 50%;
+      top: 200px;
+      left: calc(50% + 100px);
       transform: translateX(-50%);
       z-index: 10000;
       background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
