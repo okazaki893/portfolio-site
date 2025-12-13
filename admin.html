@@ -601,7 +601,7 @@
                 </div>
                 <div id="uploadedImagePath" style="margin-top: 12px; display: none; padding: 12px; background: rgba(107, 255, 107, 0.1); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 8px;">
                   <p style="color: #6bff6b; font-size: 14px; margin: 0;">アップロード完了: <code id="imagePathCode" style="background: var(--input-bg, rgba(10,10,15,0.8)); padding: 6px 10px; border-radius: 4px; user-select: all; color: var(--text-primary, #fff);">パス</code></p>
-                  <button type="button" onclick="copyImagePath()" style="margin-top: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">パスをコピー</button>
+                  <button type="button" onclick="setAsThumbnail()" style="margin-top: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">サムネイルに設定</button>
                   <button type="button" onclick="insertImageToBody()" style="margin-top: 8px; margin-left: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">本文に挿入</button>
                 </div>
               </div>
@@ -2332,21 +2332,10 @@
       });
     }
 
-    // 画像パスをコピー
-    function copyImagePath() {
+    // 画像をサムネイルに設定
+    function setAsThumbnail() {
       const path = document.getElementById('imagePathCode').textContent;
-      navigator.clipboard.writeText(path).then(() => {
-        alert('パスをコピーしました');
-      }).catch(() => {
-        // フォールバック
-        const textArea = document.createElement('textarea');
-        textArea.value = path;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        alert('パスをコピーしました');
-      });
+      document.getElementById('newArticleThumbnail').value = path;
     }
 
     // ========== ここまで画像アップロード機能 ==========
