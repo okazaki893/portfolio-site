@@ -1,9 +1,8 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: okazaki893/portfolio-site
   branch: main
-
-# Netlify Identity URL
-site_url: https://melodious-gelato-01a593.netlify.app
+  base_url: https://cms-oauth.okazaki2513.workers.dev
 
 # メディアファイルの保存先
 media_folder: "content/uploads"
