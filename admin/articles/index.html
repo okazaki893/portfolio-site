@@ -235,31 +235,46 @@
       display: none !important;
     }
 
+    /* サイドバーのテキストを小文字に */
+    [class*="SidebarNavLink"] {
+      text-transform: none !important;
+    }
+
     /* 右上の「新規作成」ボタンを非表示 */
     [class*="AppHeader"] [class*="Button"],
     [class*="AppHeader"] button,
-    header [class*="CreateButton"],
-    [class*="CollectionTop"] > [class*="Button"]:last-child {
+    header [class*="CreateButton"] {
       display: none !important;
     }
 
-    /* 記事一覧上部の作成ボタンのスタイル修正 */
-    [class*="ObjectWidgetTopBar"],
-    [class*="ListCardTop"],
-    [class*="TopBar"] {
-      background: var(--bg-card) !important;
-    }
-
-    /* 「Articlesを作成」ボタンの背景を修正 */
+    /* 中央のArticlesヘッダーボックスを非表示 */
     [class*="CollectionTop"],
-    [class*="ViewHeader"] {
-      background: var(--bg-dark) !important;
+    [class*="ViewHeader"],
+    [class*="CollectionHeader"] {
+      display: none !important;
     }
 
-    [class*="CollectionTop"] [class*="Button"],
-    [class*="ViewHeader"] [class*="Button"] {
-      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%) !important;
-      border: none !important;
+    /* カスタム新規作成ボタン */
+    #custom-create-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      background: linear-gradient(135deg, #926bff 0%, #6b5ce7 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(146, 107, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    #custom-create-btn:hover {
+      box-shadow: 0 6px 25px rgba(146, 107, 255, 0.6);
+      transform: translateY(-2px);
     }
   </style>
 </head>
@@ -302,20 +317,31 @@
       blockquote { border-left: 4px solid #926bff; padding-left: 16px; margin-left: 0; color: rgba(255,255,255,0.8); }
     `);
 
-    // ボタンテキストを「新規作成」に変更
-    const observer = new MutationObserver(function(mutations) {
-      const buttons = document.querySelectorAll('button, [class*="Button"]');
-      buttons.forEach(function(btn) {
-        if (btn.textContent.includes('を作成') || btn.textContent.includes('New')) {
-          btn.textContent = '新規作成';
-        }
-      });
-    });
+    // カスタム新規作成ボタンを追加
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        // ボタンを作成
+        const createBtn = document.createElement('button');
+        createBtn.id = 'custom-create-btn';
+        createBtn.textContent = '新規作成';
+        createBtn.onclick = function() {
+          window.location.hash = '#/collections/articles/new';
+        };
+        document.body.appendChild(createBtn);
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+        // エディタ画面ではボタンを非表示
+        function checkEditorPage() {
+          const hash = window.location.hash;
+          if (hash.includes('/new') || hash.includes('/entries/')) {
+            createBtn.style.display = 'none';
+          } else {
+            createBtn.style.display = 'block';
+          }
+        }
+
+        checkEditorPage();
+        window.addEventListener('hashchange', checkEditorPage);
+      }, 1000);
     });
   </script>
 </body>
