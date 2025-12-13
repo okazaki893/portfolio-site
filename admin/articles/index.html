@@ -72,34 +72,42 @@
       box-shadow: 0 4px 20px rgba(146, 107, 255, 0.2) !important;
     }
 
-    /* 記事一覧の幅を調整 */
+    /* 記事一覧コンテナ */
     [class*="EntriesCollection"],
-    [class*="Entries"],
-    [class*="CardsGrid"] {
-      max-width: 700px !important;
+    [class*="Entries"] {
+      max-width: 900px !important;
       margin: 0 auto !important;
       padding: 20px !important;
     }
 
-    /* 記事カードのスタイル */
-    [class*="ListCard"],
-    [class*="Card"][class*="Entry"] {
+    /* グリッドビュー - 3列表示 */
+    [class*="CardsGrid"] {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 20px !important;
+      max-width: 900px !important;
+    }
+
+    /* グリッドビューのカード */
+    [class*="CardsGrid"] [class*="Card"] {
+      min-height: 180px !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    /* リストビュー - 縦に並べる */
+    [class*="EntryListing"]:not([class*="CardsGrid"]) {
+      display: flex !important;
+      flex-direction: column !important;
+      max-width: 700px !important;
+      margin: 0 auto !important;
+    }
+
+    /* リストビューのカード */
+    [class*="ListCard"] {
+      width: 100% !important;
       padding: 16px !important;
       margin-bottom: 12px !important;
-    }
-
-    /* グリッドビューのカードスタイル */
-    [class*="CardsGrid"] [class*="Card"] {
-      min-height: 200px !important;
-    }
-
-    /* カード内の画像（グリッドビュー用） */
-    [class*="Card"] [class*="Image"],
-    [class*="CardMedia"] {
-      width: 100% !important;
-      height: 120px !important;
-      object-fit: cover !important;
-      border-radius: 8px !important;
     }
 
     /* テキスト */
@@ -380,6 +388,48 @@
         window.addEventListener('hashchange', checkEditorPage);
       }, 1000);
     });
+
+    // サムネイル表示機能
+    async function addThumbnails() {
+      try {
+        const response = await fetch('/content/articles.json');
+        if (!response.ok) return;
+        const articles = await response.json();
+
+        const thumbnailMap = {};
+        articles.forEach(article => {
+          if (article.thumbnail) {
+            thumbnailMap[article.title] = article.thumbnail;
+          }
+        });
+
+        const cards = document.querySelectorAll('[class*="ListCard"], [class*="Card"][href*="articles"]');
+        cards.forEach(card => {
+          if (card.querySelector('.custom-thumbnail')) return;
+
+          const titleEl = card.querySelector('h2, [class*="Title"]');
+          if (!titleEl) return;
+
+          const title = titleEl.textContent.split(' - ')[0].trim();
+          const thumbnail = thumbnailMap[title];
+
+          if (thumbnail) {
+            const img = document.createElement('img');
+            img.src = thumbnail;
+            img.className = 'custom-thumbnail';
+            img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:6px;margin-right:12px;flex-shrink:0;';
+            card.insertBefore(img, card.firstChild);
+            card.style.display = 'flex';
+            card.style.alignItems = 'center';
+          }
+        });
+      } catch (e) {
+        console.log('Thumbnail loading error:', e);
+      }
+    }
+
+    // 定期的にサムネイルを追加
+    setInterval(addThumbnails, 2000);
   </script>
 </body>
 </html>
