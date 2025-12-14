@@ -1557,7 +1557,7 @@ body {
 
 .contact-cards.four-cols .contact-card-wrapper {
   flex: 1;
-  min-width: 0;
+  min-width: fit-content;
 }
 
 .contact-card {
@@ -1578,7 +1578,7 @@ body {
 
 .contact-cards.four-cols .contact-card {
   width: 100%;
-  min-width: 0;
+  min-width: fit-content;
 }
 
 .contact-card:hover {
