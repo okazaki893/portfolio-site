@@ -1358,7 +1358,7 @@ body {
   font-family: 'Arial', sans-serif;
   font-size: 20px;
   font-weight: bold;
-  color: var(--text-primary, #fff);
+  color: var(--text-primary);
   min-width: 30px;
   text-align: center;
 }
@@ -1366,15 +1366,16 @@ body {
 .qty-display.small .qty-value {
   font-size: 16px;
   min-width: 24px;
+  color: var(--text-primary);
 }
 
 .qty-btn {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
-  background: var(--bg-card, rgba(20, 20, 25, 0.8));
-  color: var(--accent-primary, #926bff);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--accent-primary);
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
@@ -1392,9 +1393,9 @@ body {
 }
 
 .qty-btn:hover {
-  border-color: var(--accent-primary, #926bff);
-  background: var(--accent-dim, rgba(146, 107, 255, 0.2));
-  box-shadow: 0 0 15px var(--accent-muted, rgba(146, 107, 255, 0.3));
+  border-color: var(--accent-primary);
+  background: var(--accent-dim);
+  box-shadow: 0 0 15px var(--accent-muted);
 }
 
 .qty-btn:active {
@@ -1409,8 +1410,8 @@ body {
 /* Highlight cards with quantity > 0 */
 .price-card.tap-select.selected,
 .option-card.tap-select.selected {
-  border-color: var(--accent-primary, #926bff);
-  box-shadow: 0 0 25px var(--accent-muted, rgba(146, 107, 255, 0.4));
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 25px var(--accent-muted);
 }
 
 /* Remove checkmark for tap-select cards */
@@ -1483,8 +1484,8 @@ body {
 
 /* Selection Summary (Contact page) */
 .selection-summary-content {
-  background: var(--bg-card, rgba(20, 20, 25, 0.8));
-  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 20px 25px;
   margin-bottom: 15px;
@@ -1499,9 +1500,9 @@ body {
 .summary-list li {
   font-family: 'Arial', sans-serif;
   font-size: 14px;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  color: var(--text-secondary);
   padding: 10px 0;
-  border-bottom: 1px solid var(--border-color, rgba(146, 107, 255, 0.1));
+  border-bottom: 1px solid var(--border-color);
 }
 
 .summary-list li:last-child {
@@ -1509,7 +1510,7 @@ body {
 }
 
 .summary-list li strong {
-  color: var(--accent-primary, #926bff);
+  color: var(--accent-primary);
   margin-right: 10px;
 }
 
@@ -1517,17 +1518,17 @@ body {
   display: inline-block;
   font-family: 'Arial', sans-serif;
   font-size: 14px;
-  color: var(--accent-primary, #926bff);
+  color: var(--accent-primary);
   text-decoration: none;
   padding: 8px 16px;
-  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   transition: all 0.3s ease;
 }
 
 .edit-selection-link:hover {
-  background: var(--accent-dim, rgba(146, 107, 255, 0.2));
-  border-color: var(--accent-primary, #926bff);
+  background: var(--accent-dim);
+  border-color: var(--accent-primary);
 }
 
 /* Contact Cards (for Contact page) */
@@ -1536,6 +1537,10 @@ body {
   gap: 15px;
   flex-wrap: wrap;
   margin-top: 10px;
+}
+
+.contact-card-wrapper .qty-display .qty-value {
+  color: var(--text-primary);
 }
 
 .contact-cards.four-cols {
@@ -1561,8 +1566,8 @@ body {
   justify-content: center;
   gap: 8px;
   padding: 20px 25px;
-  background: var(--bg-card, rgba(20, 20, 25, 0.8));
-  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1575,20 +1580,20 @@ body {
 }
 
 .contact-card:hover {
-  border-color: var(--border-hover, rgba(146, 107, 255, 0.5));
-  box-shadow: 0 5px 15px var(--accent-dim, rgba(146, 107, 255, 0.15));
+  border-color: var(--border-hover);
+  box-shadow: 0 5px 15px var(--accent-dim);
 }
 
 .contact-card.selected {
-  border-color: var(--accent-primary, #926bff);
-  box-shadow: 0 0 20px var(--accent-muted, rgba(146, 107, 255, 0.4));
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 20px var(--accent-muted);
 }
 
 .contact-card-name {
   font-family: 'Arial', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-primary, #fff);
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -1596,7 +1601,7 @@ body {
   font-family: 'Times New Roman', Times, serif;
   font-size: 16px;
   font-weight: bold;
-  color: var(--accent-primary, #926bff);
+  color: var(--accent-primary);
 }
 
 /* Responsive for contact cards */
