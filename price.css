@@ -44,7 +44,7 @@ body {
   display: inline-block;
   width: 6px;
   height: 6px;
-  background-color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  background-color: var(--text-muted);
   border-radius: 50%;
   margin-right: 12px;
   flex-shrink: 0;
@@ -65,7 +65,7 @@ body {
   top: 6px;
   width: 1px;
   height: 24px;
-  background-color: var(--text-subtle, rgba(255, 255, 255, 0.3));
+  background-color: var(--text-subtle);
   margin-right: 12px;
 }
 
@@ -77,7 +77,7 @@ body {
   font-family: 'Arial', sans-serif;
   font-size: 12px;
   font-weight: 300;
-  color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 3px;
   text-decoration: none;
@@ -133,8 +133,8 @@ body {
   width: 100%;
   height: 100%;
   background-image:
-    linear-gradient(var(--grid-line, rgba(255, 255, 255, 0.02)) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line, rgba(255, 255, 255, 0.02)) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
 }
@@ -312,7 +312,7 @@ body {
   right: 20px;
   background: none;
   border: none;
-  color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  color: var(--text-muted);
   font-size: 28px;
   cursor: pointer;
   transition: color 0.3s ease;
@@ -334,7 +334,7 @@ body {
 .contact-popup-recommend {
   font-family: 'Arial', sans-serif;
   font-size: 13px;
-  color: var(--text-muted, rgba(255, 255, 255, 0.7));
+  color: var(--text-muted);
   margin-bottom: 30px;
 }
 
@@ -388,7 +388,7 @@ body {
 
 .contact-popup-icon.x-twitter {
   background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  border: 1px solid var(--border-color);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -403,7 +403,7 @@ body {
 .contact-popup-label {
   font-family: 'Arial', sans-serif;
   font-size: 14px;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  color: var(--text-secondary);
   letter-spacing: 1px;
 }
 
@@ -427,7 +427,7 @@ body {
 .contact-popup-message {
   font-family: 'Arial', sans-serif;
   font-size: 15px;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  color: var(--text-secondary);
   line-height: 1.8;
   margin-bottom: 25px;
   text-align: center;
@@ -530,7 +530,7 @@ body {
   font-family: 'Arial', sans-serif;
   font-size: 14px;
   font-weight: 300;
-  color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 4px;
   margin-bottom: 20px;
@@ -559,7 +559,7 @@ body {
 .period {
   font-family: 'Arial', sans-serif;
   font-size: 16px;
-  color: var(--text-dim, rgba(255, 255, 255, 0.4));
+  color: var(--text-dim);
 }
 
 /* Card body */
@@ -574,9 +574,9 @@ body {
 .features li {
   font-family: 'Arial', sans-serif;
   font-size: 14px;
-  color: var(--text-muted, rgba(255, 255, 255, 0.7));
+  color: var(--text-muted);
   padding: 12px 0;
-  border-bottom: 1px solid var(--text-faint, rgba(255, 255, 255, 0.05));
+  border-bottom: 1px solid var(--text-faint);
   position: relative;
   padding-left: 25px;
 }
@@ -646,7 +646,7 @@ body {
 .price-note p {
   font-family: 'Arial', sans-serif;
   font-size: 12px;
-  color: var(--text-dim, rgba(255, 255, 255, 0.4));
+  color: var(--text-dim);
   margin-bottom: 8px;
   letter-spacing: 1px;
 }
@@ -677,7 +677,7 @@ body {
   font-family: 'Arial', sans-serif;
   font-size: 16px;
   font-weight: 300;
-  color: var(--text-muted, rgba(255, 255, 255, 0.7));
+  color: var(--text-muted);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -752,7 +752,7 @@ body {
 .option-name {
   font-family: 'Arial', sans-serif;
   font-size: 14px;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  color: var(--text-secondary);
   letter-spacing: 1px;
 }
 
@@ -858,7 +858,7 @@ body {
   -moz-appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid var(--text-dim, rgba(255, 255, 255, 0.4));
+  border: 2px solid var(--text-dim);
   border-radius: 50%;
   background: var(--input-bg, rgba(10, 10, 15, 0.8));
   cursor: pointer;
@@ -868,12 +868,12 @@ body {
 }
 
 .checkbox-label input[type="checkbox"]:hover {
-  border-color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  border-color: var(--text-muted);
 }
 
 .checkbox-label input[type="checkbox"]:checked {
   background: var(--accent-primary, #926bff);
-  border-color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  border-color: var(--text-muted);
 }
 
 .checkbox-label input[type="checkbox"]:checked::after {
@@ -895,7 +895,7 @@ body {
   -moz-appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid var(--text-dim, rgba(255, 255, 255, 0.4));
+  border: 2px solid var(--text-dim);
   border-radius: 50%;
   background: var(--input-bg, rgba(10, 10, 15, 0.8));
   cursor: pointer;
@@ -905,12 +905,12 @@ body {
 }
 
 .radio-label input[type="radio"]:hover {
-  border-color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  border-color: var(--text-muted);
 }
 
 .radio-label input[type="radio"]:checked {
   background: var(--accent-primary, #926bff);
-  border-color: var(--text-muted, rgba(255, 255, 255, 0.6));
+  border-color: var(--text-muted);
 }
 
 .radio-label input[type="radio"]:checked::after {
@@ -1031,14 +1031,14 @@ body {
 .progress-bar {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--text-faint);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   border-radius: 4px;
   transition: width 0.3s ease;
   width: 0%;
@@ -1047,7 +1047,7 @@ body {
 .progress-text {
   font-family: 'Arial', sans-serif;
   font-size: 12px;
-  color: var(--text-muted, rgba(255, 255, 255, 0.7));
+  color: var(--text-muted);
   margin-top: 10px;
 }
 
@@ -1059,9 +1059,9 @@ body {
   padding: 20px 40px;
   gap: 40px;
   margin-top: 40px;
-  margin-bottom: 25px;
-  background: linear-gradient(135deg, var(--accent-dim, rgba(146, 107, 255, 0.2)) 0%, rgba(107, 146, 255, 0.15) 100%);
-  border: 1px solid var(--border-hover, rgba(146, 107, 255, 0.5));
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent-muted) 100%);
+  border: 1px solid var(--border-hover);
   border-radius: 12px;
   max-width: 500px;
 }
@@ -1084,9 +1084,11 @@ body {
 .estimate-note {
   font-family: 'Arial', sans-serif;
   font-size: 12px;
-  color: var(--text-dim);
-  margin-top: 10px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  margin-bottom: 20px;
   text-align: center;
+  max-width: 500px;
 }
 
 /* Estimate button container */
@@ -1098,10 +1100,10 @@ body {
 .estimate-btn {
   display: inline-block;
   padding: 18px 60px;
-  background: linear-gradient(135deg, var(--accent-primary, #926bff) 0%, var(--accent-secondary, #6b92ff) 100%);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   border: none;
   border-radius: 8px;
-  color: var(--text-primary, #fff);
+  color: #fff;
   font-family: 'Arial', sans-serif;
   font-size: 18px;
   font-weight: 500;
@@ -1268,7 +1270,7 @@ body {
   font-family: 'Arial', sans-serif;
   font-size: 24px;
   font-weight: 300;
-  color: var(--text-muted, rgba(255, 255, 255, 0.7));
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 5px;
   text-decoration: none;
@@ -1317,7 +1319,7 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--text-faint, rgba(255, 255, 255, 0.1));
+  background: var(--text-faint);
   transition: all 0.3s ease;
 }
 
@@ -1329,7 +1331,7 @@ body {
 .social-icon svg {
   width: 18px;
   height: 18px;
-  fill: var(--text-muted, rgba(255, 255, 255, 0.6));
+  fill: var(--text-muted);
   transition: fill 0.3s ease;
 }
 
