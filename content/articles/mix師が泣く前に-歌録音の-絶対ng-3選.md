@@ -1,6 +1,7 @@
 ---
 title: "MIX師が泣く前に！歌録音の「絶対NG」3選"
 date: 2025-12-14T08:26:07.695Z
+thumbnail: "content/uploads/mix師が泣く前に歌録音の絶対ng3選/1765698948073_Gemini_Generated_Image_h8ilbbh8idalbbh8il.png"
 ---
 
 こんにちは。MIX師として活動している岡崎有希です。
