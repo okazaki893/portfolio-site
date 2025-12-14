@@ -1529,3 +1529,101 @@ body {
   background: var(--accent-dim, rgba(146, 107, 255, 0.2));
   border-color: var(--accent-primary, #926bff);
 }
+
+/* Contact Cards (for Contact page) */
+.contact-cards {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.contact-cards.four-cols {
+  flex-wrap: nowrap;
+}
+
+.contact-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-cards.four-cols .contact-card-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 25px;
+  background: var(--bg-card, rgba(20, 20, 25, 0.8));
+  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.contact-cards.four-cols .contact-card {
+  width: 100%;
+  min-width: 0;
+}
+
+.contact-card:hover {
+  border-color: var(--border-hover, rgba(146, 107, 255, 0.5));
+  box-shadow: 0 5px 15px var(--accent-dim, rgba(146, 107, 255, 0.15));
+}
+
+.contact-card.selected {
+  border-color: var(--accent-primary, #926bff);
+  box-shadow: 0 0 20px var(--accent-muted, rgba(146, 107, 255, 0.4));
+}
+
+.contact-card-name {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary, #fff);
+  text-align: center;
+}
+
+.contact-card-price {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent-primary, #926bff);
+}
+
+/* Responsive for contact cards */
+@media (max-width: 900px) {
+  .contact-cards.four-cols {
+    flex-wrap: wrap;
+  }
+
+  .contact-cards.four-cols .contact-card-wrapper {
+    flex: 0 0 calc(50% - 10px);
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-cards {
+    flex-direction: column;
+  }
+
+  .contact-card-wrapper {
+    width: 100%;
+  }
+
+  .contact-card {
+    width: 100%;
+  }
+
+  .contact-cards.four-cols .contact-card-wrapper {
+    flex: 0 0 100%;
+  }
+}

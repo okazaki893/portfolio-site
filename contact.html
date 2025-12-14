@@ -193,77 +193,160 @@
           <input type="text" id="songName" name="songName" required>
         </div>
 
-        <!-- 選択内容サマリー（Priceページから遷移時に表示） -->
-        <div class="form-group" id="selectionSummary" style="display: none;">
-          <label>選択内容</label>
-          <div class="selection-summary-content" id="selectionSummaryContent"></div>
-          <input type="hidden" id="hiddenPlan" name="plan">
-          <input type="hidden" id="hiddenDelivery" name="deliveryOption">
-          <input type="hidden" id="hiddenOptions" name="otherOptions">
-          <a href="price.html" class="edit-selection-link">選択を変更する</a>
-        </div>
-
-        <!-- 通常のプラン選択（直接アクセス時に表示） -->
-        <div class="form-group" id="planGroupContainer">
+        <!-- プラン選択（カード形式） -->
+        <div class="form-group">
           <label>プラン <span class="required">*</span></label>
-          <div class="radio-group" id="planGroup">
-            <label class="radio-label">
-              <input type="radio" name="plan" value="Short" required>
-              <span>Short</span>
-            </label>
-            <label class="radio-label">
-              <input type="radio" name="plan" value="One Chorus">
-              <span>One Chorus</span>
-            </label>
-            <label class="radio-label">
-              <input type="radio" name="plan" value="Full Chorus">
-              <span>Full Chorus</span>
-            </label>
+          <div class="contact-cards" id="planCards">
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-plan="Short" data-price="2000" onclick="tapPlan(this)">
+                <span class="contact-card-name">Short</span>
+                <span class="contact-card-price">¥2,000~</span>
+              </div>
+              <div class="qty-display small" data-for="Short">
+                <button type="button" class="qty-btn minus" onclick="changePlanQty('Short', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changePlanQty('Short', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-plan="One Chorus" data-price="3000" onclick="tapPlan(this)">
+                <span class="contact-card-name">One Chorus</span>
+                <span class="contact-card-price">¥3,000~</span>
+              </div>
+              <div class="qty-display small" data-for="One Chorus">
+                <button type="button" class="qty-btn minus" onclick="changePlanQty('One Chorus', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changePlanQty('One Chorus', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-plan="Full Chorus" data-price="6000" onclick="tapPlan(this)">
+                <span class="contact-card-name">Full Chorus</span>
+                <span class="contact-card-price">¥6,000~</span>
+              </div>
+              <div class="qty-display small" data-for="Full Chorus">
+                <button type="button" class="qty-btn minus" onclick="changePlanQty('Full Chorus', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changePlanQty('Full Chorus', 1, event)">+</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="form-group" id="deliveryOptionGroup">
+        <!-- 納期オプション -->
+        <div class="form-group">
           <label>納期オプション</label>
-          <p class="form-note">※ 通常納期：2週間（Shortのみ3日）</p>
-          <div class="radio-group" id="deliveryOptions">
-            <label class="radio-label" data-for="short" style="display: none;">
-              <input type="radio" name="deliveryOption" value="3日">
-              <span>3日</span>
-            </label>
-            <label class="radio-label" data-for="all">
-              <input type="radio" name="deliveryOption" value="24時間以内">
-              <span>24時間以内</span>
-            </label>
-            <label class="radio-label" data-for="standard">
-              <input type="radio" name="deliveryOption" value="3日">
-              <span>3日</span>
-            </label>
-            <label class="radio-label" data-for="standard">
-              <input type="radio" name="deliveryOption" value="1週間">
-              <span>1週間</span>
-            </label>
-            <label class="radio-label" data-for="standard">
-              <input type="radio" name="deliveryOption" value="2週間">
-              <span>2週間</span>
-            </label>
+          <p class="form-note" style="margin-bottom: 15px;">One Chorus / Full Chorus</p>
+          <div class="contact-cards four-cols" id="deliveryStandardCards">
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-delivery="standard-2週間" data-price="0" onclick="tapDelivery(this)">
+                <span class="contact-card-name">2週間</span>
+                <span class="contact-card-price">¥0</span>
+              </div>
+              <div class="qty-display small" data-for="standard-2週間">
+                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-2週間', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-2週間', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-delivery="standard-1週間" data-price="1500" onclick="tapDelivery(this)">
+                <span class="contact-card-name">1週間</span>
+                <span class="contact-card-price">+¥1,500</span>
+              </div>
+              <div class="qty-display small" data-for="standard-1週間">
+                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-1週間', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-1週間', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-delivery="standard-3日" data-price="4000" onclick="tapDelivery(this)">
+                <span class="contact-card-name">3日</span>
+                <span class="contact-card-price">+¥4,000</span>
+              </div>
+              <div class="qty-display small" data-for="standard-3日">
+                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-3日', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-3日', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-delivery="standard-24時間以内" data-price="6000" onclick="tapDelivery(this)">
+                <span class="contact-card-name">24時間以内</span>
+                <span class="contact-card-price">+¥6,000</span>
+              </div>
+              <div class="qty-display small" data-for="standard-24時間以内">
+                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-24時間以内', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-24時間以内', 1, event)">+</button>
+              </div>
+            </div>
+          </div>
+          <p class="form-note" style="margin-top: 20px; margin-bottom: 15px;">Short</p>
+          <div class="contact-cards" id="deliveryShortCards">
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-delivery="short-3日" data-price="0" onclick="tapDelivery(this)">
+                <span class="contact-card-name">3日</span>
+                <span class="contact-card-price">¥0</span>
+              </div>
+              <div class="qty-display small" data-for="short-3日">
+                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-3日', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-3日', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-delivery="short-24時間以内" data-price="1000" onclick="tapDelivery(this)">
+                <span class="contact-card-name">24時間以内</span>
+                <span class="contact-card-price">+¥1,000</span>
+              </div>
+              <div class="qty-display small" data-for="short-24時間以内">
+                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-24時間以内', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-24時間以内', 1, event)">+</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="form-group" id="otherOptionsGroupContainer">
+        <!-- その他オプション -->
+        <div class="form-group">
           <label>その他オプション</label>
-          <div class="checkbox-group" id="otherOptionsGroup">
-            <label class="checkbox-label">
-              <input type="checkbox" name="otherOptions" value="カットアップ">
-              <span>カットアップ</span>
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="otherOptions" value="エンコード">
-              <span>エンコード</span>
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="otherOptions" value="ハモリガイドメロ作成">
-              <span>ハモリガイドメロ作成</span>
-            </label>
+          <div class="contact-cards" id="otherOptionCards">
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-option="カットアップ" data-price="2000" data-variable="true" onclick="tapOption(this)">
+                <span class="contact-card-name">カットアップ</span>
+                <span class="contact-card-price">¥2,000~</span>
+              </div>
+              <div class="qty-display small" data-for="カットアップ">
+                <button type="button" class="qty-btn minus" onclick="changeOptionQty('カットアップ', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeOptionQty('カットアップ', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-option="エンコード" data-price="1000" onclick="tapOption(this)">
+                <span class="contact-card-name">エンコード</span>
+                <span class="contact-card-price">¥1,000</span>
+              </div>
+              <div class="qty-display small" data-for="エンコード">
+                <button type="button" class="qty-btn minus" onclick="changeOptionQty('エンコード', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeOptionQty('エンコード', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-option="ハモリガイドメロ作成" data-price="3000" data-variable="true" onclick="tapOption(this)">
+                <span class="contact-card-name">ハモリガイドメロ作成</span>
+                <span class="contact-card-price">¥3,000~</span>
+              </div>
+              <div class="qty-display small" data-for="ハモリガイドメロ作成">
+                <button type="button" class="qty-btn minus" onclick="changeOptionQty('ハモリガイドメロ作成', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeOptionQty('ハモリガイドメロ作成', 1, event)">+</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -326,101 +409,119 @@
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRJgSS8wavzPcFXkktF9WwnAkL2XBKpUHqHyOKVMRwWqNA3w12-fOPHkvy5Oeo9wJPPg/exec';
 
-    // 料金設定
-    const prices = {
-      plan: {
-        'Short': 2000,
-        'One Chorus': 3000,
-        'Full Chorus': 6000
-      },
-      delivery: {
-        'Short': {
-          '3日': 0,
-          '24時間以内': 1000
-        },
-        'standard': {
-          '2週間': 0,
-          '1週間': 1500,
-          '3日': 4000,
-          '24時間以内': 6000
-        }
-      },
-      options: {
-        'カットアップ': 2000,
-        'エンコード': 1000,
-        'ハモリガイドメロ作成': 3000
-      }
+    // 数量データを保持
+    const quantities = {
+      plans: {},
+      delivery: {},
+      options: {}
     };
 
-    // 納期オプションの表示切り替え
-    function updateDeliveryOptions(planValue) {
-      var isShort = planValue === 'Short';
-      var labels = document.querySelectorAll('#deliveryOptions .radio-label');
-
-      for (var i = 0; i < labels.length; i++) {
-        var label = labels[i];
-        var forAttr = label.getAttribute('data-for');
-        if (forAttr === 'standard') {
-          label.style.display = isShort ? 'none' : 'flex';
-        } else if (forAttr === 'short') {
-          label.style.display = isShort ? 'flex' : 'none';
-        } else if (forAttr === 'all') {
-          // 24時間以内は常に表示
-          label.style.display = 'flex';
-        }
-      }
+    // プランカードをタップ
+    function tapPlan(card) {
+      const plan = card.getAttribute('data-plan');
+      quantities.plans[plan] = (quantities.plans[plan] || 0) + 1;
+      updateDisplay(plan, quantities.plans[plan], '.contact-card');
+      calculateEstimate();
     }
 
-    // プラン選択時の納期オプション制御
-    var planRadios = document.querySelectorAll('input[name="plan"]');
-    for (var i = 0; i < planRadios.length; i++) {
-      planRadios[i].addEventListener('change', function() {
-        updateDeliveryOptions(this.value);
+    // プラン数量変更
+    function changePlanQty(plan, delta, event) {
+      event.stopPropagation();
+      quantities.plans[plan] = Math.max(0, (quantities.plans[plan] || 0) + delta);
+      updateDisplay(plan, quantities.plans[plan], '.contact-card');
+      calculateEstimate();
+    }
 
-        // 隠れた選択肢が選択されていたらデフォルトに戻す
-        var isShort = this.value === 'Short';
-        var checkedDelivery = document.querySelector('input[name="deliveryOption"]:checked');
-        if (checkedDelivery) {
-          var parentLabel = checkedDelivery.closest('.radio-label');
-          if (parentLabel && parentLabel.style.display === 'none') {
-            if (isShort) {
-              document.querySelector('#deliveryOptions .radio-label[data-for="short"] input').checked = true;
-            } else {
-              document.querySelector('input[name="deliveryOption"][value="2週間"]').checked = true;
-            }
-          }
+    // 納期カードをタップ
+    function tapDelivery(card) {
+      const delivery = card.getAttribute('data-delivery');
+      quantities.delivery[delivery] = (quantities.delivery[delivery] || 0) + 1;
+      updateDisplay(delivery, quantities.delivery[delivery], '.contact-card');
+      calculateEstimate();
+    }
+
+    // 納期数量変更
+    function changeDeliveryQty(delivery, delta, event) {
+      event.stopPropagation();
+      quantities.delivery[delivery] = Math.max(0, (quantities.delivery[delivery] || 0) + delta);
+      updateDisplay(delivery, quantities.delivery[delivery], '.contact-card');
+      calculateEstimate();
+    }
+
+    // オプションカードをタップ
+    function tapOption(card) {
+      const option = card.getAttribute('data-option');
+      quantities.options[option] = (quantities.options[option] || 0) + 1;
+      updateDisplay(option, quantities.options[option], '.contact-card');
+      calculateEstimate();
+    }
+
+    // オプション数量変更
+    function changeOptionQty(option, delta, event) {
+      event.stopPropagation();
+      quantities.options[option] = Math.max(0, (quantities.options[option] || 0) + delta);
+      updateDisplay(option, quantities.options[option], '.contact-card');
+      calculateEstimate();
+    }
+
+    // 表示を更新
+    function updateDisplay(key, value, cardSelector) {
+      const display = document.querySelector(`.qty-display[data-for="${key}"] .qty-value`);
+      if (display) {
+        display.textContent = value;
+      }
+      // カードのselected状態を更新
+      const card = document.querySelector(`${cardSelector}[data-plan="${key}"], ${cardSelector}[data-delivery="${key}"], ${cardSelector}[data-option="${key}"]`);
+      if (card) {
+        if (value > 0) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
         }
-
-        calculateEstimate();
-      });
+      }
     }
 
     // 見積金額計算
     function calculateEstimate() {
-      var total = 0;
-      var hasVariable = false;
+      let total = 0;
+      let hasVariable = false;
 
-      var plan = document.querySelector('input[name="plan"]:checked');
-      if (plan) {
-        total += prices.plan[plan.value];
-      }
-
-      var delivery = document.querySelector('input[name="deliveryOption"]:checked');
-      if (delivery && plan) {
-        var deliveryPrices = plan.value === 'Short' ? prices.delivery['Short'] : prices.delivery['standard'];
-        total += deliveryPrices[delivery.value] || 0;
-      }
-
-      var checkedOptions = document.querySelectorAll('input[name="otherOptions"]:checked');
-      for (var i = 0; i < checkedOptions.length; i++) {
-        var cb = checkedOptions[i];
-        total += prices.options[cb.value] || 0;
-        if (cb.value === 'カットアップ' || cb.value === 'ハモリガイドメロ作成') {
-          hasVariable = true;
+      // プラン料金
+      const planPrices = { 'Short': 2000, 'One Chorus': 3000, 'Full Chorus': 6000 };
+      for (const [plan, qty] of Object.entries(quantities.plans)) {
+        if (qty > 0) {
+          total += (planPrices[plan] || 0) * qty;
         }
       }
 
-      var display = document.getElementById('estimateAmount');
+      // 納期オプション料金
+      for (const [delivery, qty] of Object.entries(quantities.delivery)) {
+        if (qty > 0) {
+          const card = document.querySelector(`.contact-card[data-delivery="${delivery}"]`);
+          if (card) {
+            const price = parseInt(card.getAttribute('data-price')) || 0;
+            total += price * qty;
+          }
+        }
+      }
+
+      // その他オプション料金
+      for (const [option, qty] of Object.entries(quantities.options)) {
+        if (qty > 0) {
+          const card = document.querySelector(`.contact-card[data-option="${option}"]`);
+          if (card) {
+            const price = parseInt(card.getAttribute('data-price')) || 0;
+            const isVariable = card.getAttribute('data-variable') === 'true';
+            total += price * qty;
+            if (isVariable) {
+              hasVariable = true;
+            }
+          }
+        }
+      }
+
+      // 表示更新
+      const display = document.getElementById('estimateAmount');
       if (total > 0) {
         display.textContent = '¥' + total.toLocaleString() + (hasVariable ? '~' : '');
       } else {
@@ -428,17 +529,10 @@
       }
     }
 
-    // 全ての入力変更時に見積もり再計算
-    var allInputs = document.querySelectorAll('input[name="plan"], input[name="deliveryOption"], input[name="otherOptions"]');
-    for (var i = 0; i < allInputs.length; i++) {
-      allInputs[i].addEventListener('change', calculateEstimate);
-    }
-
     // URLパラメータから選択状態を復元
     function restoreFromUrlParams() {
       var search = window.location.search;
       if (!search) {
-        console.log('URLパラメータなし');
         return;
       }
 
@@ -446,189 +540,67 @@
       var planValue = urlParams.get('plan');
       var deliveryValue = urlParams.get('delivery');
       var optionsValue = urlParams.get('options');
-      var estimateValue = urlParams.get('estimate');
 
-      console.log('URLパラメータ:', { plan: planValue, delivery: deliveryValue, options: optionsValue, estimate: estimateValue });
-
-      // 新しいフォーマット（数量付き）かどうかを判定
-      var hasQuantity = planValue && planValue.includes(' x');
-
-      if (hasQuantity) {
-        // 新しいフォーマット: サマリー表示モード
-        showSelectionSummary(planValue, deliveryValue, optionsValue, estimateValue);
-      } else {
-        // 旧フォーマット: 従来の選択モード
-        restoreLegacyFormat(planValue, deliveryValue, optionsValue);
-      }
-    }
-
-    // 選択内容サマリーを表示（Priceページから遷移時）
-    function showSelectionSummary(planValue, deliveryValue, optionsValue, estimateValue) {
-      // 通常の選択UIを非表示
-      document.getElementById('planGroupContainer').style.display = 'none';
-      document.getElementById('deliveryOptionGroup').style.display = 'none';
-      document.getElementById('otherOptionsGroupContainer').style.display = 'none';
-
-      // サマリーを表示
-      var summaryDiv = document.getElementById('selectionSummary');
-      var summaryContent = document.getElementById('selectionSummaryContent');
-      summaryDiv.style.display = 'block';
-
-      // サマリーHTML作成
-      var html = '<ul class="summary-list">';
-
+      // 数量付きフォーマットをパース（例: "Short x2, One Chorus x1"）
       if (planValue) {
-        html += '<li><strong>プラン:</strong> ' + planValue + '</li>';
+        var planItems = planValue.split(',');
+        for (var i = 0; i < planItems.length; i++) {
+          var item = planItems[i].trim();
+          var match = item.match(/^(.+)\s+x(\d+)$/);
+          if (match) {
+            var name = match[1].trim();
+            var qty = parseInt(match[2]);
+            quantities.plans[name] = qty;
+            updateDisplay(name, qty, '.contact-card');
+          } else if (item) {
+            // 旧フォーマット（数量なし）
+            quantities.plans[item] = 1;
+            updateDisplay(item, 1, '.contact-card');
+          }
+        }
       }
+
       if (deliveryValue) {
-        html += '<li><strong>納期:</strong> ' + deliveryValue + '</li>';
-      }
-      if (optionsValue) {
-        html += '<li><strong>オプション:</strong> ' + optionsValue + '</li>';
-      }
-      if (estimateValue) {
-        html += '<li><strong>概算見積り:</strong> ' + estimateValue + '</li>';
-      }
-
-      html += '</ul>';
-      summaryContent.innerHTML = html;
-
-      // hidden inputに値をセット
-      document.getElementById('hiddenPlan').value = planValue || '';
-      document.getElementById('hiddenDelivery').value = deliveryValue || '';
-      document.getElementById('hiddenOptions').value = optionsValue || '';
-
-      // 見積金額を表示
-      if (estimateValue) {
-        document.getElementById('estimateAmount').textContent = estimateValue;
-      }
-
-      // required属性を解除（hidden inputで送信するため）
-      var planInputs = document.querySelectorAll('#planGroup input[name="plan"]');
-      for (var i = 0; i < planInputs.length; i++) {
-        planInputs[i].removeAttribute('required');
-        planInputs[i].removeAttribute('name');
-      }
-    }
-
-    // 旧フォーマットの復元（直接アクセス時や旧リンク）
-    function restoreLegacyFormat(planValue, deliveryValue, optionsValue) {
-      // プランを選択
-      if (planValue) {
-        var planInputs = document.querySelectorAll('input[name="plan"]');
-        var planFound = false;
-        for (var i = 0; i < planInputs.length; i++) {
-          if (planInputs[i].value === planValue) {
-            planInputs[i].checked = true;
-            planFound = true;
-            console.log('プラン選択:', planValue);
-            // 納期オプションの表示を更新
-            updateDeliveryOptions(planValue);
-            break;
-          }
-        }
-        if (!planFound) {
-          console.warn('プランが見つかりません:', planValue);
-        }
-      }
-
-      // 納期オプションを選択（プラン選択後に実行）
-      if (deliveryValue && planValue) {
-        // DOM更新を待つ
-        setTimeout(function() {
-          var isShort = planValue === 'Short';
-          console.log('納期オプション選択開始:', deliveryValue, 'isShort:', isShort);
-
-          // まず全てのチェックを解除
-          var deliveryInputs = document.querySelectorAll('input[name="deliveryOption"]');
-          for (var i = 0; i < deliveryInputs.length; i++) {
-            deliveryInputs[i].checked = false;
-          }
-
-          // 適切なラジオボタンを選択
-          var deliveryFound = false;
-          for (var i = 0; i < deliveryInputs.length; i++) {
-            var input = deliveryInputs[i];
-            var parentLabel = input.closest('.radio-label');
-            var forAttr = parentLabel ? parentLabel.getAttribute('data-for') : null;
-            var isVisible = parentLabel && window.getComputedStyle(parentLabel).display !== 'none';
-
-            // 値が一致するラジオボタンを探す
-            if (input.value === deliveryValue) {
-              var shouldSelect = false;
-
-              // 3日の場合はプランに応じて選択
-              if (deliveryValue === '3日') {
-                if (isShort && forAttr === 'short') {
-                  shouldSelect = true;
-                } else if (!isShort && forAttr === 'standard') {
-                  shouldSelect = true;
-                }
-              } else if (deliveryValue === '24時間以内') {
-                // 24時間以内は常に表示される（data-for="all"）
-                if (forAttr === 'all') {
-                  shouldSelect = true;
-                }
-              } else {
-                // その他の納期オプション（1週間、2週間）はstandardのみ
-                if (forAttr === 'standard' && isVisible) {
-                  shouldSelect = true;
-                }
-              }
-
-              if (shouldSelect) {
-                input.checked = true;
-                deliveryFound = true;
-                console.log('納期オプション選択成功:', deliveryValue, 'forAttr:', forAttr);
-                // changeイベントを発火
-                input.dispatchEvent(new Event('change', { bubbles: true }));
+        var deliveryItems = deliveryValue.split(',');
+        for (var i = 0; i < deliveryItems.length; i++) {
+          var item = deliveryItems[i].trim();
+          var match = item.match(/^(.+)\s+x(\d+)$/);
+          if (match) {
+            var name = match[1].trim();
+            var qty = parseInt(match[2]);
+            // standard-XXX または short-XXX の形式で保存
+            // URLからは "2週間 x1" のような形式なので、適切なキーを探す
+            var deliveryCards = document.querySelectorAll('.contact-card[data-delivery]');
+            for (var j = 0; j < deliveryCards.length; j++) {
+              var cardDelivery = deliveryCards[j].getAttribute('data-delivery');
+              if (cardDelivery.endsWith(name)) {
+                quantities.delivery[cardDelivery] = qty;
+                updateDisplay(cardDelivery, qty, '.contact-card');
                 break;
               }
             }
           }
-
-          if (!deliveryFound) {
-            console.warn('納期オプションが見つかりません:', deliveryValue);
-          }
-
-          // 見積もり再計算
-          calculateEstimate();
-        }, 100);
+        }
       }
 
-      // その他オプションを選択（納期オプション選択後に実行）
       if (optionsValue) {
-        setTimeout(function() {
-          var options = optionsValue.split(',').map(function(s) { return s.trim(); });
-          console.log('その他オプション選択開始:', options);
-          var checkboxes = document.querySelectorAll('input[name="otherOptions"]');
-          var optionsFound = 0;
-
-          for (var i = 0; i < checkboxes.length; i++) {
-            for (var j = 0; j < options.length; j++) {
-              if (checkboxes[i].value === options[j]) {
-                checkboxes[i].checked = true;
-                optionsFound++;
-                console.log('その他オプション選択成功:', options[j]);
-              }
-            }
+        var optionItems = optionsValue.split(',');
+        for (var i = 0; i < optionItems.length; i++) {
+          var item = optionItems[i].trim();
+          var match = item.match(/^(.+)\s+x(\d+)$/);
+          if (match) {
+            var name = match[1].trim();
+            var qty = parseInt(match[2]);
+            quantities.options[name] = qty;
+            updateDisplay(name, qty, '.contact-card');
+          } else if (item) {
+            quantities.options[item] = 1;
+            updateDisplay(item, 1, '.contact-card');
           }
-
-          if (optionsFound === 0 && options.length > 0) {
-            console.warn('その他オプションが見つかりません:', options);
-          }
-
-          // 見積もり再計算
-          calculateEstimate();
-        }, 150);
+        }
       }
 
-      // 見積もり再計算（納期オプションが選択されていない場合も実行）
-      if (!deliveryValue || !planValue) {
-        setTimeout(function() {
-          calculateEstimate();
-        }, 200);
-      }
+      calculateEstimate();
     }
 
     // ページ読み込み完了後に実行
@@ -638,9 +610,48 @@
       restoreFromUrlParams();
     }
 
+    // 選択データを文字列に変換
+    function getSelectedPlans() {
+      var plans = [];
+      for (var plan in quantities.plans) {
+        if (quantities.plans[plan] > 0) {
+          plans.push(plan + ' x' + quantities.plans[plan]);
+        }
+      }
+      return plans.join(', ');
+    }
+
+    function getSelectedDeliveries() {
+      var deliveries = [];
+      for (var delivery in quantities.delivery) {
+        if (quantities.delivery[delivery] > 0) {
+          var name = delivery.split('-').slice(1).join('-');
+          deliveries.push(name + ' x' + quantities.delivery[delivery]);
+        }
+      }
+      return deliveries.join(', ');
+    }
+
+    function getSelectedOptions() {
+      var options = [];
+      for (var option in quantities.options) {
+        if (quantities.options[option] > 0) {
+          options.push(option + ' x' + quantities.options[option]);
+        }
+      }
+      return options.join(', ');
+    }
+
     // フォーム送信
     document.getElementById('estimateForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+
+      // プランが選択されているかチェック
+      var selectedPlans = getSelectedPlans();
+      if (!selectedPlans) {
+        alert('プランを選択してください');
+        return;
+      }
 
       var submitBtn = document.getElementById('submitBtn');
       var uploadProgress = document.getElementById('uploadProgress');
@@ -660,12 +671,6 @@
         // フォームデータ取得
         var formData = new FormData(this);
 
-        var otherOptions = [];
-        var checkedBoxes = document.querySelectorAll('input[name="otherOptions"]:checked');
-        for (var i = 0; i < checkedBoxes.length; i++) {
-          otherOptions.push(checkedBoxes[i].value);
-        }
-
         progressFill.style.width = '50%';
 
         // GASに送信
@@ -679,9 +684,9 @@
             formInfo: {
               name: formData.get('name'),
               songName: formData.get('songName'),
-              plan: formData.get('plan'),
-              deliveryOption: formData.get('deliveryOption') || '',
-              otherOptions: otherOptions.join(', '),
+              plan: selectedPlans,
+              deliveryOption: getSelectedDeliveries(),
+              otherOptions: getSelectedOptions(),
               fileUrl: formData.get('fileUrl') || '',
               remarks: formData.get('remarks') || ''
             }
@@ -693,6 +698,12 @@
 
         // フォームリセット
         document.getElementById('estimateForm').reset();
+        // 数量もリセット
+        quantities.plans = {};
+        quantities.delivery = {};
+        quantities.options = {};
+        document.querySelectorAll('.qty-value').forEach(function(el) { el.textContent = '0'; });
+        document.querySelectorAll('.contact-card.selected').forEach(function(el) { el.classList.remove('selected'); });
         calculateEstimate();
 
         // 進捗バーを非表示
