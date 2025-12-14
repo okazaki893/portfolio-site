@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="price.css">
   <script src="theme.js"></script>
+  <!-- mammoth.js for Word document conversion -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <style>
     .admin-container {
       position: relative;
@@ -548,7 +550,26 @@
               <input type="text" id="newArticleTitle" placeholder="記事タイトル" oninput="syncFolderName(this.value)">
               <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/フォルダ名/image.jpg）">
               <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
-              <textarea id="newArticleBody" placeholder="本文（Markdown形式）&#10;&#10;画像を挿入する場合: ![画像の説明](/content/uploads/フォルダ名/ファイル名.jpg)" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 200px; resize: vertical; font-family: monospace;"></textarea>
+
+              <!-- 本文ファイルアップロード -->
+              <div style="margin-top: 10px;">
+                <p style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px; margin: 0 0 8px 0;">本文ファイル（.docx, .txt, .md, .rtf）</p>
+                <input type="file" id="newArticleFileInput" accept=".docx,.txt,.md,.rtf,.doc" style="display: none;" onchange="handleArticleFileUpload(this, 'new')">
+                <div id="newArticleDropZone" onclick="document.getElementById('newArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(146, 107, 255, 0.5)); border-radius: 8px; padding: 25px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
+                  <svg style="width: 32px; height: 32px; margin-bottom: 8px; fill: var(--accent-primary, #926bff);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
+                  <p id="newArticleFileName" style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 14px; margin: 0;">ここに本文ファイルをドラッグ&ドロップ</p>
+                  <p style="color: var(--text-muted, rgba(255,255,255,0.4)); font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
+                </div>
+                <div id="newArticlePreview" style="display: none; margin-top: 10px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px; max-height: 300px; overflow-y: auto;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="color: var(--accent-primary, #926bff); font-size: 13px;">プレビュー</span>
+                    <button type="button" onclick="clearArticleFile('new')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(255,100,100,0.5); border-radius: 4px; color: rgba(255,100,100,0.8); cursor: pointer; font-size: 12px;">クリア</button>
+                  </div>
+                  <pre id="newArticlePreviewContent" style="color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 0;"></pre>
+                </div>
+              </div>
+              <!-- 本文データを保持する隠しフィールド -->
+              <input type="hidden" id="newArticleBody" value="">
 
               <!-- 画像アップロード（ドラッグ&ドロップ） -->
               <div style="margin-top: 15px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px;">
@@ -568,7 +589,7 @@
                 <div id="uploadedImagePath" style="margin-top: 12px; display: none; padding: 12px; background: rgba(107, 255, 107, 0.1); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 8px;">
                   <p style="color: #6bff6b; font-size: 14px; margin: 0;">アップロード完了: <code id="imagePathCode" style="background: var(--input-bg, rgba(10,10,15,0.8)); padding: 6px 10px; border-radius: 4px; user-select: all; color: var(--text-primary, #fff);">パス</code></p>
                   <button type="button" onclick="setAsThumbnail()" style="margin-top: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">サムネイルに設定</button>
-                  <button type="button" onclick="insertImageToBody()" style="margin-top: 8px; margin-left: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">本文に挿入</button>
+                  <button type="button" onclick="appendImageToBody()" style="margin-top: 8px; margin-left: 8px; padding: 8px 16px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 6px; color: #6bff6b; cursor: pointer; font-size: 13px;">本文に追加</button>
                 </div>
               </div>
 
@@ -657,7 +678,26 @@
         <input type="text" id="editArticleTitle" placeholder="タイトル">
         <input type="text" id="editArticleThumbnail" placeholder="サムネイル画像パス（任意）">
         <textarea id="editArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
-        <textarea id="editArticleBody" placeholder="本文（Markdown形式）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 300px; resize: vertical; font-family: monospace;"></textarea>
+
+        <!-- 本文ファイルアップロード（編集用） -->
+        <div style="margin-top: 10px;">
+          <p style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px; margin: 0 0 8px 0;">本文ファイル（.docx, .txt, .md, .rtf）で上書き、または既存を維持</p>
+          <input type="file" id="editArticleFileInput" accept=".docx,.txt,.md,.rtf,.doc" style="display: none;" onchange="handleArticleFileUpload(this, 'edit')">
+          <div id="editArticleDropZone" onclick="document.getElementById('editArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(146, 107, 255, 0.5)); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
+            <svg style="width: 28px; height: 28px; margin-bottom: 6px; fill: var(--accent-primary, #926bff);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
+            <p id="editArticleFileName" style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 13px; margin: 0;">新しいファイルで上書きする場合はここにドラッグ</p>
+          </div>
+          <div id="editArticlePreview" style="margin-top: 10px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px; max-height: 300px; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="color: var(--accent-primary, #926bff); font-size: 13px;">現在の本文</span>
+              <button type="button" onclick="clearArticleFile('edit')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(255,100,100,0.5); border-radius: 4px; color: rgba(255,100,100,0.8); cursor: pointer; font-size: 12px;">クリア</button>
+            </div>
+            <pre id="editArticlePreviewContent" style="color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 0;"></pre>
+          </div>
+        </div>
+        <!-- 本文データを保持する隠しフィールド -->
+        <input type="hidden" id="editArticleBody" value="">
+
         <div class="modal-buttons">
           <button class="btn-cancel" onclick="closeArticleModal()">キャンセル</button>
           <button class="btn-save" onclick="saveArticleEdit()">保存</button>
@@ -1895,6 +1935,11 @@
         document.getElementById('newArticleThumbnail').value = '';
         document.getElementById('newArticleSummary').value = '';
         document.getElementById('newArticleBody').value = '';
+        // ファイルアップロード表示をリセット
+        document.getElementById('newArticlePreviewContent').textContent = '';
+        document.getElementById('newArticlePreview').style.display = 'none';
+        document.getElementById('newArticleFileName').textContent = 'ここに本文ファイルをドラッグ&ドロップ';
+        document.getElementById('newArticleDropZone').style.borderColor = 'rgba(146, 107, 255, 0.5)';
         currentFolderName = '';
         document.getElementById('folderPreview').textContent = '/content/uploads/';
 
@@ -1916,6 +1961,10 @@
       document.getElementById('editArticleThumbnail').value = article.thumbnail || '';
       document.getElementById('editArticleSummary').value = article.summary || '';
       document.getElementById('editArticleBody').value = article.body || '';
+      // 本文をプレビューに表示
+      document.getElementById('editArticlePreviewContent').textContent = article.body || '';
+      document.getElementById('editArticleFileName').textContent = '新しいファイルで上書きする場合はここにドラッグ';
+      document.getElementById('editArticleDropZone').style.borderColor = 'rgba(146, 107, 255, 0.5)';
       document.getElementById('editArticleModal').style.display = 'flex';
     }
 
@@ -2238,21 +2287,18 @@
       }
     }
 
-    // 画像を本文に挿入
-    function insertImageToBody() {
+    // 画像を本文に追加
+    function appendImageToBody() {
       const path = document.getElementById('imagePathCode').textContent;
-      const bodyTextarea = document.getElementById('newArticleBody');
-      const markdownImage = `![画像](${path})`;
+      const bodyInput = document.getElementById('newArticleBody');
+      const markdownImage = `\n\n![画像](${path})`;
 
-      // カーソル位置に挿入
-      const start = bodyTextarea.selectionStart;
-      const end = bodyTextarea.selectionEnd;
-      const text = bodyTextarea.value;
-      bodyTextarea.value = text.substring(0, start) + markdownImage + text.substring(end);
+      // 本文の末尾に追加
+      bodyInput.value = bodyInput.value + markdownImage;
 
-      // カーソルを挿入後の位置に移動
-      bodyTextarea.selectionStart = bodyTextarea.selectionEnd = start + markdownImage.length;
-      bodyTextarea.focus();
+      // プレビューも更新
+      document.getElementById('newArticlePreviewContent').textContent = bodyInput.value;
+      document.getElementById('newArticlePreview').style.display = 'block';
     }
 
     // ファイルをBase64に変換
@@ -2287,6 +2333,547 @@
     }
 
     // ========== ここまでArticles管理機能 ==========
+
+    // ========== 本文ファイルアップロード機能 ==========
+
+    // ファイルアップロード処理
+    async function handleArticleFileUpload(input, mode) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const prefix = mode === 'new' ? 'newArticle' : 'editArticle';
+
+      // ファイル名を表示
+      document.getElementById(`${prefix}FileName`).textContent = `読み込み中: ${file.name}`;
+
+      try {
+        const markdown = await convertFileToMarkdown(file);
+
+        // 隠しフィールドに保存
+        document.getElementById(`${prefix}Body`).value = markdown;
+
+        // プレビューを表示
+        document.getElementById(`${prefix}PreviewContent`).textContent = markdown;
+        document.getElementById(`${prefix}Preview`).style.display = 'block';
+        document.getElementById(`${prefix}FileName`).textContent = `読み込み完了: ${file.name}`;
+
+        // ドロップゾーンのスタイルを変更
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(107, 255, 107, 0.5)';
+      } catch (error) {
+        console.error('File conversion error:', error);
+        document.getElementById(`${prefix}FileName`).textContent = `エラー: ${error.message}`;
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(255, 100, 100, 0.5)';
+      }
+
+      // input をリセット（同じファイルを再選択できるように）
+      input.value = '';
+    }
+
+    // ファイルをMarkdownに変換
+    async function convertFileToMarkdown(file) {
+      const fileName = file.name.toLowerCase();
+      const extension = fileName.split('.').pop();
+
+      if (extension === 'docx' || extension === 'doc') {
+        // Word文書の場合はmammoth.jsで変換
+        return await convertDocxToMarkdown(file);
+      } else if (extension === 'txt' || extension === 'md') {
+        // テキストファイルはそのまま読み込む
+        return await readTextFile(file);
+      } else if (extension === 'rtf') {
+        // RTFは基本的なテキスト抽出
+        return await convertRtfToMarkdown(file);
+      } else {
+        throw new Error('サポートされていないファイル形式です');
+      }
+    }
+
+    // Word文書をMarkdownに変換
+    async function convertDocxToMarkdown(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          try {
+            const arrayBuffer = e.target.result;
+            const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+            const html = result.value;
+
+            // HTMLをMarkdownに変換
+            const markdown = htmlToMarkdownForFile(html);
+            resolve(markdown);
+          } catch (error) {
+            reject(new Error('Word文書の変換に失敗しました: ' + error.message));
+          }
+        };
+        reader.onerror = () => reject(new Error('ファイルの読み込みに失敗しました'));
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    // テキストファイルを読み込む
+    async function readTextFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          resolve(e.target.result);
+        };
+        reader.onerror = () => reject(new Error('ファイルの読み込みに失敗しました'));
+        reader.readAsText(file, 'UTF-8');
+      });
+    }
+
+    // RTFをMarkdownに変換（基本的なテキスト抽出）
+    async function convertRtfToMarkdown(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const rtfContent = e.target.result;
+          // RTFの基本的なテキスト抽出
+          let text = rtfContent
+            .replace(/\\par[d]?/g, '\n')  // 段落
+            .replace(/\{\\[^{}]+\}/g, '')  // グループを削除
+            .replace(/\\[a-z]+\d* ?/gi, '')  // コントロールワードを削除
+            .replace(/[{}]/g, '')  // 残りの波括弧を削除
+            .replace(/\r\n/g, '\n')
+            .replace(/\n{3,}/g, '\n\n')  // 連続する改行を整理
+            .trim();
+          resolve(text);
+        };
+        reader.onerror = () => reject(new Error('ファイルの読み込みに失敗しました'));
+        reader.readAsText(file, 'UTF-8');
+      });
+    }
+
+    // HTMLをMarkdownに変換（ファイル読み込み用）
+    function htmlToMarkdownForFile(html) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+
+      function processNode(node) {
+        let result = '';
+
+        for (const child of node.childNodes) {
+          if (child.nodeType === Node.TEXT_NODE) {
+            result += child.textContent;
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
+            const tagName = child.tagName.toLowerCase();
+
+            if (tagName === 'h1') {
+              result += '# ' + child.textContent.trim() + '\n\n';
+            } else if (tagName === 'h2') {
+              result += '## ' + child.textContent.trim() + '\n\n';
+            } else if (tagName === 'h3') {
+              result += '### ' + child.textContent.trim() + '\n\n';
+            } else if (tagName === 'h4') {
+              result += '#### ' + child.textContent.trim() + '\n\n';
+            } else if (tagName === 'h5') {
+              result += '##### ' + child.textContent.trim() + '\n\n';
+            } else if (tagName === 'h6') {
+              result += '###### ' + child.textContent.trim() + '\n\n';
+            } else if (tagName === 'p') {
+              const pContent = processNode(child);
+              if (pContent.trim()) {
+                result += pContent.trim() + '\n\n';
+              }
+            } else if (tagName === 'ul') {
+              result += processListItems(child, false, 0) + '\n';
+            } else if (tagName === 'ol') {
+              result += processListItems(child, true, 0) + '\n';
+            } else if (tagName === 'li') {
+              // 親がul/olでない場合の単独li
+              result += '- ' + child.textContent.trim() + '\n';
+            } else if (tagName === 'strong' || tagName === 'b') {
+              result += '**' + child.textContent + '**';
+            } else if (tagName === 'em' || tagName === 'i') {
+              result += '*' + child.textContent + '*';
+            } else if (tagName === 'a') {
+              const href = child.getAttribute('href') || '';
+              result += '[' + child.textContent + '](' + href + ')';
+            } else if (tagName === 'br') {
+              result += '\n';
+            } else if (tagName === 'hr') {
+              result += '\n---\n\n';
+            } else if (tagName === 'blockquote') {
+              const lines = processNode(child).trim().split('\n');
+              result += lines.map(line => '> ' + line).join('\n') + '\n\n';
+            } else if (tagName === 'code') {
+              result += '`' + child.textContent + '`';
+            } else if (tagName === 'pre') {
+              result += '```\n' + child.textContent + '\n```\n\n';
+            } else {
+              result += processNode(child);
+            }
+          }
+        }
+        return result;
+      }
+
+      function processListItems(listElement, ordered, depth) {
+        let result = '';
+        let counter = 1;
+        const indent = '  '.repeat(depth);
+
+        for (const child of listElement.children) {
+          if (child.tagName.toLowerCase() === 'li') {
+            // liの直接のテキストを取得（ネストされたリストは除く）
+            let itemText = '';
+            let nestedLists = '';
+
+            for (const liChild of child.childNodes) {
+              if (liChild.nodeType === Node.TEXT_NODE) {
+                itemText += liChild.textContent;
+              } else if (liChild.nodeType === Node.ELEMENT_NODE) {
+                const liChildTag = liChild.tagName.toLowerCase();
+                if (liChildTag === 'ul') {
+                  nestedLists += processListItems(liChild, false, depth + 1);
+                } else if (liChildTag === 'ol') {
+                  nestedLists += processListItems(liChild, true, depth + 1);
+                } else {
+                  itemText += liChild.textContent;
+                }
+              }
+            }
+
+            const prefix = ordered ? `${counter}. ` : '- ';
+            result += indent + prefix + itemText.trim() + '\n';
+            if (nestedLists) {
+              result += nestedLists;
+            }
+            counter++;
+          }
+        }
+        return result;
+      }
+
+      return processNode(tempDiv).trim();
+    }
+
+    // ファイルをクリア
+    function clearArticleFile(mode) {
+      const prefix = mode === 'new' ? 'newArticle' : 'editArticle';
+
+      document.getElementById(`${prefix}Body`).value = '';
+      document.getElementById(`${prefix}PreviewContent`).textContent = '';
+      document.getElementById(`${prefix}Preview`).style.display = mode === 'new' ? 'none' : 'block';
+      document.getElementById(`${prefix}FileName`).textContent = mode === 'new'
+        ? 'ここに本文ファイルをドラッグ&ドロップ'
+        : '新しいファイルで上書きする場合はここにドラッグ';
+      document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(146, 107, 255, 0.5)';
+    }
+
+    // ドラッグ&ドロップのセットアップ
+    function setupArticleDropZone(dropZoneId, fileInputId, mode) {
+      const dropZone = document.getElementById(dropZoneId);
+      if (!dropZone) return;
+
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+          dropZone.style.background = 'rgba(146, 107, 255, 0.1)';
+          dropZone.style.borderColor = 'rgba(146, 107, 255, 0.8)';
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+          dropZone.style.background = 'var(--input-bg, rgba(10, 10, 15, 0.3))';
+          dropZone.style.borderColor = 'rgba(146, 107, 255, 0.5)';
+        }, false);
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          const fileInput = document.getElementById(fileInputId);
+          // DataTransferからファイルを設定できないので、直接処理
+          const file = files[0];
+          handleArticleFileDrop(file, mode);
+        }
+      }, false);
+    }
+
+    // ドロップされたファイルを処理
+    async function handleArticleFileDrop(file, mode) {
+      const prefix = mode === 'new' ? 'newArticle' : 'editArticle';
+      const allowedExtensions = ['docx', 'doc', 'txt', 'md', 'rtf'];
+      const extension = file.name.split('.').pop().toLowerCase();
+
+      if (!allowedExtensions.includes(extension)) {
+        document.getElementById(`${prefix}FileName`).textContent = 'エラー: サポートされていないファイル形式です';
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(255, 100, 100, 0.5)';
+        return;
+      }
+
+      document.getElementById(`${prefix}FileName`).textContent = `読み込み中: ${file.name}`;
+
+      try {
+        const markdown = await convertFileToMarkdown(file);
+
+        document.getElementById(`${prefix}Body`).value = markdown;
+        document.getElementById(`${prefix}PreviewContent`).textContent = markdown;
+        document.getElementById(`${prefix}Preview`).style.display = 'block';
+        document.getElementById(`${prefix}FileName`).textContent = `読み込み完了: ${file.name}`;
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(107, 255, 107, 0.5)';
+      } catch (error) {
+        console.error('File conversion error:', error);
+        document.getElementById(`${prefix}FileName`).textContent = `エラー: ${error.message}`;
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(255, 100, 100, 0.5)';
+      }
+    }
+
+    // 初期化時にドロップゾーンをセットアップ
+    document.addEventListener('DOMContentLoaded', function() {
+      setupArticleDropZone('newArticleDropZone', 'newArticleFileInput', 'new');
+      setupArticleDropZone('editArticleDropZone', 'editArticleFileInput', 'edit');
+    });
+
+    // ========== ここまで本文ファイルアップロード機能 ==========
+
+    // ========== リストペースト変換機能 ==========
+
+    // HTMLをMarkdownに変換（リスト・罫線対応、Word対応強化）
+    function htmlToMarkdown(html) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+
+      // Wordのリスト段落かどうかを判定
+      function isWordListParagraph(element) {
+        const style = element.getAttribute('style') || '';
+        const className = element.className || '';
+        return style.includes('mso-list') ||
+               className.includes('MsoListParagraph') ||
+               className.includes('MsoList');
+      }
+
+      // 要素からリストマーカーを除去してテキストを取得
+      function getTextWithoutMarker(element) {
+        let text = '';
+        for (const child of element.childNodes) {
+          if (child.nodeType === Node.TEXT_NODE) {
+            text += child.textContent;
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
+            const style = child.getAttribute('style') || '';
+            // mso-list:Ignoreはリストマーカー部分なのでスキップ
+            if (style.includes('mso-list:Ignore')) {
+              continue;
+            }
+            text += child.textContent;
+          }
+        }
+        // 先頭のビュレットや数字マーカーを除去
+        text = text.replace(/^[\s]*[•·‣⁃◦○●◯◆◇■□▪▫➤➢➣→►▶]\s*/, '');
+        text = text.replace(/^[\s]*\d+[.)]\s*/, '');
+        text = text.replace(/^[\s]*[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳]\s*/, '');
+        return text.trim();
+      }
+
+      // リストを処理する再帰関数
+      function processNode(node, indent = '', orderedCounter = null) {
+        let result = '';
+
+        for (const child of node.childNodes) {
+          if (child.nodeType === Node.TEXT_NODE) {
+            const text = child.textContent;
+            if (text.trim()) {
+              result += text;
+            }
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
+            const tagName = child.tagName.toLowerCase();
+
+            // Wordのリスト段落を処理
+            if (tagName === 'p' && isWordListParagraph(child)) {
+              const itemText = getTextWithoutMarker(child);
+              if (itemText) {
+                result += '- ' + itemText + '\n';
+              }
+            } else if (tagName === 'ul') {
+              // 順序なしリスト
+              result += processNode(child, indent, null);
+            } else if (tagName === 'ol') {
+              // 順序付きリスト
+              result += processNode(child, indent, { count: 1 });
+            } else if (tagName === 'li') {
+              // リストアイテム
+              let prefix;
+              if (orderedCounter !== null) {
+                prefix = `${indent}${orderedCounter.count}. `;
+                orderedCounter.count++;
+              } else {
+                prefix = `${indent}- `;
+              }
+
+              // liの中身を処理（ネストされたリストを分離）
+              let itemText = '';
+              let nestedLists = '';
+
+              for (const liChild of child.childNodes) {
+                if (liChild.nodeType === Node.ELEMENT_NODE &&
+                    (liChild.tagName.toLowerCase() === 'ul' || liChild.tagName.toLowerCase() === 'ol')) {
+                  // ネストされたリスト
+                  nestedLists += processNode(liChild, indent + '  ',
+                    liChild.tagName.toLowerCase() === 'ol' ? { count: 1 } : null);
+                } else if (liChild.nodeType === Node.TEXT_NODE) {
+                  itemText += liChild.textContent.trim();
+                } else if (liChild.nodeType === Node.ELEMENT_NODE) {
+                  itemText += liChild.textContent.trim();
+                }
+              }
+
+              result += prefix + itemText + '\n' + nestedLists;
+            } else if (tagName === 'hr') {
+              // 罫線
+              result += '\n---\n\n';
+            } else if (tagName === 'br') {
+              result += '\n';
+            } else if (tagName === 'p') {
+              const pText = processNode(child, indent, orderedCounter);
+              if (pText.trim()) {
+                result += pText.trim() + '\n\n';
+              }
+            } else if (tagName === 'div') {
+              const divText = processNode(child, indent, orderedCounter);
+              if (divText.trim()) {
+                result += divText.trim() + '\n';
+              }
+            } else if (tagName === 'strong' || tagName === 'b') {
+              result += `**${child.textContent}**`;
+            } else if (tagName === 'em' || tagName === 'i') {
+              result += `*${child.textContent}*`;
+            } else if (tagName === 'a') {
+              const href = child.getAttribute('href');
+              result += `[${child.textContent}](${href})`;
+            } else if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tagName)) {
+              // 見出し
+              const level = parseInt(tagName[1]);
+              const prefix = '#'.repeat(level) + ' ';
+              result += prefix + child.textContent.trim() + '\n\n';
+            } else {
+              // その他の要素は中身を再帰処理
+              result += processNode(child, indent, orderedCounter);
+            }
+          }
+        }
+
+        return result;
+      }
+
+      return processNode(tempDiv).trim();
+    }
+
+    // プレーンテキストのリストマーカーをMarkdownに変換
+    function convertPlainTextLists(text) {
+      const lines = text.split('\n');
+      const convertedLines = lines.map(line => {
+        // 順序なしリストマーカー: 各種ビュレット記号
+        const unorderedMatch = line.match(/^(\s*)[•·‣⁃◦○●◯◆◇■□▪▫➤➢➣→►▶・]\s*(.+)$/);
+        if (unorderedMatch) {
+          const indent = unorderedMatch[1];
+          const content = unorderedMatch[2];
+          return indent + '- ' + content;
+        }
+
+        // 順序付きリストマーカー: 1) 2) や 1. 2. など（行頭のみ）
+        const orderedParenMatch = line.match(/^(\s*)(\d+)[.)]\s+(.+)$/);
+        if (orderedParenMatch) {
+          const indent = orderedParenMatch[1];
+          const num = orderedParenMatch[2];
+          const content = orderedParenMatch[3];
+          return indent + num + '. ' + content;
+        }
+
+        // 丸数字: ① ② ③ など
+        const circledNumbers = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+        const circledMatch = line.match(/^(\s*)([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳])\s*(.+)$/);
+        if (circledMatch) {
+          const indent = circledMatch[1];
+          const circled = circledMatch[2];
+          const num = circledNumbers.indexOf(circled) + 1;
+          const content = circledMatch[3];
+          return indent + num + '. ' + content;
+        }
+
+        // 罫線パターン: ----, ====, ______, ────── など
+        if (/^[\-=_─━─]+$/.test(line.trim()) && line.trim().length >= 3) {
+          return '---';
+        }
+
+        return line;
+      });
+      return convertedLines.join('\n');
+    }
+
+    // ペースト対象のHTMLかどうかを判定
+    function shouldProcessHtml(htmlData) {
+      return htmlData.includes('<li') ||
+             htmlData.includes('<ul') ||
+             htmlData.includes('<ol') ||
+             htmlData.includes('<hr') ||
+             htmlData.includes('mso-list') ||
+             htmlData.includes('MsoListParagraph') ||
+             htmlData.includes('MsoList');
+    }
+
+    // ペースト対象のプレーンテキストかどうかを判定
+    function shouldProcessPlainText(plainData) {
+      // 各種ビュレット記号
+      if (/^[\s]*[•·‣⁃◦○●◯◆◇■□▪▫➤➢➣→►▶・]\s/m.test(plainData)) return true;
+      // 丸数字
+      if (/^[\s]*[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳]\s/m.test(plainData)) return true;
+      // 括弧付き数字 1) 2)
+      if (/^\s*\d+\)\s/m.test(plainData)) return true;
+      // 罫線
+      if (/^[\-=_─━]{3,}$/m.test(plainData)) return true;
+      return false;
+    }
+
+    // ペーストイベントハンドラ
+    function handleArticlePaste(e) {
+      const clipboardData = e.clipboardData;
+
+      // HTMLデータとプレーンテキストデータを取得
+      const htmlData = clipboardData.getData('text/html');
+      const plainData = clipboardData.getData('text/plain');
+
+      // HTMLにリストや罫線、Wordリストが含まれている場合
+      if (htmlData && shouldProcessHtml(htmlData)) {
+        e.preventDefault();
+
+        let markdown = htmlToMarkdown(htmlData);
+        // さらにプレーンテキストマーカーも変換
+        markdown = convertPlainTextLists(markdown);
+
+        insertTextAtCursor(e.target, markdown);
+        return;
+      }
+
+      // プレーンテキストでリストや罫線パターンがある場合
+      if (plainData && shouldProcessPlainText(plainData)) {
+        e.preventDefault();
+        const markdown = convertPlainTextLists(plainData);
+        insertTextAtCursor(e.target, markdown);
+        return;
+      }
+      // 上記に該当しない場合は通常のペースト処理
+    }
+
+    // カーソル位置にテキストを挿入
+    function insertTextAtCursor(textarea, text) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const value = textarea.value;
+      textarea.value = value.substring(0, start) + text + value.substring(end);
+      textarea.selectionStart = textarea.selectionEnd = start + text.length;
+    }
+
+    // ========== ここまでリストペースト変換機能 ==========
 
     // Enterキーでログイン
     document.getElementById('passwordInput').addEventListener('keypress', function(e) {
