@@ -150,7 +150,7 @@
       <!-- 基本料金 -->
       <div class="price-cards">
         <!-- Short -->
-        <div class="price-card clickable" data-plan="Short">
+        <div class="price-card multi-select" data-plan="Short" data-price="2000">
           <div class="card-header">
             <span class="plan-name">Short</span>
             <div class="price">
@@ -163,11 +163,16 @@
             <ul class="features">
               <li>基本納期: 3日</li>
             </ul>
+            <div class="quantity-control">
+              <button type="button" class="qty-btn minus" onclick="changeQty(this, -1)">-</button>
+              <input type="number" class="qty-input" value="0" min="0" max="99" data-plan="Short" onchange="updateFromInput(this)">
+              <button type="button" class="qty-btn plus" onclick="changeQty(this, 1)">+</button>
+            </div>
           </div>
         </div>
 
         <!-- One Chorus -->
-        <div class="price-card clickable" data-plan="One Chorus">
+        <div class="price-card multi-select" data-plan="One Chorus" data-price="3000">
           <div class="card-header">
             <span class="plan-name">One Chorus</span>
             <div class="price">
@@ -180,11 +185,16 @@
             <ul class="features">
               <li>基本納期: 2週間</li>
             </ul>
+            <div class="quantity-control">
+              <button type="button" class="qty-btn minus" onclick="changeQty(this, -1)">-</button>
+              <input type="number" class="qty-input" value="0" min="0" max="99" data-plan="One Chorus" onchange="updateFromInput(this)">
+              <button type="button" class="qty-btn plus" onclick="changeQty(this, 1)">+</button>
+            </div>
           </div>
         </div>
 
         <!-- Full Chorus -->
-        <div class="price-card clickable" data-plan="Full Chorus">
+        <div class="price-card multi-select" data-plan="Full Chorus" data-price="6000">
           <div class="card-header">
             <span class="plan-name">Full Chorus</span>
             <div class="price">
@@ -197,6 +207,11 @@
             <ul class="features">
               <li>基本納期: 2週間</li>
             </ul>
+            <div class="quantity-control">
+              <button type="button" class="qty-btn minus" onclick="changeQty(this, -1)">-</button>
+              <input type="number" class="qty-input" value="0" min="0" max="99" data-plan="Full Chorus" onchange="updateFromInput(this)">
+              <button type="button" class="qty-btn plus" onclick="changeQty(this, 1)">+</button>
+            </div>
           </div>
         </div>
       </div>
@@ -247,17 +262,32 @@
       <!-- その他オプション -->
       <h2 class="section-title">その他オプション</h2>
       <div class="option-cards other-options">
-        <div class="option-card clickable" data-option="カットアップ">
+        <div class="option-card multi-select" data-option="カットアップ" data-price="2000" data-variable="true">
           <span class="option-name">カットアップ</span>
           <span class="option-price">¥2,000~</span>
+          <div class="quantity-control small">
+            <button type="button" class="qty-btn minus" onclick="changeOptionQty(this, -1)">-</button>
+            <input type="number" class="qty-input" value="0" min="0" max="99" data-option="カットアップ" onchange="updateOptionFromInput(this)">
+            <button type="button" class="qty-btn plus" onclick="changeOptionQty(this, 1)">+</button>
+          </div>
         </div>
-        <div class="option-card clickable" data-option="エンコード">
+        <div class="option-card multi-select" data-option="エンコード" data-price="1000">
           <span class="option-name">エンコード</span>
           <span class="option-price">¥1,000</span>
+          <div class="quantity-control small">
+            <button type="button" class="qty-btn minus" onclick="changeOptionQty(this, -1)">-</button>
+            <input type="number" class="qty-input" value="0" min="0" max="99" data-option="エンコード" onchange="updateOptionFromInput(this)">
+            <button type="button" class="qty-btn plus" onclick="changeOptionQty(this, 1)">+</button>
+          </div>
         </div>
-        <div class="option-card clickable" data-option="ハモリガイドメロ作成">
+        <div class="option-card multi-select" data-option="ハモリガイドメロ作成" data-price="3000" data-variable="true">
           <span class="option-name">ハモリガイドメロ作成</span>
           <span class="option-price">¥3,000~</span>
+          <div class="quantity-control small">
+            <button type="button" class="qty-btn minus" onclick="changeOptionQty(this, -1)">-</button>
+            <input type="number" class="qty-input" value="0" min="0" max="99" data-option="ハモリガイドメロ作成" onchange="updateOptionFromInput(this)">
+            <button type="button" class="qty-btn plus" onclick="changeOptionQty(this, 1)">+</button>
+          </div>
         </div>
       </div>
 
@@ -279,127 +309,127 @@
   </div>
 
   <script>
-    // プランカードの選択機能
-    const priceCards = document.querySelectorAll('.price-card.clickable');
-    let selectedPlan = null;
+    // 数量変更（プラン）
+    function changeQty(btn, delta) {
+      const input = btn.parentElement.querySelector('.qty-input');
+      let value = parseInt(input.value) || 0;
+      value = Math.max(0, Math.min(99, value + delta));
+      input.value = value;
+      updateCardState(input);
+      calculateEstimate();
+    }
+
+    // 入力から更新（プラン）
+    function updateFromInput(input) {
+      let value = parseInt(input.value) || 0;
+      value = Math.max(0, Math.min(99, value));
+      input.value = value;
+      updateCardState(input);
+      calculateEstimate();
+    }
+
+    // カードの状態を更新
+    function updateCardState(input) {
+      const card = input.closest('.price-card');
+      if (parseInt(input.value) > 0) {
+        card.classList.add('selected');
+      } else {
+        card.classList.remove('selected');
+      }
+    }
+
+    // 数量変更（オプション）
+    function changeOptionQty(btn, delta) {
+      const input = btn.parentElement.querySelector('.qty-input');
+      let value = parseInt(input.value) || 0;
+      value = Math.max(0, Math.min(99, value + delta));
+      input.value = value;
+      updateOptionCardState(input);
+      calculateEstimate();
+    }
+
+    // 入力から更新（オプション）
+    function updateOptionFromInput(input) {
+      let value = parseInt(input.value) || 0;
+      value = Math.max(0, Math.min(99, value));
+      input.value = value;
+      updateOptionCardState(input);
+      calculateEstimate();
+    }
+
+    // オプションカードの状態を更新
+    function updateOptionCardState(input) {
+      const card = input.closest('.option-card');
+      if (parseInt(input.value) > 0) {
+        card.classList.add('selected');
+      } else {
+        card.classList.remove('selected');
+      }
+    }
+
+    // 納期オプションの選択機能（1つだけ選択可能）
     let selectedDelivery = null;
-    let selectedOptions = [];
-
-    priceCards.forEach(card => {
-      card.addEventListener('click', function() {
-        if (this.classList.contains('selected')) {
-          // 既に選択されている場合は解除
-          this.classList.remove('selected');
-          selectedPlan = null;
-        } else {
-          // 他のカードの選択を解除
-          priceCards.forEach(c => c.classList.remove('selected'));
-          // クリックしたカードを選択
-          this.classList.add('selected');
-          selectedPlan = this.getAttribute('data-plan');
-        }
-
-        // プランが変わったら納期オプションの選択をリセット
-        selectedDelivery = null;
-        document.querySelectorAll('.delivery-options .option-card').forEach(c => c.classList.remove('selected'));
-
-        // プランに応じて納期セクションの表示を切り替え
-        const deliveryStandard = document.getElementById('deliveryStandard');
-        const deliveryShort = document.getElementById('deliveryShort');
-
-        if (selectedPlan === 'Short') {
-          deliveryStandard.style.display = 'none';
-          deliveryShort.style.display = 'block';
-        } else if (selectedPlan === 'One Chorus' || selectedPlan === 'Full Chorus') {
-          deliveryStandard.style.display = 'block';
-          deliveryShort.style.display = 'none';
-        } else {
-          // プラン未選択時は両方表示
-          deliveryStandard.style.display = 'block';
-          deliveryShort.style.display = 'block';
-        }
-      });
-    });
-
-    // 納期オプションの選択機能（両セクション合わせて1つだけ選択可能）
     document.querySelectorAll('.delivery-options .option-card.clickable').forEach(card => {
       card.addEventListener('click', function() {
         if (this.classList.contains('selected')) {
-          // 既に選択されている場合は解除
           this.classList.remove('selected');
           selectedDelivery = null;
         } else {
-          // 全ての納期オプションの選択を解除
           document.querySelectorAll('.delivery-options .option-card').forEach(c => c.classList.remove('selected'));
-          // クリックしたカードを選択
           this.classList.add('selected');
           selectedDelivery = this.getAttribute('data-delivery');
         }
+        calculateEstimate();
       });
     });
-
-    // その他オプションの選択機能（複数選択可能、解除も可能）
-    document.querySelectorAll('.other-options .option-card.clickable').forEach(card => {
-      card.addEventListener('click', function() {
-        this.classList.toggle('selected');
-        const option = this.getAttribute('data-option');
-        if (this.classList.contains('selected')) {
-          if (!selectedOptions.includes(option)) {
-            selectedOptions.push(option);
-          }
-        } else {
-          selectedOptions = selectedOptions.filter(o => o !== option);
-        }
-      });
-    });
-
-    // 料金設定
-    const prices = {
-      plan: {
-        'Short': 2000,
-        'One Chorus': 3000,
-        'Full Chorus': 6000
-      },
-      delivery: {
-        'Short': {
-          '3日': 0,
-          '24時間以内': 1000
-        },
-        'standard': {
-          '2週間': 0,
-          '1週間': 1500,
-          '3日': 4000,
-          '24時間以内': 6000
-        }
-      },
-      options: {
-        'カットアップ': 2000,
-        'エンコード': 1000,
-        'ハモリガイドメロ作成': 3000
-      }
-    };
 
     // 見積金額計算
     function calculateEstimate() {
       let total = 0;
       let hasVariable = false;
+      let totalItems = 0;
 
-      // プラン料金
-      if (selectedPlan) {
-        total += prices.plan[selectedPlan];
+      // プラン料金（数量対応）
+      document.querySelectorAll('.price-card .qty-input').forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        if (qty > 0) {
+          const card = input.closest('.price-card');
+          const price = parseInt(card.getAttribute('data-price')) || 0;
+          total += price * qty;
+          totalItems += qty;
+        }
+      });
+
+      // 納期オプション料金（アイテム数に応じて）
+      if (selectedDelivery && totalItems > 0) {
+        const deliveryPrices = {
+          '2週間': 0,
+          '1週間': 1500,
+          '3日': 4000,
+          '24時間以内': 6000
+        };
+        // Shortプラン用
+        const shortDeliveryPrices = {
+          '3日': 0,
+          '24時間以内': 1000
+        };
+
+        // 選択された納期の追加料金を計算
+        let deliveryPrice = deliveryPrices[selectedDelivery] || shortDeliveryPrices[selectedDelivery] || 0;
+        total += deliveryPrice * totalItems;
       }
 
-      // 納期オプション料金
-      if (selectedDelivery && selectedPlan) {
-        const deliveryPrices = selectedPlan === 'Short' ? prices.delivery['Short'] : prices.delivery['standard'];
-        total += deliveryPrices[selectedDelivery] || 0;
-      }
-
-      // その他オプション料金
-      selectedOptions.forEach(option => {
-        total += prices.options[option] || 0;
-        if (option === 'カットアップ' || option === 'ハモリガイドメロ作成') {
-          hasVariable = true;
+      // その他オプション料金（数量対応）
+      document.querySelectorAll('.other-options .qty-input').forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        if (qty > 0) {
+          const card = input.closest('.option-card');
+          const price = parseInt(card.getAttribute('data-price')) || 0;
+          const isVariable = card.getAttribute('data-variable') === 'true';
+          total += price * qty;
+          if (isVariable) {
+            hasVariable = true;
+          }
         }
       });
 
@@ -412,41 +442,46 @@
       }
     }
 
-    // 各選択変更時に見積もり再計算を呼び出すようにイベントリスナーを追加
-    priceCards.forEach(card => {
-      card.addEventListener('click', calculateEstimate);
-    });
-    document.querySelectorAll('.delivery-options .option-card.clickable').forEach(card => {
-      card.addEventListener('click', calculateEstimate);
-    });
-    document.querySelectorAll('.other-options .option-card.clickable').forEach(card => {
-      card.addEventListener('click', calculateEstimate);
-    });
-
     // 依頼するボタンのリンクを動的に変更
     document.getElementById('estimateBtn').addEventListener('click', function(e) {
       e.preventDefault();
-      
-      console.log('選択状態:', {
-        plan: selectedPlan,
-        delivery: selectedDelivery,
-        options: selectedOptions
+
+      // 選択されたプランを収集
+      const plans = [];
+      document.querySelectorAll('.price-card .qty-input').forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        if (qty > 0) {
+          plans.push(input.getAttribute('data-plan') + ' x' + qty);
+        }
       });
-      
+
+      // 選択されたオプションを収集
+      const options = [];
+      document.querySelectorAll('.other-options .qty-input').forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        if (qty > 0) {
+          options.push(input.getAttribute('data-option') + ' x' + qty);
+        }
+      });
+
       var params = new URLSearchParams();
-      if (selectedPlan) {
-        params.append('plan', selectedPlan);
+      if (plans.length > 0) {
+        params.append('plan', plans.join(', '));
       }
       if (selectedDelivery) {
         params.append('delivery', selectedDelivery);
       }
-      if (selectedOptions.length > 0) {
-        params.append('options', selectedOptions.join(','));
+      if (options.length > 0) {
+        params.append('options', options.join(', '));
       }
+
+      // 見積もり金額も追加
+      const estimateAmount = document.getElementById('estimateAmount').textContent;
+      params.append('estimate', estimateAmount);
+
       var queryString = params.toString();
       var url = 'contact.html' + (queryString ? '?' + queryString : '');
-      
-      console.log('遷移URL:', url);
+
       window.location.href = url;
     });
 
