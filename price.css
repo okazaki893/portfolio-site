@@ -1480,3 +1480,52 @@ body {
     font-size: 14px;
   }
 }
+
+/* Selection Summary (Contact page) */
+.selection-summary-content {
+  background: var(--bg-card, rgba(20, 20, 25, 0.8));
+  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-bottom: 15px;
+}
+
+.summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.summary-list li {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color, rgba(146, 107, 255, 0.1));
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li strong {
+  color: var(--accent-primary, #926bff);
+  margin-right: 10px;
+}
+
+.edit-selection-link {
+  display: inline-block;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: var(--accent-primary, #926bff);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.edit-selection-link:hover {
+  background: var(--accent-dim, rgba(146, 107, 255, 0.2));
+  border-color: var(--accent-primary, #926bff);
+}

@@ -193,7 +193,18 @@
           <input type="text" id="songName" name="songName" required>
         </div>
 
-        <div class="form-group">
+        <!-- 選択内容サマリー（Priceページから遷移時に表示） -->
+        <div class="form-group" id="selectionSummary" style="display: none;">
+          <label>選択内容</label>
+          <div class="selection-summary-content" id="selectionSummaryContent"></div>
+          <input type="hidden" id="hiddenPlan" name="plan">
+          <input type="hidden" id="hiddenDelivery" name="deliveryOption">
+          <input type="hidden" id="hiddenOptions" name="otherOptions">
+          <a href="price.html" class="edit-selection-link">選択を変更する</a>
+        </div>
+
+        <!-- 通常のプラン選択（直接アクセス時に表示） -->
+        <div class="form-group" id="planGroupContainer">
           <label>プラン <span class="required">*</span></label>
           <div class="radio-group" id="planGroup">
             <label class="radio-label">
@@ -238,7 +249,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="otherOptionsGroupContainer">
           <label>その他オプション</label>
           <div class="checkbox-group" id="otherOptionsGroup">
             <label class="checkbox-label">
@@ -435,9 +446,73 @@
       var planValue = urlParams.get('plan');
       var deliveryValue = urlParams.get('delivery');
       var optionsValue = urlParams.get('options');
+      var estimateValue = urlParams.get('estimate');
 
-      console.log('URLパラメータ:', { plan: planValue, delivery: deliveryValue, options: optionsValue });
+      console.log('URLパラメータ:', { plan: planValue, delivery: deliveryValue, options: optionsValue, estimate: estimateValue });
 
+      // 新しいフォーマット（数量付き）かどうかを判定
+      var hasQuantity = planValue && planValue.includes(' x');
+
+      if (hasQuantity) {
+        // 新しいフォーマット: サマリー表示モード
+        showSelectionSummary(planValue, deliveryValue, optionsValue, estimateValue);
+      } else {
+        // 旧フォーマット: 従来の選択モード
+        restoreLegacyFormat(planValue, deliveryValue, optionsValue);
+      }
+    }
+
+    // 選択内容サマリーを表示（Priceページから遷移時）
+    function showSelectionSummary(planValue, deliveryValue, optionsValue, estimateValue) {
+      // 通常の選択UIを非表示
+      document.getElementById('planGroupContainer').style.display = 'none';
+      document.getElementById('deliveryOptionGroup').style.display = 'none';
+      document.getElementById('otherOptionsGroupContainer').style.display = 'none';
+
+      // サマリーを表示
+      var summaryDiv = document.getElementById('selectionSummary');
+      var summaryContent = document.getElementById('selectionSummaryContent');
+      summaryDiv.style.display = 'block';
+
+      // サマリーHTML作成
+      var html = '<ul class="summary-list">';
+
+      if (planValue) {
+        html += '<li><strong>プラン:</strong> ' + planValue + '</li>';
+      }
+      if (deliveryValue) {
+        html += '<li><strong>納期:</strong> ' + deliveryValue + '</li>';
+      }
+      if (optionsValue) {
+        html += '<li><strong>オプション:</strong> ' + optionsValue + '</li>';
+      }
+      if (estimateValue) {
+        html += '<li><strong>概算見積り:</strong> ' + estimateValue + '</li>';
+      }
+
+      html += '</ul>';
+      summaryContent.innerHTML = html;
+
+      // hidden inputに値をセット
+      document.getElementById('hiddenPlan').value = planValue || '';
+      document.getElementById('hiddenDelivery').value = deliveryValue || '';
+      document.getElementById('hiddenOptions').value = optionsValue || '';
+
+      // 見積金額を表示
+      if (estimateValue) {
+        document.getElementById('estimateAmount').textContent = estimateValue;
+      }
+
+      // required属性を解除（hidden inputで送信するため）
+      var planInputs = document.querySelectorAll('#planGroup input[name="plan"]');
+      for (var i = 0; i < planInputs.length; i++) {
+        planInputs[i].removeAttribute('required');
+        planInputs[i].removeAttribute('name');
+      }
+    }
+
+    // 旧フォーマットの復元（直接アクセス時や旧リンク）
+    function restoreLegacyFormat(planValue, deliveryValue, optionsValue) {
       // プランを選択
       if (planValue) {
         var planInputs = document.querySelectorAll('input[name="plan"]');
@@ -477,11 +552,11 @@
             var parentLabel = input.closest('.radio-label');
             var forAttr = parentLabel ? parentLabel.getAttribute('data-for') : null;
             var isVisible = parentLabel && window.getComputedStyle(parentLabel).display !== 'none';
-            
+
             // 値が一致するラジオボタンを探す
             if (input.value === deliveryValue) {
               var shouldSelect = false;
-              
+
               // 3日の場合はプランに応じて選択
               if (deliveryValue === '3日') {
                 if (isShort && forAttr === 'short') {
@@ -500,7 +575,7 @@
                   shouldSelect = true;
                 }
               }
-              
+
               if (shouldSelect) {
                 input.checked = true;
                 deliveryFound = true;
@@ -511,20 +586,11 @@
               }
             }
           }
-          
+
           if (!deliveryFound) {
             console.warn('納期オプションが見つかりません:', deliveryValue);
-            // デバッグ用：全ての納期オプションを表示
-            console.log('利用可能な納期オプション:');
-            for (var i = 0; i < deliveryInputs.length; i++) {
-              var input = deliveryInputs[i];
-              var parentLabel = input.closest('.radio-label');
-              var forAttr = parentLabel ? parentLabel.getAttribute('data-for') : null;
-              var isVisible = parentLabel && window.getComputedStyle(parentLabel).display !== 'none';
-              console.log('  -', input.value, 'forAttr:', forAttr, 'visible:', isVisible);
-            }
           }
-          
+
           // 見積もり再計算
           calculateEstimate();
         }, 100);
@@ -533,11 +599,11 @@
       // その他オプションを選択（納期オプション選択後に実行）
       if (optionsValue) {
         setTimeout(function() {
-          var options = optionsValue.split(',');
+          var options = optionsValue.split(',').map(function(s) { return s.trim(); });
           console.log('その他オプション選択開始:', options);
           var checkboxes = document.querySelectorAll('input[name="otherOptions"]');
           var optionsFound = 0;
-          
+
           for (var i = 0; i < checkboxes.length; i++) {
             for (var j = 0; j < options.length; j++) {
               if (checkboxes[i].value === options[j]) {
@@ -547,11 +613,11 @@
               }
             }
           }
-          
+
           if (optionsFound === 0 && options.length > 0) {
             console.warn('その他オプションが見つかりません:', options);
           }
-          
+
           // 見積もり再計算
           calculateEstimate();
         }, 150);
