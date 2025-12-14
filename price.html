@@ -150,68 +150,74 @@
       <!-- 基本料金 -->
       <div class="price-cards">
         <!-- Short -->
-        <div class="price-card multi-select" data-plan="Short" data-price="2000">
-          <div class="card-header">
-            <span class="plan-name">Short</span>
-            <div class="price">
-              <span class="currency">¥</span>
-              <span class="amount">2,000</span>
-              <span class="period">~</span>
+        <div class="price-card-wrapper">
+          <div class="price-card tap-select" data-plan="Short" data-price="2000" onclick="tapCard(this)">
+            <div class="card-header">
+              <span class="plan-name">Short</span>
+              <div class="price">
+                <span class="currency">¥</span>
+                <span class="amount">2,000</span>
+                <span class="period">~</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="features">
+                <li>基本納期: 3日</li>
+              </ul>
             </div>
           </div>
-          <div class="card-body">
-            <ul class="features">
-              <li>基本納期: 3日</li>
-            </ul>
-            <div class="quantity-control">
-              <button type="button" class="qty-btn minus" onclick="changeQty(this, -1)">-</button>
-              <input type="number" class="qty-input" value="0" min="0" max="99" data-plan="Short" onchange="updateFromInput(this)">
-              <button type="button" class="qty-btn plus" onclick="changeQty(this, 1)">+</button>
-            </div>
+          <div class="qty-display" data-for="Short">
+            <button type="button" class="qty-btn minus" onclick="changeQty('Short', -1, event)">-</button>
+            <span class="qty-value">0</span>
+            <button type="button" class="qty-btn plus" onclick="changeQty('Short', 1, event)">+</button>
           </div>
         </div>
 
         <!-- One Chorus -->
-        <div class="price-card multi-select" data-plan="One Chorus" data-price="3000">
-          <div class="card-header">
-            <span class="plan-name">One Chorus</span>
-            <div class="price">
-              <span class="currency">¥</span>
-              <span class="amount">3,000</span>
-              <span class="period">~</span>
+        <div class="price-card-wrapper">
+          <div class="price-card tap-select" data-plan="One Chorus" data-price="3000" onclick="tapCard(this)">
+            <div class="card-header">
+              <span class="plan-name">One Chorus</span>
+              <div class="price">
+                <span class="currency">¥</span>
+                <span class="amount">3,000</span>
+                <span class="period">~</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="features">
+                <li>基本納期: 2週間</li>
+              </ul>
             </div>
           </div>
-          <div class="card-body">
-            <ul class="features">
-              <li>基本納期: 2週間</li>
-            </ul>
-            <div class="quantity-control">
-              <button type="button" class="qty-btn minus" onclick="changeQty(this, -1)">-</button>
-              <input type="number" class="qty-input" value="0" min="0" max="99" data-plan="One Chorus" onchange="updateFromInput(this)">
-              <button type="button" class="qty-btn plus" onclick="changeQty(this, 1)">+</button>
-            </div>
+          <div class="qty-display" data-for="One Chorus">
+            <button type="button" class="qty-btn minus" onclick="changeQty('One Chorus', -1, event)">-</button>
+            <span class="qty-value">0</span>
+            <button type="button" class="qty-btn plus" onclick="changeQty('One Chorus', 1, event)">+</button>
           </div>
         </div>
 
         <!-- Full Chorus -->
-        <div class="price-card multi-select" data-plan="Full Chorus" data-price="6000">
-          <div class="card-header">
-            <span class="plan-name">Full Chorus</span>
-            <div class="price">
-              <span class="currency">¥</span>
-              <span class="amount">6,000</span>
-              <span class="period">~</span>
+        <div class="price-card-wrapper">
+          <div class="price-card tap-select" data-plan="Full Chorus" data-price="6000" onclick="tapCard(this)">
+            <div class="card-header">
+              <span class="plan-name">Full Chorus</span>
+              <div class="price">
+                <span class="currency">¥</span>
+                <span class="amount">6,000</span>
+                <span class="period">~</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="features">
+                <li>基本納期: 2週間</li>
+              </ul>
             </div>
           </div>
-          <div class="card-body">
-            <ul class="features">
-              <li>基本納期: 2週間</li>
-            </ul>
-            <div class="quantity-control">
-              <button type="button" class="qty-btn minus" onclick="changeQty(this, -1)">-</button>
-              <input type="number" class="qty-input" value="0" min="0" max="99" data-plan="Full Chorus" onchange="updateFromInput(this)">
-              <button type="button" class="qty-btn plus" onclick="changeQty(this, 1)">+</button>
-            </div>
+          <div class="qty-display" data-for="Full Chorus">
+            <button type="button" class="qty-btn minus" onclick="changeQty('Full Chorus', -1, event)">-</button>
+            <span class="qty-value">0</span>
+            <button type="button" class="qty-btn plus" onclick="changeQty('Full Chorus', 1, event)">+</button>
           </div>
         </div>
       </div>
@@ -226,21 +232,49 @@
       <div class="option-section delivery-section" id="deliveryStandard">
         <h3 class="option-subtitle">One Chorus / Full Chorus</h3>
         <div class="option-cards delivery-options four-cols" data-for="standard">
-          <div class="option-card clickable" data-delivery="2週間">
-            <span class="option-name">2週間</span>
-            <span class="option-price">¥0</span>
+          <div class="option-card-wrapper">
+            <div class="option-card tap-select" data-delivery="standard-2週間" data-price="0" onclick="tapDelivery(this, 'standard')">
+              <span class="option-name">2週間</span>
+              <span class="option-price">¥0</span>
+            </div>
+            <div class="qty-display small" data-for="standard-2週間">
+              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-2週間', -1, event)">-</button>
+              <span class="qty-value">0</span>
+              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-2週間', 1, event)">+</button>
+            </div>
           </div>
-          <div class="option-card clickable" data-delivery="1週間">
-            <span class="option-name">1週間</span>
-            <span class="option-price">+¥1,500</span>
+          <div class="option-card-wrapper">
+            <div class="option-card tap-select" data-delivery="standard-1週間" data-price="1500" onclick="tapDelivery(this, 'standard')">
+              <span class="option-name">1週間</span>
+              <span class="option-price">+¥1,500</span>
+            </div>
+            <div class="qty-display small" data-for="standard-1週間">
+              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-1週間', -1, event)">-</button>
+              <span class="qty-value">0</span>
+              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-1週間', 1, event)">+</button>
+            </div>
           </div>
-          <div class="option-card clickable" data-delivery="3日">
-            <span class="option-name">3日</span>
-            <span class="option-price">+¥4,000</span>
+          <div class="option-card-wrapper">
+            <div class="option-card tap-select" data-delivery="standard-3日" data-price="4000" onclick="tapDelivery(this, 'standard')">
+              <span class="option-name">3日</span>
+              <span class="option-price">+¥4,000</span>
+            </div>
+            <div class="qty-display small" data-for="standard-3日">
+              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-3日', -1, event)">-</button>
+              <span class="qty-value">0</span>
+              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-3日', 1, event)">+</button>
+            </div>
           </div>
-          <div class="option-card clickable" data-delivery="24時間以内">
-            <span class="option-name">24時間以内</span>
-            <span class="option-price">+¥6,000</span>
+          <div class="option-card-wrapper">
+            <div class="option-card tap-select" data-delivery="standard-24時間以内" data-price="6000" onclick="tapDelivery(this, 'standard')">
+              <span class="option-name">24時間以内</span>
+              <span class="option-price">+¥6,000</span>
+            </div>
+            <div class="qty-display small" data-for="standard-24時間以内">
+              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-24時間以内', -1, event)">-</button>
+              <span class="qty-value">0</span>
+              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-24時間以内', 1, event)">+</button>
+            </div>
           </div>
         </div>
       </div>
@@ -248,13 +282,27 @@
       <div class="option-section delivery-section" id="deliveryShort">
         <h3 class="option-subtitle">Short</h3>
         <div class="option-cards delivery-options" data-for="short">
-          <div class="option-card clickable" data-delivery="3日">
-            <span class="option-name">3日</span>
-            <span class="option-price">¥0</span>
+          <div class="option-card-wrapper">
+            <div class="option-card tap-select" data-delivery="short-3日" data-price="0" onclick="tapDelivery(this, 'short')">
+              <span class="option-name">3日</span>
+              <span class="option-price">¥0</span>
+            </div>
+            <div class="qty-display small" data-for="short-3日">
+              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-3日', -1, event)">-</button>
+              <span class="qty-value">0</span>
+              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-3日', 1, event)">+</button>
+            </div>
           </div>
-          <div class="option-card clickable" data-delivery="24時間以内">
-            <span class="option-name">24時間以内</span>
-            <span class="option-price">+¥1,000</span>
+          <div class="option-card-wrapper">
+            <div class="option-card tap-select" data-delivery="short-24時間以内" data-price="1000" onclick="tapDelivery(this, 'short')">
+              <span class="option-name">24時間以内</span>
+              <span class="option-price">+¥1,000</span>
+            </div>
+            <div class="qty-display small" data-for="short-24時間以内">
+              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-24時間以内', -1, event)">-</button>
+              <span class="qty-value">0</span>
+              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-24時間以内', 1, event)">+</button>
+            </div>
           </div>
         </div>
       </div>
@@ -262,31 +310,37 @@
       <!-- その他オプション -->
       <h2 class="section-title">その他オプション</h2>
       <div class="option-cards other-options">
-        <div class="option-card multi-select" data-option="カットアップ" data-price="2000" data-variable="true">
-          <span class="option-name">カットアップ</span>
-          <span class="option-price">¥2,000~</span>
-          <div class="quantity-control small">
-            <button type="button" class="qty-btn minus" onclick="changeOptionQty(this, -1)">-</button>
-            <input type="number" class="qty-input" value="0" min="0" max="99" data-option="カットアップ" onchange="updateOptionFromInput(this)">
-            <button type="button" class="qty-btn plus" onclick="changeOptionQty(this, 1)">+</button>
+        <div class="option-card-wrapper">
+          <div class="option-card tap-select" data-option="カットアップ" data-price="2000" data-variable="true" onclick="tapOption(this)">
+            <span class="option-name">カットアップ</span>
+            <span class="option-price">¥2,000~</span>
+          </div>
+          <div class="qty-display small" data-for="カットアップ">
+            <button type="button" class="qty-btn minus" onclick="changeOptionQty('カットアップ', -1, event)">-</button>
+            <span class="qty-value">0</span>
+            <button type="button" class="qty-btn plus" onclick="changeOptionQty('カットアップ', 1, event)">+</button>
           </div>
         </div>
-        <div class="option-card multi-select" data-option="エンコード" data-price="1000">
-          <span class="option-name">エンコード</span>
-          <span class="option-price">¥1,000</span>
-          <div class="quantity-control small">
-            <button type="button" class="qty-btn minus" onclick="changeOptionQty(this, -1)">-</button>
-            <input type="number" class="qty-input" value="0" min="0" max="99" data-option="エンコード" onchange="updateOptionFromInput(this)">
-            <button type="button" class="qty-btn plus" onclick="changeOptionQty(this, 1)">+</button>
+        <div class="option-card-wrapper">
+          <div class="option-card tap-select" data-option="エンコード" data-price="1000" onclick="tapOption(this)">
+            <span class="option-name">エンコード</span>
+            <span class="option-price">¥1,000</span>
+          </div>
+          <div class="qty-display small" data-for="エンコード">
+            <button type="button" class="qty-btn minus" onclick="changeOptionQty('エンコード', -1, event)">-</button>
+            <span class="qty-value">0</span>
+            <button type="button" class="qty-btn plus" onclick="changeOptionQty('エンコード', 1, event)">+</button>
           </div>
         </div>
-        <div class="option-card multi-select" data-option="ハモリガイドメロ作成" data-price="3000" data-variable="true">
-          <span class="option-name">ハモリガイドメロ作成</span>
-          <span class="option-price">¥3,000~</span>
-          <div class="quantity-control small">
-            <button type="button" class="qty-btn minus" onclick="changeOptionQty(this, -1)">-</button>
-            <input type="number" class="qty-input" value="0" min="0" max="99" data-option="ハモリガイドメロ作成" onchange="updateOptionFromInput(this)">
-            <button type="button" class="qty-btn plus" onclick="changeOptionQty(this, 1)">+</button>
+        <div class="option-card-wrapper">
+          <div class="option-card tap-select" data-option="ハモリガイドメロ作成" data-price="3000" data-variable="true" onclick="tapOption(this)">
+            <span class="option-name">ハモリガイドメロ作成</span>
+            <span class="option-price">¥3,000~</span>
+          </div>
+          <div class="qty-display small" data-for="ハモリガイドメロ作成">
+            <button type="button" class="qty-btn minus" onclick="changeOptionQty('ハモリガイドメロ作成', -1, event)">-</button>
+            <span class="qty-value">0</span>
+            <button type="button" class="qty-btn plus" onclick="changeOptionQty('ハモリガイドメロ作成', 1, event)">+</button>
           </div>
         </div>
       </div>
@@ -309,129 +363,116 @@
   </div>
 
   <script>
-    // 数量変更（プラン）
-    function changeQty(btn, delta) {
-      const input = btn.parentElement.querySelector('.qty-input');
-      let value = parseInt(input.value) || 0;
-      value = Math.max(0, Math.min(99, value + delta));
-      input.value = value;
-      updateCardState(input);
+    // 数量データを保持
+    const quantities = {
+      plans: {},
+      delivery: {},
+      options: {}
+    };
+
+    // プランカードをタップ
+    function tapCard(card) {
+      const plan = card.getAttribute('data-plan');
+      quantities.plans[plan] = (quantities.plans[plan] || 0) + 1;
+      updateDisplay(plan, quantities.plans[plan], '.price-card');
       calculateEstimate();
     }
 
-    // 入力から更新（プラン）
-    function updateFromInput(input) {
-      let value = parseInt(input.value) || 0;
-      value = Math.max(0, Math.min(99, value));
-      input.value = value;
-      updateCardState(input);
+    // プラン数量変更
+    function changeQty(plan, delta, event) {
+      event.stopPropagation();
+      quantities.plans[plan] = Math.max(0, (quantities.plans[plan] || 0) + delta);
+      updateDisplay(plan, quantities.plans[plan], '.price-card');
       calculateEstimate();
     }
 
-    // カードの状態を更新
-    function updateCardState(input) {
-      const card = input.closest('.price-card');
-      if (parseInt(input.value) > 0) {
-        card.classList.add('selected');
-      } else {
-        card.classList.remove('selected');
+    // 納期カードをタップ
+    function tapDelivery(card, type) {
+      const delivery = card.getAttribute('data-delivery');
+      quantities.delivery[delivery] = (quantities.delivery[delivery] || 0) + 1;
+      updateDisplay(delivery, quantities.delivery[delivery], '.option-card');
+      calculateEstimate();
+    }
+
+    // 納期数量変更
+    function changeDeliveryQty(delivery, delta, event) {
+      event.stopPropagation();
+      quantities.delivery[delivery] = Math.max(0, (quantities.delivery[delivery] || 0) + delta);
+      updateDisplay(delivery, quantities.delivery[delivery], '.option-card');
+      calculateEstimate();
+    }
+
+    // オプションカードをタップ
+    function tapOption(card) {
+      const option = card.getAttribute('data-option');
+      quantities.options[option] = (quantities.options[option] || 0) + 1;
+      updateDisplay(option, quantities.options[option], '.option-card');
+      calculateEstimate();
+    }
+
+    // オプション数量変更
+    function changeOptionQty(option, delta, event) {
+      event.stopPropagation();
+      quantities.options[option] = Math.max(0, (quantities.options[option] || 0) + delta);
+      updateDisplay(option, quantities.options[option], '.option-card');
+      calculateEstimate();
+    }
+
+    // 表示を更新
+    function updateDisplay(key, value, cardSelector) {
+      const display = document.querySelector(`.qty-display[data-for="${key}"] .qty-value`);
+      if (display) {
+        display.textContent = value;
       }
-    }
-
-    // 数量変更（オプション）
-    function changeOptionQty(btn, delta) {
-      const input = btn.parentElement.querySelector('.qty-input');
-      let value = parseInt(input.value) || 0;
-      value = Math.max(0, Math.min(99, value + delta));
-      input.value = value;
-      updateOptionCardState(input);
-      calculateEstimate();
-    }
-
-    // 入力から更新（オプション）
-    function updateOptionFromInput(input) {
-      let value = parseInt(input.value) || 0;
-      value = Math.max(0, Math.min(99, value));
-      input.value = value;
-      updateOptionCardState(input);
-      calculateEstimate();
-    }
-
-    // オプションカードの状態を更新
-    function updateOptionCardState(input) {
-      const card = input.closest('.option-card');
-      if (parseInt(input.value) > 0) {
-        card.classList.add('selected');
-      } else {
-        card.classList.remove('selected');
-      }
-    }
-
-    // 納期オプションの選択機能（1つだけ選択可能）
-    let selectedDelivery = null;
-    document.querySelectorAll('.delivery-options .option-card.clickable').forEach(card => {
-      card.addEventListener('click', function() {
-        if (this.classList.contains('selected')) {
-          this.classList.remove('selected');
-          selectedDelivery = null;
+      // カードのselected状態を更新
+      const card = document.querySelector(`${cardSelector}[data-plan="${key}"], ${cardSelector}[data-delivery="${key}"], ${cardSelector}[data-option="${key}"]`);
+      if (card) {
+        if (value > 0) {
+          card.classList.add('selected');
         } else {
-          document.querySelectorAll('.delivery-options .option-card').forEach(c => c.classList.remove('selected'));
-          this.classList.add('selected');
-          selectedDelivery = this.getAttribute('data-delivery');
+          card.classList.remove('selected');
         }
-        calculateEstimate();
-      });
-    });
+      }
+    }
 
     // 見積金額計算
     function calculateEstimate() {
       let total = 0;
       let hasVariable = false;
-      let totalItems = 0;
 
-      // プラン料金（数量対応）
-      document.querySelectorAll('.price-card .qty-input').forEach(input => {
-        const qty = parseInt(input.value) || 0;
+      // プラン料金
+      const planPrices = { 'Short': 2000, 'One Chorus': 3000, 'Full Chorus': 6000 };
+      for (const [plan, qty] of Object.entries(quantities.plans)) {
         if (qty > 0) {
-          const card = input.closest('.price-card');
-          const price = parseInt(card.getAttribute('data-price')) || 0;
-          total += price * qty;
-          totalItems += qty;
+          total += (planPrices[plan] || 0) * qty;
         }
-      });
-
-      // 納期オプション料金（アイテム数に応じて）
-      if (selectedDelivery && totalItems > 0) {
-        const deliveryPrices = {
-          '2週間': 0,
-          '1週間': 1500,
-          '3日': 4000,
-          '24時間以内': 6000
-        };
-        // Shortプラン用
-        const shortDeliveryPrices = {
-          '3日': 0,
-          '24時間以内': 1000
-        };
-
-        // 選択された納期の追加料金を計算
-        let deliveryPrice = deliveryPrices[selectedDelivery] || shortDeliveryPrices[selectedDelivery] || 0;
-        total += deliveryPrice * totalItems;
       }
 
-      // その他オプション料金（数量対応）
-      document.querySelectorAll('.other-options .qty-input').forEach(input => {
-        const qty = parseInt(input.value) || 0;
+      // 納期オプション料金
+      for (const [delivery, qty] of Object.entries(quantities.delivery)) {
         if (qty > 0) {
-          const card = input.closest('.option-card');
-          const price = parseInt(card.getAttribute('data-price')) || 0;
-          const isVariable = card.getAttribute('data-variable') === 'true';
-          total += price * qty;
-          if (isVariable) {
-            hasVariable = true;
+          const card = document.querySelector(`.option-card[data-delivery="${delivery}"]`);
+          if (card) {
+            const price = parseInt(card.getAttribute('data-price')) || 0;
+            total += price * qty;
           }
         }
-      });
+      }
+
+      // その他オプション料金
+      for (const [option, qty] of Object.entries(quantities.options)) {
+        if (qty > 0) {
+          const card = document.querySelector(`.option-card[data-option="${option}"]`);
+          if (card) {
+            const price = parseInt(card.getAttribute('data-price')) || 0;
+            const isVariable = card.getAttribute('data-variable') === 'true';
+            total += price * qty;
+            if (isVariable) {
+              hasVariable = true;
+            }
+          }
+        }
+      }
 
       // 表示更新
       const display = document.getElementById('estimateAmount');
@@ -448,28 +489,36 @@
 
       // 選択されたプランを収集
       const plans = [];
-      document.querySelectorAll('.price-card .qty-input').forEach(input => {
-        const qty = parseInt(input.value) || 0;
+      for (const [plan, qty] of Object.entries(quantities.plans)) {
         if (qty > 0) {
-          plans.push(input.getAttribute('data-plan') + ' x' + qty);
+          plans.push(plan + ' x' + qty);
         }
-      });
+      }
+
+      // 選択された納期を収集
+      const deliveries = [];
+      for (const [delivery, qty] of Object.entries(quantities.delivery)) {
+        if (qty > 0) {
+          // "standard-2週間" -> "2週間" のように変換
+          const name = delivery.split('-').slice(1).join('-');
+          deliveries.push(name + ' x' + qty);
+        }
+      }
 
       // 選択されたオプションを収集
       const options = [];
-      document.querySelectorAll('.other-options .qty-input').forEach(input => {
-        const qty = parseInt(input.value) || 0;
+      for (const [option, qty] of Object.entries(quantities.options)) {
         if (qty > 0) {
-          options.push(input.getAttribute('data-option') + ' x' + qty);
+          options.push(option + ' x' + qty);
         }
-      });
+      }
 
       var params = new URLSearchParams();
       if (plans.length > 0) {
         params.append('plan', plans.join(', '));
       }
-      if (selectedDelivery) {
-        params.append('delivery', selectedDelivery);
+      if (deliveries.length > 0) {
+        params.append('delivery', deliveries.join(', '));
       }
       if (options.length > 0) {
         params.append('options', options.join(', '));
