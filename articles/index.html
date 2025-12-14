@@ -65,85 +65,110 @@
       text-align: left;
     }
 
-    .article-header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
     .article-meta {
       font-family: 'Arial', sans-serif;
       font-size: 14px;
       color: var(--text-muted, rgba(255, 255, 255, 0.5));
-      white-space: nowrap;
-      flex-shrink: 0;
+      margin-top: 10px;
     }
 
-    /* シェアボタン */
+    /* シェアセクション */
+    .share-section {
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .share-title {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+
     .share-buttons {
       display: flex;
+      justify-content: center;
       gap: 12px;
-      margin-top: 20px;
       flex-wrap: wrap;
     }
 
     .share-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
+      background: var(--bg-card, rgba(20, 20, 25, 0.6));
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-family: 'Arial', sans-serif;
-      font-size: 14px;
-      text-decoration: none;
-      cursor: pointer;
+      justify-content: center;
       transition: all 0.3s ease;
-      border: none;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-primary, #926bff);
     }
 
     .share-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
+      width: 20px;
+      height: 20px;
+      fill: var(--text-secondary, rgba(255, 255, 255, 0.7));
+      transition: fill 0.3s ease;
     }
 
-    .share-btn-x {
+    .share-btn:hover svg {
+      fill: var(--accent-primary, #926bff);
+    }
+
+    .share-btn.x-share:hover {
+      border-color: #000;
       background: #000;
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .share-btn.x-share:hover svg {
+      fill: #fff;
     }
 
-    .share-btn-x:hover {
-      background: #1a1a1a;
-      border-color: rgba(255, 255, 255, 0.4);
+    .share-btn.line-share:hover {
+      border-color: #06c755;
+      background: #06c755;
+    }
+    .share-btn.line-share:hover svg {
+      fill: #fff;
     }
 
-    .share-btn-line {
-      background: #06C755;
-      color: #fff;
-    }
-
-    .share-btn-line:hover {
-      background: #05b34c;
-    }
-
-    .share-btn-copy {
-      background: var(--bg-card, rgba(20, 20, 25, 0.8));
-      color: var(--text-secondary, rgba(255, 255, 255, 0.9));
-      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3));
-    }
-
-    .share-btn-copy:hover {
+    .share-btn.copy-link:hover {
       border-color: var(--accent-primary, #926bff);
-      color: var(--accent-primary, #926bff);
+      background: var(--accent-primary, #926bff);
+    }
+    .share-btn.copy-link:hover svg {
+      fill: #fff;
     }
 
-    .share-btn-copy.copied {
-      background: rgba(107, 255, 107, 0.1);
-      border-color: #6bff6b;
-      color: #6bff6b;
+    .share-btn-wrapper {
+      position: relative;
+    }
+
+    .copy-tooltip {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      color: var(--accent-primary, #926bff);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .copy-tooltip.show {
+      opacity: 1;
     }
 
     .article-thumbnail {
@@ -346,27 +371,19 @@
         left: 20px;
       }
 
-      .article-header-top {
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .article-meta {
-        order: -1;
-      }
-
-      .share-buttons {
-        margin-top: 15px;
+      .share-section {
+        margin-top: 40px;
+        padding-top: 20px;
       }
 
       .share-btn {
-        padding: 8px 12px;
-        font-size: 13px;
+        width: 40px;
+        height: 40px;
       }
 
       .share-btn svg {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
       }
     }
   </style>
@@ -642,38 +659,39 @@
         // 記事を表示
         container.innerHTML = `
           <div class="article-wrapper">
-            <div class="article-header">
-              <div class="article-header-top">
-                <h1 class="article-title">${meta.title || 'Untitled'}</h1>
-                ${meta.date ? `<p class="article-meta">${formatDate(meta.date)}</p>` : ''}
-              </div>
-              <div class="share-buttons">
-                <a href="https://twitter.com/intent/tweet?url=${currentUrl}&text=${shareTitle}" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-x">
-                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                  X でシェア
-                </a>
-                <a href="https://social-plugins.line.me/lineit/share?url=${currentUrl}" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-line">
-                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.349 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
-                  </svg>
-                  LINE
-                </a>
-                <button onclick="copyArticleUrl()" class="share-btn share-btn-copy" id="copyUrlBtn">
-                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                  </svg>
-                  <span id="copyBtnText">URLをコピー</span>
-                </button>
-              </div>
-            </div>
             ${thumbnailUrl ? `
               <div class="article-thumbnail">
                 <img src="${thumbnailUrl}" alt="${meta.title}">
               </div>
             ` : ''}
+            <div class="article-header">
+              <h1 class="article-title">${meta.title || 'Untitled'}</h1>
+              ${meta.date ? `<p class="article-meta">${formatDate(meta.date)}</p>` : ''}
+            </div>
             <div class="article-body">${htmlContent}</div>
+            <div class="share-section">
+              <p class="share-title">SHARE</p>
+              <div class="share-buttons">
+                <button class="share-btn x-share" onclick="shareToX()" title="Xでシェア">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </button>
+                <button class="share-btn line-share" onclick="shareToLine()" title="LINEでシェア">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.349 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+                  </svg>
+                </button>
+                <div class="share-btn-wrapper">
+                  <button class="share-btn copy-link" onclick="copyLink()" title="リンクをコピー">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                    </svg>
+                  </button>
+                  <span class="copy-tooltip" id="copyTooltip">コピーしました!</span>
+                </div>
+              </div>
+            </div>
           </div>
         `;
       } catch (error) {
@@ -685,34 +703,24 @@
     // 初期化
     loadArticle();
 
-    // URLをクリップボードにコピー
-    function copyArticleUrl() {
-      const url = window.location.href;
-      navigator.clipboard.writeText(url).then(() => {
-        const btn = document.getElementById('copyUrlBtn');
-        const btnText = document.getElementById('copyBtnText');
-        btn.classList.add('copied');
-        btnText.textContent = 'コピーしました！';
+    // シェア機能
+    function shareToX() {
+      const text = encodeURIComponent(document.title);
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=550,height=420');
+    }
+
+    function shareToLine() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://social-plugins.line.me/lineit/share?url=${url}`, '_blank', 'width=550,height=420');
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const tooltip = document.getElementById('copyTooltip');
+        tooltip.classList.add('show');
         setTimeout(() => {
-          btn.classList.remove('copied');
-          btnText.textContent = 'URLをコピー';
-        }, 2000);
-      }).catch(err => {
-        console.error('Failed to copy URL:', err);
-        // フォールバック
-        const textarea = document.createElement('textarea');
-        textarea.value = url;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        const btn = document.getElementById('copyUrlBtn');
-        const btnText = document.getElementById('copyBtnText');
-        btn.classList.add('copied');
-        btnText.textContent = 'コピーしました！';
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          btnText.textContent = 'URLをコピー';
+          tooltip.classList.remove('show');
         }, 2000);
       });
     }
