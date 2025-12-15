@@ -1,7 +1,6 @@
 ---
 title: "歌ってみた録音で失敗しないためのBPM・メトロノーム設定ガイド"
 date: 2025-12-15T05:30:28.453Z
-publishDate: 2025-12-15T06:00:00.000Z
 thumbnail: "/content/uploads/歌ってみた録音で失敗しないためのbpm・メトロノーム設定ガイド/1765776609210_Gemini_Generated_Image_a36j8ba36j8saba36j.png"
 ---
 
