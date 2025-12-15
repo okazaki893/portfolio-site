@@ -853,8 +853,8 @@
         savePlanning();
       }
 
-      // ログイン状態確認
-      if (sessionStorage.getItem('admin_logged_in') === 'true') {
+      // ログイン状態確認（自動ログイン対応）
+      if (localStorage.getItem('admin_logged_in') === 'true') {
         showAdminPanel();
       }
     }
@@ -863,7 +863,7 @@
     function login() {
       const password = document.getElementById('passwordInput').value;
       if (password === ADMIN_PASSWORD) {
-        sessionStorage.setItem('admin_logged_in', 'true');
+        localStorage.setItem('admin_logged_in', 'true');
         showAdminPanel();
       } else {
         document.getElementById('loginError').textContent = 'パスワードが違います';
@@ -872,7 +872,7 @@
 
     // ログアウト
     function logout() {
-      sessionStorage.removeItem('admin_logged_in');
+      localStorage.removeItem('admin_logged_in');
       document.getElementById('loginContainer').style.display = 'flex';
       document.getElementById('adminPanel').style.display = 'none';
       document.getElementById('passwordInput').value = '';
