@@ -653,7 +653,9 @@
         }
 
         // Markdownをパース
+        console.log('Markdown body:', body);
         let htmlContent = marked.parse(body || '');
+        console.log('Parsed HTML:', htmlContent);
         // 画像パスをGitHub raw URLに変換
         htmlContent = convertImagePaths(htmlContent);
 
