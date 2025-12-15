@@ -1,10 +1,16 @@
 [
   {
-    "slug": "sample-article",
-    "title": "サンプル記事",
-    "date": "2024-12-13T12:00:00.000Z",
+    "slug": "歌ってみた録音で失敗しないためのbpm・メトロノーム設定ガイド",
+    "title": "歌ってみた録音で失敗しないためのBPM・メトロノーム設定ガイド",
+    "date": "2025-12-15T05:30:28.453Z",
     "thumbnail": null,
-    "category": "DTM",
-    "summary": "これはサンプル記事です。CMSから記事を追加・編集できます。"
+    "summary": ""
+  },
+  {
+    "slug": "mix師が泣く前に-歌録音の-絶対ng-3選",
+    "title": "MIX師が泣く前に！歌録音の「絶対NG」3選",
+    "date": "2025-12-14T08:26:07.695Z",
+    "thumbnail": null,
+    "summary": ""
   }
 ]
