@@ -6,10 +6,6 @@ on:
   push:
     branches: ["main"]
 
-  # 予約投稿用: 1時間ごとに自動ビルド
-  schedule:
-    - cron: '0 * * * *'  # 毎時0分
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 

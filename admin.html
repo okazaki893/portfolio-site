@@ -549,12 +549,6 @@
               <h4 style="color: var(--text-secondary, rgba(255,255,255,0.8)); margin-bottom: 10px;">新規記事作成</h4>
               <input type="text" id="newArticleTitle" placeholder="記事タイトル" oninput="syncFolderName(this.value)">
               <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/フォルダ名/image.jpg）">
-              <div style="margin-top: 10px;">
-                <label style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px;">
-                  予約投稿（空欄で即時公開）
-                </label>
-                <input type="datetime-local" id="newArticlePublishDate" style="width: 100%; padding: 12px 15px; margin-top: 5px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px;">
-              </div>
               <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
 
               <!-- 本文ファイルアップロード -->
@@ -693,12 +687,6 @@
         <input type="hidden" id="editArticleSha">
         <input type="text" id="editArticleTitle" placeholder="タイトル">
         <input type="text" id="editArticleThumbnail" placeholder="サムネイル画像パス（任意）">
-        <div style="margin-top: 10px;">
-          <label style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px;">
-            予約投稿（空欄で即時公開）
-          </label>
-          <input type="datetime-local" id="editArticlePublishDate" style="width: 100%; padding: 12px 15px; margin-top: 5px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px;">
-        </div>
         <textarea id="editArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
 
         <!-- 本文ファイルアップロード（編集用） -->
@@ -1867,16 +1855,6 @@
       articlesList.forEach((article, index) => {
         const date = new Date(article.date).toLocaleDateString('ja-JP');
 
-        // 予約投稿の状態を判定
-        let scheduleBadge = '';
-        if (article.publishDate) {
-          const publishDate = new Date(article.publishDate);
-          if (publishDate > now) {
-            const pubDateStr = publishDate.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            scheduleBadge = `<span style="display: inline-block; padding: 2px 8px; background: rgba(255, 165, 0, 0.3); border: 1px solid rgba(255, 165, 0, 0.6); border-radius: 4px; font-size: 11px; color: #ffa500; margin-left: 8px;">予約: ${pubDateStr}</span>`;
-          }
-        }
-
         const item = document.createElement('div');
         item.className = 'video-item';
         item.innerHTML = `
@@ -1891,7 +1869,7 @@
             </div>
           `}
           <div class="video-info">
-            <h4>${article.title}${scheduleBadge}</h4>
+            <h4>${article.title}</h4>
             <p>${date}</p>
             ${article.summary ? `<p style="font-size: 11px; color: rgba(255,255,255,0.5);">${article.summary.substring(0, 50)}${article.summary.length > 50 ? '...' : ''}</p>` : ''}
           </div>
@@ -1916,7 +1894,6 @@
       const thumbnail = document.getElementById('newArticleThumbnail').value.trim();
       const summary = document.getElementById('newArticleSummary').value.trim();
       const body = document.getElementById('newArticleBody').value.trim();
-      const publishDateInput = document.getElementById('newArticlePublishDate').value;
 
       if (!title) {
         alert('タイトルは必須です');
@@ -1930,15 +1907,8 @@
 
       const date = new Date().toISOString();
 
-      // 予約投稿日時をISO形式に変換
-      let publishDate = null;
-      if (publishDateInput) {
-        publishDate = new Date(publishDateInput).toISOString();
-      }
-
       // Markdownコンテンツを生成
       let content = `---\ntitle: "${title}"\ndate: ${date}\n`;
-      if (publishDate) content += `publishDate: ${publishDate}\n`;
       if (thumbnail) content += `thumbnail: "${thumbnail}"\n`;
       if (summary) content += `summary: "${summary}"\n`;
       content += `---\n\n${body}`;
@@ -2000,14 +1970,6 @@
       document.getElementById('editArticleThumbnail').value = article.thumbnail || '';
       document.getElementById('editArticleSummary').value = article.summary || '';
       document.getElementById('editArticleBody').value = article.body || '';
-      // 予約投稿日時をセット（ISO形式をdatetime-local形式に変換）
-      if (article.publishDate) {
-        const date = new Date(article.publishDate);
-        const localDateTime = date.toISOString().slice(0, 16);
-        document.getElementById('editArticlePublishDate').value = localDateTime;
-      } else {
-        document.getElementById('editArticlePublishDate').value = '';
-      }
       document.getElementById('editArticleFileName').textContent = '新しいファイルで上書きする場合はここにドラッグ';
       document.getElementById('editArticleDropZone').style.borderColor = 'rgba(146, 107, 255, 0.5)';
       document.getElementById('editArticleModal').style.display = 'flex';
@@ -2032,7 +1994,6 @@
       const thumbnail = document.getElementById('editArticleThumbnail').value.trim();
       const summary = document.getElementById('editArticleSummary').value.trim();
       const body = document.getElementById('editArticleBody').value.trim();
-      const publishDateInput = document.getElementById('editArticlePublishDate').value;
 
       if (!title) {
         alert('タイトルは必須です');
@@ -2043,15 +2004,8 @@
       const existingArticle = articlesList.find(a => a.slug === slug);
       const date = existingArticle ? existingArticle.date : new Date().toISOString();
 
-      // 予約投稿日時をISO形式に変換
-      let publishDate = null;
-      if (publishDateInput) {
-        publishDate = new Date(publishDateInput).toISOString();
-      }
-
       // Markdownコンテンツを生成
       let content = `---\ntitle: "${title}"\ndate: ${date}\n`;
-      if (publishDate) content += `publishDate: ${publishDate}\n`;
       if (thumbnail) content += `thumbnail: "${thumbnail}"\n`;
       if (summary) content += `summary: "${summary}"\n`;
       content += `---\n\n${body}`;
