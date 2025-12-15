@@ -6,6 +6,10 @@ on:
   push:
     branches: ["main"]
 
+  # 予約投稿用: 毎日9時(JST)に自動ビルド
+  schedule:
+    - cron: '0 0 * * *'  # UTC 0:00 = JST 9:00
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 

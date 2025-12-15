@@ -43,6 +43,8 @@ function buildArticlesList() {
 
   const files = fs.readdirSync(ARTICLES_DIR).filter(f => f.endsWith('.md'));
   const articles = [];
+  const now = new Date();
+  let scheduledCount = 0;
 
   for (const file of files) {
     const filePath = path.join(ARTICLES_DIR, file);
@@ -51,6 +53,16 @@ function buildArticlesList() {
 
     // スラッグはファイル名から.mdを除いたもの
     const slug = file.replace('.md', '');
+
+    // 予約投稿: publishDateが設定されていて未来の場合はスキップ
+    if (meta.publishDate) {
+      const publishDate = new Date(meta.publishDate);
+      if (publishDate > now) {
+        console.log(`Scheduled: ${meta.title} (publishes at ${meta.publishDate})`);
+        scheduledCount++;
+        continue;
+      }
+    }
 
     articles.push({
       slug,
@@ -65,7 +77,7 @@ function buildArticlesList() {
   articles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(articles, null, 2));
-  console.log(`Generated articles.json with ${articles.length} articles`);
+  console.log(`Generated articles.json with ${articles.length} articles (${scheduledCount} scheduled)`);
 }
 
 buildArticlesList();
