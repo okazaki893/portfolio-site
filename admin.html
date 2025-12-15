@@ -2519,17 +2519,17 @@
             const tagName = child.tagName.toLowerCase();
 
             if (tagName === 'h1') {
-              result += '# ' + child.textContent.trim() + '\n\n';
+              result += '# ' + processNode(child).trim() + '\n\n';
             } else if (tagName === 'h2') {
-              result += '## ' + child.textContent.trim() + '\n\n';
+              result += '## ' + processNode(child).trim() + '\n\n';
             } else if (tagName === 'h3') {
-              result += '### ' + child.textContent.trim() + '\n\n';
+              result += '### ' + processNode(child).trim() + '\n\n';
             } else if (tagName === 'h4') {
-              result += '#### ' + child.textContent.trim() + '\n\n';
+              result += '#### ' + processNode(child).trim() + '\n\n';
             } else if (tagName === 'h5') {
-              result += '##### ' + child.textContent.trim() + '\n\n';
+              result += '##### ' + processNode(child).trim() + '\n\n';
             } else if (tagName === 'h6') {
-              result += '###### ' + child.textContent.trim() + '\n\n';
+              result += '###### ' + processNode(child).trim() + '\n\n';
             } else if (tagName === 'p') {
               const pContent = processNode(child);
               if (pContent.trim()) {
@@ -2543,12 +2543,12 @@
               // 親がul/olでない場合の単独li
               result += '- ' + child.textContent.trim() + '\n';
             } else if (tagName === 'strong' || tagName === 'b') {
-              result += '**' + child.textContent + '**';
+              result += '**' + processNode(child) + '**';
             } else if (tagName === 'em' || tagName === 'i') {
-              result += '*' + child.textContent + '*';
+              result += '*' + processNode(child) + '*';
             } else if (tagName === 'a') {
               const href = child.getAttribute('href') || '';
-              result += '[' + child.textContent + '](' + href + ')';
+              result += '[' + processNode(child) + '](' + href + ')';
             } else if (tagName === 'br') {
               result += '\n';
             } else if (tagName === 'hr') {
@@ -2573,6 +2573,33 @@
         let counter = 1;
         const indent = '  '.repeat(depth);
 
+        // リスト項目内のインライン要素を処理
+        function processInlineContent(node) {
+          let text = '';
+          for (const child of node.childNodes) {
+            if (child.nodeType === Node.TEXT_NODE) {
+              text += child.textContent;
+            } else if (child.nodeType === Node.ELEMENT_NODE) {
+              const tag = child.tagName.toLowerCase();
+              if (tag === 'strong' || tag === 'b') {
+                text += '**' + processInlineContent(child) + '**';
+              } else if (tag === 'em' || tag === 'i') {
+                text += '*' + processInlineContent(child) + '*';
+              } else if (tag === 'a') {
+                const href = child.getAttribute('href') || '';
+                text += '[' + processInlineContent(child) + '](' + href + ')';
+              } else if (tag === 'code') {
+                text += '`' + child.textContent + '`';
+              } else if (tag === 'ul' || tag === 'ol') {
+                // ネストされたリストはスキップ（後で処理）
+              } else {
+                text += processInlineContent(child);
+              }
+            }
+          }
+          return text;
+        }
+
         for (const child of listElement.children) {
           if (child.tagName.toLowerCase() === 'li') {
             // liの直接のテキストを取得（ネストされたリストは除く）
@@ -2588,8 +2615,17 @@
                   nestedLists += processListItems(liChild, false, depth + 1);
                 } else if (liChildTag === 'ol') {
                   nestedLists += processListItems(liChild, true, depth + 1);
+                } else if (liChildTag === 'strong' || liChildTag === 'b') {
+                  itemText += '**' + processInlineContent(liChild) + '**';
+                } else if (liChildTag === 'em' || liChildTag === 'i') {
+                  itemText += '*' + processInlineContent(liChild) + '*';
+                } else if (liChildTag === 'a') {
+                  const href = liChild.getAttribute('href') || '';
+                  itemText += '[' + processInlineContent(liChild) + '](' + href + ')';
+                } else if (liChildTag === 'code') {
+                  itemText += '`' + liChild.textContent + '`';
                 } else {
-                  itemText += liChild.textContent;
+                  itemText += processInlineContent(liChild);
                 }
               }
             }
