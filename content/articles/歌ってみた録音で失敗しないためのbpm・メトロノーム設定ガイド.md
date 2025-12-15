@@ -35,8 +35,8 @@ date: 2025-12-15T05:30:28.453Z
 
 以下のようなツールで自動検出できます:
 
-- BPM測定ツール - 当サイトで提供しているオンラインBPM測定ツール。簡単にBPM測定が可能 (https://noumenon.jp/tools/bpm)
-- BPM Analyzer - 当サイトで提供しているより詳細な分析が可能なツール (https://noumenon.jp/tools/bpm-analyzer)
+- BPM測定ツール - 当サイトで提供しているオンラインBPM測定ツール。簡単にBPM測定が可能
+- BPM Analyzer - 当サイトで提供しているより詳細な分析が可能なツール 。
 - DAWの自動BPM検出機能(Cubase、Studio Oneなど)
 
 **注意点: **自動検出は必ずしも正確ではありません。特に変拍子や複雑なリズムの曲では誤検出することがあります。
