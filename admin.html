@@ -571,7 +571,15 @@
                     <span style="color: var(--accent-primary, #926bff); font-size: 13px;">本文（編集可能）</span>
                     <button type="button" onclick="clearArticleFile('new')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(255,100,100,0.5); border-radius: 4px; color: rgba(255,100,100,0.8); cursor: pointer; font-size: 12px;">クリア</button>
                   </div>
-                  <textarea id="newArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
+                  <!-- 書式ツールバー -->
+                  <div style="display: flex; gap: 5px; margin-bottom: 5px; padding: 8px; background: var(--input-bg, rgba(10, 10, 15, 0.6)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px 8px 0 0; border-bottom: none;">
+                    <button type="button" onclick="insertLink('newArticleBody')" style="padding: 6px 12px; background: rgba(146, 107, 255, 0.2); border: 1px solid rgba(146, 107, 255, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;" title="リンクを挿入">
+                      <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                      リンク
+                    </button>
+                    <button type="button" onclick="insertBold('newArticleBody')" style="padding: 6px 12px; background: rgba(146, 107, 255, 0.2); border: 1px solid rgba(146, 107, 255, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; font-weight: bold;" title="太字">B</button>
+                  </div>
+                  <textarea id="newArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 0 0 8px 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
                 </div>
               </div>
 
@@ -702,7 +710,15 @@
               <span style="color: var(--accent-primary, #926bff); font-size: 13px;">本文（編集可能）</span>
               <button type="button" onclick="clearArticleFile('edit')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(255,100,100,0.5); border-radius: 4px; color: rgba(255,100,100,0.8); cursor: pointer; font-size: 12px;">クリア</button>
             </div>
-            <textarea id="editArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
+            <!-- 書式ツールバー -->
+            <div style="display: flex; gap: 5px; margin-bottom: 5px; padding: 8px; background: var(--input-bg, rgba(10, 10, 15, 0.6)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px 8px 0 0; border-bottom: none;">
+              <button type="button" onclick="insertLink('editArticleBody')" style="padding: 6px 12px; background: rgba(146, 107, 255, 0.2); border: 1px solid rgba(146, 107, 255, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;" title="リンクを挿入">
+                <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                リンク
+              </button>
+              <button type="button" onclick="insertBold('editArticleBody')" style="padding: 6px 12px; background: rgba(146, 107, 255, 0.2); border: 1px solid rgba(146, 107, 255, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; font-weight: bold;" title="太字">B</button>
+            </div>
+            <textarea id="editArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 0 0 8px 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
           </div>
         </div>
 
@@ -2305,6 +2321,50 @@
 
       // プレビューを表示
       document.getElementById('newArticlePreview').style.display = 'block';
+    }
+
+    // リンクを挿入
+    function insertLink(textareaId) {
+      const textarea = document.getElementById(textareaId);
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+
+      const url = prompt('リンクURLを入力してください:', 'https://');
+      if (!url || url === 'https://') return;
+
+      const linkText = selectedText || prompt('リンクテキストを入力してください:', '') || 'リンク';
+      const markdown = `[${linkText}](${url})`;
+
+      textarea.value = textarea.value.substring(0, start) + markdown + textarea.value.substring(end);
+
+      // カーソル位置を調整
+      const newPos = start + markdown.length;
+      textarea.setSelectionRange(newPos, newPos);
+      textarea.focus();
+    }
+
+    // 太字を挿入
+    function insertBold(textareaId) {
+      const textarea = document.getElementById(textareaId);
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+
+      const boldText = selectedText || '太字テキスト';
+      const markdown = `**${boldText}**`;
+
+      textarea.value = textarea.value.substring(0, start) + markdown + textarea.value.substring(end);
+
+      // カーソル位置を調整
+      if (selectedText) {
+        const newPos = start + markdown.length;
+        textarea.setSelectionRange(newPos, newPos);
+      } else {
+        // 選択がなかった場合は太字テキストを選択状態にする
+        textarea.setSelectionRange(start + 2, start + 2 + boldText.length);
+      }
+      textarea.focus();
     }
 
     // ファイルをBase64に変換
