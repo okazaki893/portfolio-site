@@ -572,16 +572,14 @@
                   <p id="newArticleFileName" style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 14px; margin: 0;">ここに本文ファイルをドラッグ&ドロップ</p>
                   <p style="color: var(--text-muted, rgba(255,255,255,0.4)); font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
                 </div>
-                <div id="newArticlePreview" style="display: none; margin-top: 10px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px; max-height: 300px; overflow-y: auto;">
+                <div id="newArticlePreview" style="display: none; margin-top: 10px;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <span style="color: var(--accent-primary, #926bff); font-size: 13px;">プレビュー</span>
+                    <span style="color: var(--accent-primary, #926bff); font-size: 13px;">本文（編集可能）</span>
                     <button type="button" onclick="clearArticleFile('new')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(255,100,100,0.5); border-radius: 4px; color: rgba(255,100,100,0.8); cursor: pointer; font-size: 12px;">クリア</button>
                   </div>
-                  <pre id="newArticlePreviewContent" style="color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 0;"></pre>
+                  <textarea id="newArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
                 </div>
               </div>
-              <!-- 本文データを保持する隠しフィールド -->
-              <input type="hidden" id="newArticleBody" value="">
 
               <!-- 画像アップロード（ドラッグ&ドロップ） -->
               <div style="margin-top: 15px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px;">
@@ -711,16 +709,14 @@
             <svg style="width: 28px; height: 28px; margin-bottom: 6px; fill: var(--accent-primary, #926bff);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
             <p id="editArticleFileName" style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 13px; margin: 0;">新しいファイルで上書きする場合はここにドラッグ</p>
           </div>
-          <div id="editArticlePreview" style="margin-top: 10px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2)); border-radius: 8px; max-height: 300px; overflow-y: auto;">
+          <div id="editArticlePreview" style="margin-top: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <span style="color: var(--accent-primary, #926bff); font-size: 13px;">現在の本文</span>
+              <span style="color: var(--accent-primary, #926bff); font-size: 13px;">本文（編集可能）</span>
               <button type="button" onclick="clearArticleFile('edit')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(255,100,100,0.5); border-radius: 4px; color: rgba(255,100,100,0.8); cursor: pointer; font-size: 12px;">クリア</button>
             </div>
-            <pre id="editArticlePreviewContent" style="color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 0;"></pre>
+            <textarea id="editArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(146, 107, 255, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
           </div>
         </div>
-        <!-- 本文データを保持する隠しフィールド -->
-        <input type="hidden" id="editArticleBody" value="">
 
         <div class="modal-buttons">
           <button class="btn-cancel" onclick="closeArticleModal()">キャンセル</button>
@@ -1980,7 +1976,6 @@
         document.getElementById('newArticleSummary').value = '';
         document.getElementById('newArticleBody').value = '';
         // ファイルアップロード表示をリセット
-        document.getElementById('newArticlePreviewContent').textContent = '';
         document.getElementById('newArticlePreview').style.display = 'none';
         document.getElementById('newArticleFileName').textContent = 'ここに本文ファイルをドラッグ&ドロップ';
         document.getElementById('newArticleDropZone').style.borderColor = 'rgba(146, 107, 255, 0.5)';
@@ -2013,8 +2008,6 @@
       } else {
         document.getElementById('editArticlePublishDate').value = '';
       }
-      // 本文をプレビューに表示
-      document.getElementById('editArticlePreviewContent').textContent = article.body || '';
       document.getElementById('editArticleFileName').textContent = '新しいファイルで上書きする場合はここにドラッグ';
       document.getElementById('editArticleDropZone').style.borderColor = 'rgba(146, 107, 255, 0.5)';
       document.getElementById('editArticleModal').style.display = 'flex';
@@ -2356,8 +2349,7 @@
       // 本文の末尾に追加
       bodyInput.value = bodyInput.value + markdownImage;
 
-      // プレビューも更新
-      document.getElementById('newArticlePreviewContent').textContent = bodyInput.value;
+      // プレビューを表示
       document.getElementById('newArticlePreview').style.display = 'block';
     }
 
@@ -2413,7 +2405,6 @@
         document.getElementById(`${prefix}Body`).value = markdown;
 
         // プレビューを表示
-        document.getElementById(`${prefix}PreviewContent`).textContent = markdown;
         document.getElementById(`${prefix}Preview`).style.display = 'block';
         document.getElementById(`${prefix}FileName`).textContent = `読み込み完了: ${file.name}`;
 
@@ -2649,7 +2640,6 @@
       const prefix = mode === 'new' ? 'newArticle' : 'editArticle';
 
       document.getElementById(`${prefix}Body`).value = '';
-      document.getElementById(`${prefix}PreviewContent`).textContent = '';
       document.getElementById(`${prefix}Preview`).style.display = mode === 'new' ? 'none' : 'block';
       document.getElementById(`${prefix}FileName`).textContent = mode === 'new'
         ? 'ここに本文ファイルをドラッグ&ドロップ'
@@ -2714,7 +2704,6 @@
         const markdown = await convertFileToMarkdown(file);
 
         document.getElementById(`${prefix}Body`).value = markdown;
-        document.getElementById(`${prefix}PreviewContent`).textContent = markdown;
         document.getElementById(`${prefix}Preview`).style.display = 'block';
         document.getElementById(`${prefix}FileName`).textContent = `読み込み完了: ${file.name}`;
         document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(107, 255, 107, 0.5)';
