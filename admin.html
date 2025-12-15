@@ -2632,7 +2632,13 @@
         return result;
       }
 
-      return processNode(tempDiv).trim();
+      let markdown = processNode(tempDiv).trim();
+
+      // 太字・斜体のスペース問題を修正（**text ** → **text**）
+      markdown = markdown.replace(/\*\*(\S.*?)\s+\*\*/g, '**$1**');
+      markdown = markdown.replace(/\*(\S.*?)\s+\*/g, '*$1*');
+
+      return markdown;
     }
 
     // ファイルをクリア
