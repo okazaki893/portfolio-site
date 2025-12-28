@@ -442,6 +442,7 @@
           <button class="tab-button" onclick="switchTab('3d')">3D Animation</button>
           <button class="tab-button" onclick="switchTab('music')">Music</button>
           <button class="tab-button" onclick="switchTab('planning')">Planning</button>
+          <button class="tab-button" onclick="switchTab('plugins')">Plugins</button>
           <button class="tab-button" onclick="switchTab('articles')">Articles</button>
         </div>
 
@@ -515,6 +516,25 @@
               <input type="text" id="newPlanningTitle" placeholder="作品タイトル">
               <input type="text" id="newPlanningYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <button onclick="addPlanning()">追加</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Plugins Tab Content -->
+        <div class="tab-content" id="tab-plugins">
+          <div class="admin-section">
+            <h3>プラグイン管理</h3>
+            <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px; font-size: 14px;">OtherページのPlug-inタブに表示されるプラグインを管理します</p>
+            <div class="video-list" id="pluginsList"></div>
+
+            <div class="add-form">
+              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <input type="text" id="newPluginTitle" placeholder="プラグイン名">
+              <input type="text" id="newPluginDescription" placeholder="説明">
+              <input type="text" id="newPluginLink" placeholder="リンクURL（例: https://example.com/plugin）">
+              <input type="text" id="newPluginTag" placeholder="カテゴリタグ（例: Audio, Video, Utility）">
+              <button onclick="addPlugin()">追加</button>
             </div>
           </div>
 
@@ -683,6 +703,21 @@
         <div class="modal-buttons">
           <button class="btn-cancel" onclick="closePlanningModal()">キャンセル</button>
           <button class="btn-save" onclick="savePlanningEdit()">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Plugin Modal -->
+    <div class="modal" id="editPluginModal">
+      <div class="modal-content">
+        <h3>プラグインを編集</h3>
+        <input type="text" id="editPluginTitle" placeholder="プラグイン名">
+        <input type="text" id="editPluginDescription" placeholder="説明">
+        <input type="text" id="editPluginLink" placeholder="リンクURL">
+        <input type="text" id="editPluginTag" placeholder="カテゴリタグ">
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="closePluginModal()">キャンセル</button>
+          <button class="btn-save" onclick="savePluginEdit()">保存</button>
         </div>
       </div>
     </div>
@@ -903,6 +938,7 @@
       render3dList();
       renderMusicList();
       renderPlanningList();
+      renderPluginsList();
     }
 
     // 動画リスト表示
@@ -1640,6 +1676,158 @@
     }
 
     // ========== ここまでPlanning Progress管理機能 ==========
+
+    // ========== Plugins管理機能 ==========
+
+    const PLUGINS_STORAGE_KEY = 'portfolio_plugins';
+    let pluginsList = JSON.parse(localStorage.getItem(PLUGINS_STORAGE_KEY) || '[]');
+    let editPluginIndex = -1;
+
+    // プラグインアイコンSVG
+    const pluginIconSVG = `<svg style="width: 40px; height: 40px; fill: #926bff;" viewBox="0 0 24 24"><path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7s2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/></svg>`;
+
+    // プラグイン一覧表示
+    function renderPluginsList() {
+      const listEl = document.getElementById('pluginsList');
+      if (!listEl) return;
+
+      if (pluginsList.length === 0) {
+        listEl.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">プラグインがまだありません</p>';
+        return;
+      }
+
+      listEl.innerHTML = pluginsList.map((plugin, index) => `
+        <div class="video-item">
+          <div class="video-number">
+            <input type="number" value="${index + 1}" min="1" max="${pluginsList.length}"
+              onchange="movePluginToPosition(${index}, this.value)"
+              onclick="this.select()"
+              title="順番を変更">
+          </div>
+          <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: rgba(146, 107, 255, 0.1); border-radius: 8px;">
+            ${pluginIconSVG}
+          </div>
+          <div class="video-info">
+            <h4>${plugin.title}</h4>
+            <p style="margin-bottom: 3px;">${plugin.description || ''}</p>
+            <p style="font-size: 11px; color: rgba(146, 107, 255, 0.8);">${plugin.link}</p>
+            ${plugin.tag ? `<span style="display: inline-block; margin-top: 5px; padding: 2px 8px; background: rgba(146, 107, 255, 0.2); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.7);">${plugin.tag}</span>` : ''}
+          </div>
+          <div class="video-actions">
+            <button class="btn-edit" onclick="openPluginEdit(${index})">編集</button>
+            <button class="btn-delete" onclick="deletePlugin(${index})">削除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // プラグイン追加
+    function addPlugin() {
+      const title = document.getElementById('newPluginTitle').value.trim();
+      const description = document.getElementById('newPluginDescription').value.trim();
+      const link = document.getElementById('newPluginLink').value.trim();
+      const tag = document.getElementById('newPluginTag').value.trim();
+
+      if (!title || !link) {
+        alert('プラグイン名とリンクURLは必須です');
+        return;
+      }
+
+      const newPlugin = {
+        title: title,
+        description: description,
+        link: link,
+        tag: tag
+      };
+
+      pluginsList.unshift(newPlugin);
+      savePlugins();
+      renderPluginsList();
+
+      // フォームクリア
+      document.getElementById('newPluginTitle').value = '';
+      document.getElementById('newPluginDescription').value = '';
+      document.getElementById('newPluginLink').value = '';
+      document.getElementById('newPluginTag').value = '';
+
+      showSaveStatus();
+    }
+
+    // プラグイン削除
+    function deletePlugin(index) {
+      if (confirm(`「${pluginsList[index].title}」を削除しますか？`)) {
+        pluginsList.splice(index, 1);
+        savePlugins();
+        renderPluginsList();
+        showSaveStatus();
+      }
+    }
+
+    // プラグインを指定位置に移動
+    function movePluginToPosition(currentIndex, newPosition) {
+      const targetIndex = parseInt(newPosition) - 1;
+      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= pluginsList.length || targetIndex === currentIndex) {
+        renderPluginsList();
+        return;
+      }
+
+      const item = pluginsList.splice(currentIndex, 1)[0];
+      pluginsList.splice(targetIndex, 0, item);
+      savePlugins();
+      renderPluginsList();
+      showSaveStatus();
+    }
+
+    // プラグイン編集モーダルを開く
+    function openPluginEdit(index) {
+      editPluginIndex = index;
+      const plugin = pluginsList[index];
+      document.getElementById('editPluginTitle').value = plugin.title;
+      document.getElementById('editPluginDescription').value = plugin.description || '';
+      document.getElementById('editPluginLink').value = plugin.link;
+      document.getElementById('editPluginTag').value = plugin.tag || '';
+      document.getElementById('editPluginModal').style.display = 'flex';
+    }
+
+    // プラグインモーダルを閉じる
+    function closePluginModal() {
+      document.getElementById('editPluginModal').style.display = 'none';
+      editPluginIndex = -1;
+    }
+
+    // プラグイン編集を保存
+    function savePluginEdit() {
+      if (editPluginIndex === -1) return;
+
+      const title = document.getElementById('editPluginTitle').value.trim();
+      const description = document.getElementById('editPluginDescription').value.trim();
+      const link = document.getElementById('editPluginLink').value.trim();
+      const tag = document.getElementById('editPluginTag').value.trim();
+
+      if (!title || !link) {
+        alert('プラグイン名とリンクURLは必須です');
+        return;
+      }
+
+      pluginsList[editPluginIndex] = {
+        title: title,
+        description: description,
+        link: link,
+        tag: tag
+      };
+
+      savePlugins();
+      renderPluginsList();
+      closePluginModal();
+      showSaveStatus();
+    }
+
+    // プラグインデータを保存
+    function savePlugins() {
+      localStorage.setItem(PLUGINS_STORAGE_KEY, JSON.stringify(pluginsList));
+    }
+
+    // ========== ここまでPlugins管理機能 ==========
 
     // ========== タブ切り替え機能 ==========
 
