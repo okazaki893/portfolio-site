@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planning Progress</title>
+  <title>Articles - Noumenon</title>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VSVT7TT4R"></script>
   <script>
@@ -14,20 +14,20 @@
   </script>
   <link rel="icon" type="image/png" href="favicon.png">
   <!-- OGP -->
-  <meta property="og:title" content="Planning Progress - Noumenon">
-  <meta property="og:description" content="Planning Progress Portfolio">
+  <meta property="og:title" content="Articles - Noumenon">
+  <meta property="og:description" content="Blog Articles">
   <meta property="og:image" content="https://noumenon.jp/OGP.png">
-  <meta property="og:url" content="https://noumenon.jp/planning">
+  <meta property="og:url" content="https://noumenon.jp/articles">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Planning Progress - Noumenon">
-  <meta name="twitter:description" content="Planning Progress Portfolio">
+  <meta name="twitter:title" content="Articles - Noumenon">
+  <meta name="twitter:description" content="Blog Articles">
   <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="style2.css">
   <script src="theme.js"></script>
   <style>
-    .planning-content {
+    .page-content {
       position: relative;
       z-index: 10;
       width: 100%;
@@ -35,10 +35,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 60px 60px 60px 340px;
+      padding: 60px 60px 100px 340px;
     }
 
-    .page-title-planning {
+    .page-title {
       font-family: 'Times New Roman', Times, serif;
       font-size: 72px;
       font-weight: bold;
@@ -51,7 +51,7 @@
       text-align: center;
     }
 
-    .page-subtitle-planning {
+    .page-subtitle {
       font-family: 'Arial', sans-serif;
       font-size: 16px;
       color: var(--text-secondary, rgba(255, 255, 255, 0.8));
@@ -60,123 +60,120 @@
       text-align: center;
     }
 
-    .planning-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 30px;
+    .section-container {
       width: 100%;
       max-width: 1200px;
     }
 
-    .planning-card {
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 30px;
+      width: 100%;
+    }
+
+    .card {
       background: var(--bg-card, rgba(20, 20, 25, 0.8));
       border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
       border-radius: 16px;
       overflow: hidden;
       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      display: block;
     }
 
-    .planning-card:hover {
+    .card:hover {
       transform: translateY(-5px);
       border-color: var(--border-hover, rgba(146, 107, 255, 0.5));
       box-shadow: 0 10px 30px var(--accent-dim, rgba(146, 107, 255, 0.2));
     }
 
-    .planning-thumbnail {
-      display: block;
-      position: relative;
+    .card-icon {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent-dim, rgba(146, 107, 255, 0.2)) 0%, rgba(107, 146, 255, 0.1) 100%);
     }
 
-    .planning-thumbnail img {
+    .card-icon svg {
+      width: 48px;
+      height: 48px;
+      fill: var(--accent-primary, #926bff);
+    }
+
+    .card-thumbnail {
+      width: 100%;
+      aspect-ratio: 1200 / 630;
+      overflow: hidden;
+    }
+
+    .card-thumbnail img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.3s ease;
     }
 
-    .play-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    .card:hover .card-thumbnail img {
+      transform: scale(1.05);
     }
 
-    .planning-thumbnail:hover .play-overlay {
-      opacity: 1;
+    .card-content {
+      padding: 20px;
     }
 
-    .play-button {
-      width: 80px;
-      height: 80px;
-      background: var(--accent-primary, rgba(146, 107, 255, 0.9));
-      border-radius: 50%;
-      position: relative;
-    }
-
-    .play-button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 55%;
-      transform: translate(-50%, -50%);
-      border-style: solid;
-      border-width: 15px 0 15px 25px;
-      border-color: transparent transparent transparent var(--text-primary, #fff);
-    }
-
-    .planning-title {
-      padding: 15px;
-      font-family: 'Arial', sans-serif;
-      font-size: 14px;
-      color: var(--text-secondary, rgba(255, 255, 255, 0.9));
-      letter-spacing: 1px;
-      text-align: center;
-    }
-
-    .no-planning {
+    .card-title {
       font-family: 'Arial', sans-serif;
       font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary, #fff);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .card-description {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
       color: var(--text-muted, rgba(255, 255, 255, 0.6));
+      line-height: 1.6;
+    }
+
+    .no-items {
+      font-family: 'Arial', sans-serif;
+      font-size: 16px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
       text-align: center;
-      margin-top: 60px;
+      padding: 40px;
     }
 
-    /* PC版・スマホ版両方でスクロール可能に */
     html, body {
-      overflow-x: hidden !important;
-      height: auto;
-    }
-
-    body {
-      overflow-y: scroll !important;
+      overflow: hidden !important;
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
 
     .portfolio-cover {
-      overflow: hidden;
-      height: auto;
-      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100vh;
+      width: 100vw;
     }
 
     @media (max-width: 900px) {
-      .planning-content {
+      .page-content {
         padding: 80px 20px 40px 20px;
       }
 
-      .page-title-planning {
+      .page-title {
         font-size: 36px;
         letter-spacing: 8px;
         margin-bottom: 15px;
       }
 
-      .planning-grid {
+      .card-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -198,11 +195,11 @@
         <li><a href="mixing">Mixing</a></li>
         <li><a href="3danimation">3D Animation</a></li>
         <li><a href="music">Music</a></li>
-        <li><a href="planning" class="active">Planning Progress</a></li>
+        <li><a href="planning">Planning Progress</a></li>
         <li><a href="price">Price</a></li>
         <li><a href="tools">Tools</a></li>
         <li><a href="plugins">Plug-in</a></li>
-        <li><a href="articles">Articles</a></li>
+        <li><a href="articles" class="active">Articles</a></li>
         <li><a href="contact">Contact</a></li>
       </ul>
       <!-- Mobile Theme Toggle -->
@@ -240,9 +237,9 @@
           <a href="music" class="menu-link">Music</a>
         </li>
         <li class="menu-item">
-          <span class="menu-bullet active"></span>
+          <span class="menu-bullet"></span>
           <span class="menu-line"></span>
-          <a href="planning" class="menu-link active">Planning Progress</a>
+          <a href="planning" class="menu-link">Planning Progress</a>
         </li>
         <li class="menu-item">
           <span class="menu-bullet"></span>
@@ -260,9 +257,9 @@
           <a href="plugins" class="menu-link">Plug-in</a>
         </li>
         <li class="menu-item">
-          <span class="menu-bullet"></span>
+          <span class="menu-bullet active"></span>
           <span class="menu-line"></span>
-          <a href="articles" class="menu-link">Articles</a>
+          <a href="articles" class="menu-link active">Articles</a>
         </li>
         <li class="menu-item">
           <span class="menu-bullet"></span>
@@ -315,71 +312,161 @@
     <div class="orb orb-3"></div>
 
     <!-- Main content -->
-    <div class="planning-content">
-      <h1 class="page-title-planning">PLANNING PROGRESS</h1>
-      <p class="page-subtitle-planning">企画進行を担当した作品</p>
-      <div class="planning-grid" id="planningGrid">
-        <!-- 作品はJavaScriptで読み込み -->
+    <div class="page-content">
+      <h1 class="page-title">ARTICLES</h1>
+      <p class="page-subtitle">Blog Articles</p>
+
+      <div class="section-container">
+        <div class="card-grid" id="articlesGrid">
+          <!-- 記事はJavaScriptで読み込み -->
+        </div>
+        <p class="no-items" id="noArticles" style="display: none;">記事はまだありません</p>
       </div>
-      <p class="no-planning" id="noPlanning" style="display: none;">作品がまだありません</p>
     </div>
   </div>
 
   <script>
-    // ローカルストレージのキー
-    const PLANNING_STORAGE_KEY = 'portfolio_planning';
+    // 記事データ
+    let articles = [];
 
-    // デフォルトの作品データ
-    const defaultPlanningWorks = [
-      { id: 'UAV_q6xKtu4', title: 'ドキシック/かわいいJKふぁん倶楽部', link: 'https://www.youtube.com/watch?v=UAV_q6xKtu4' }
-    ];
+    // GitHub設定
+    const GITHUB_REPO = 'okazaki893/portfolio-site';
+    const GITHUB_BRANCH = 'main';
+    const ARTICLES_PATH = 'content/articles';
 
-    // 作品データを読み込み
-    function loadPlanningWorks() {
-      const saved = localStorage.getItem(PLANNING_STORAGE_KEY);
-      if (saved) {
-        return JSON.parse(saved);
-      }
-      return defaultPlanningWorks;
+    // アイコンSVG
+    const articleIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+    </svg>`;
+
+    // 記事カード生成
+    function createArticleCard(item) {
+      const thumbnailHtml = item.thumbnail
+        ? `<div class="card-thumbnail"><img src="${item.thumbnail}" alt="${item.title}"></div>`
+        : `<div class="card-icon">${articleIconSVG}</div>`;
+
+      return `
+        <a href="articles/?slug=${item.slug}" class="card">
+          ${thumbnailHtml}
+          <div class="card-content">
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-description">${item.summary || ''}</p>
+          </div>
+        </a>
+      `;
     }
 
-    // 作品を表示
-    function renderPlanningWorks() {
-      const worksList = loadPlanningWorks();
-      const grid = document.getElementById('planningGrid');
-      const noPlanning = document.getElementById('noPlanning');
+    // 記事を表示
+    function renderArticles() {
+      const grid = document.getElementById('articlesGrid');
+      const noArticles = document.getElementById('noArticles');
 
-      if (worksList.length === 0) {
-        noPlanning.style.display = 'block';
+      if (articles.length === 0) {
+        noArticles.style.display = 'block';
+        grid.style.display = 'none';
         return;
       }
 
-      noPlanning.style.display = 'none';
-      grid.innerHTML = '';
+      noArticles.style.display = 'none';
+      grid.style.display = 'grid';
+      // 日付順にソート（新しい順）
+      const sorted = [...articles].sort((a, b) => new Date(b.date) - new Date(a.date));
+      grid.innerHTML = sorted.map(article => createArticleCard(article)).join('');
+    }
 
-      worksList.forEach(work => {
-        const card = document.createElement('div');
-        card.className = 'planning-card';
+    // フロントマターをパース
+    function parseFrontMatter(content) {
+      const match = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!match) return {};
 
-        const workLink = work.link || `https://www.youtube.com/watch?v=${work.id}`;
+      const frontMatter = match[1];
+      const meta = {};
 
-        card.innerHTML = `
-          <a href="${workLink}" target="_blank" class="planning-thumbnail" title="${work.title}">
-            <img src="https://img.youtube.com/vi/${work.id}/maxresdefault.jpg"
-                 alt="${work.title}"
-                 onerror="this.src='https://img.youtube.com/vi/${work.id}/hqdefault.jpg'">
-            <div class="play-overlay">
-              <div class="play-button"></div>
-            </div>
-          </a>
-          <div class="planning-title">${work.title}</div>
-        `;
-        grid.appendChild(card);
+      frontMatter.split('\n').forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > -1) {
+          const key = line.substring(0, colonIndex).trim();
+          let value = line.substring(colonIndex + 1).trim();
+          if ((value.startsWith('"') && value.endsWith('"')) ||
+              (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+          }
+          meta[key] = value;
+        }
       });
+
+      return meta;
+    }
+
+    // GitHubから記事を読み込み
+    async function loadArticles() {
+      const grid = document.getElementById('articlesGrid');
+
+      try {
+        // GitHubからファイル一覧を取得
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${ARTICLES_PATH}?ref=${GITHUB_BRANCH}`);
+
+        if (response.status === 404) {
+          articles = [];
+          renderArticles();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch articles');
+        }
+
+        const files = await response.json();
+        articles = [];
+
+        // 各Markdownファイルの情報を取得
+        for (const file of files) {
+          if (file.name.endsWith('.md')) {
+            try {
+              const contentRes = await fetch(file.url);
+              const contentData = await contentRes.json();
+
+              // UTF-8でBase64デコード
+              const binaryString = atob(contentData.content.replace(/\n/g, ''));
+              const bytes = new Uint8Array(binaryString.length);
+              for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+              }
+              const content = new TextDecoder('utf-8').decode(bytes);
+              const meta = parseFrontMatter(content);
+
+              articles.push({
+                slug: file.name.replace('.md', ''),
+                title: meta.title || 'Untitled',
+                date: meta.date || new Date().toISOString(),
+                thumbnail: meta.thumbnail || '',
+                summary: meta.summary || ''
+              });
+            } catch (e) {
+              console.error('Error loading article:', file.name, e);
+            }
+          }
+        }
+
+        renderArticles();
+
+      } catch (error) {
+        console.error('Error loading articles:', error);
+        // フォールバック: JSONファイルから読み込み
+        try {
+          const jsonResponse = await fetch('content/articles.json');
+          if (jsonResponse.ok) {
+            articles = await jsonResponse.json();
+            renderArticles();
+          }
+        } catch (e) {
+          console.error('Fallback also failed:', e);
+        }
+      }
     }
 
     // 初期化
-    renderPlanningWorks();
+    loadArticles();
 
     // Mobile menu toggle
     function toggleMobileMenu() {
