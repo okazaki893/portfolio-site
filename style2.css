@@ -127,16 +127,7 @@ body {
 
 /* Grid pattern */
 .grid-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    linear-gradient(var(--grid-line, rgba(255, 255, 255, 0.02)) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line, rgba(255, 255, 255, 0.02)) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
+  display: none;
 }
 
 /* Floating orbs */
