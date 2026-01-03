@@ -13,7 +13,11 @@
       "Bash(node:*)",
       "Bash(git pull:*)",
       "Bash(git stash:*)",
-      "WebFetch(domain:note.com)"
+      "WebFetch(domain:note.com)",
+      "Bash(python:*)",
+      "Bash(chcp 6500)",
+      "Bash(cd:*)",
+      "WebFetch(domain:noumenon.jp)"
     ]
   }
 }
