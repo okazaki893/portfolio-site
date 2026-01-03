@@ -317,9 +317,8 @@
   </div>
 
   <script>
-    // プラグインデータ（localStorageから読み込み）
-    const PLUGINS_STORAGE_KEY = 'portfolio_plugins';
-    const plugins = JSON.parse(localStorage.getItem(PLUGINS_STORAGE_KEY) || '[]');
+    // プラグインデータ（JSONファイルから読み込み）
+    let plugins = [];
 
     // アイコンSVG
     const pluginIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -356,8 +355,17 @@
       grid.innerHTML = plugins.map(plugin => createPluginCard(plugin)).join('');
     }
 
-    // 初期化
-    renderPlugins();
+    // 初期化 - JSONファイルから読み込み
+    fetch('data/plugins.json')
+      .then(response => response.json())
+      .then(data => {
+        plugins = data;
+        renderPlugins();
+      })
+      .catch(error => {
+        console.error('Failed to load plugins:', error);
+        renderPlugins();
+      });
 
     // Mobile menu toggle
     function toggleMobileMenu() {
