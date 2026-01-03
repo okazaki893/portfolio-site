@@ -362,7 +362,7 @@ body {
 }
 
 .info-number {
-  color: var(--accent-primary, #926bff);
+  color: #000;
   font-weight: bold;
 }
 
