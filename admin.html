@@ -21,55 +21,78 @@
   <!-- mammoth.js for Word document conversion -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <style>
-    /* Admin用白黒テーマ（ダーク背景用） */
+    /* Admin用白黒テーマ */
     :root {
-      --accent-primary: #fff !important;
-      --accent-secondary: #ccc !important;
-      --accent-glow: rgba(255, 255, 255, 0.3) !important;
-      --accent-muted: rgba(255, 255, 255, 0.2) !important;
-      --accent-dim: rgba(255, 255, 255, 0.1) !important;
-      --border-color: rgba(255, 255, 255, 0.2) !important;
-      --border-hover: rgba(255, 255, 255, 0.4) !important;
-      --border-active: #fff !important;
+      --accent-primary: #000 !important;
+      --accent-secondary: #333 !important;
+      --accent-glow: rgba(0, 0, 0, 0.3) !important;
+      --accent-muted: rgba(0, 0, 0, 0.2) !important;
+      --accent-dim: rgba(0, 0, 0, 0.1) !important;
+      --border-color: rgba(0, 0, 0, 0.3) !important;
+      --border-hover: rgba(0, 0, 0, 0.5) !important;
+      --border-active: #000 !important;
     }
 
+    /* ボタン（背景あり）: 背景黒、文字白 */
     .login-form button,
     .add-form button,
     .btn-edit,
     .btn-save,
-    .modal-buttons button {
-      background: #fff !important;
-      color: #000 !important;
+    .btn-delete,
+    .btn-cancel,
+    .modal-buttons button,
+    .logout-btn,
+    button[onclick] {
+      background: #000 !important;
+      color: #fff !important;
     }
 
     .login-form button:hover,
     .add-form button:hover,
     .btn-edit:hover,
-    .btn-save:hover {
-      background: #ddd !important;
+    .btn-save:hover,
+    .btn-delete:hover,
+    .logout-btn:hover {
+      background: #333 !important;
     }
 
-    .btn-delete {
-      background: #fff !important;
+    /* タブボタン（背景なし）: 文字黒 */
+    .tab-button {
       color: #000 !important;
-    }
-
-    .btn-delete:hover {
-      background: #ddd !important;
+      background: transparent !important;
     }
 
     .tab-button.active {
-      color: #fff !important;
-      border-bottom-color: #fff !important;
+      color: #000 !important;
+      border-bottom-color: #000 !important;
     }
 
     .tab-button:hover {
-      color: #ccc !important;
+      color: #333 !important;
     }
 
-    .logout-btn {
-      background: #fff !important;
+    /* 背景なしのテキスト: 黒 */
+    .admin-title,
+    .section-title,
+    .video-info h4,
+    .video-info p,
+    h3, h4, label {
       color: #000 !important;
+    }
+
+    /* リンク: 黒 */
+    a:not(.btn-edit):not(.btn-delete) {
+      color: #000 !important;
+    }
+
+    /* SVGアイコン: 黒 */
+    svg:not(button svg) {
+      fill: #000 !important;
+    }
+
+    /* ボタン内のSVG: 白 */
+    button svg {
+      fill: #fff !important;
     }
 
     .admin-container {
