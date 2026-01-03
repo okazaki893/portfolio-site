@@ -1,8 +1,32 @@
 [
   {
+    "title": "【After Effects スクリプト】Windows Maker",
+    "description": "選択したシェイプレイヤーの矩形サイズを基に、Windows風のUIウィンドウを自動生成 します。",
+    "link": "https://okazakiyuki.booth.pm/items/7765689",
+    "tag": ""
+  },
+  {
     "title": "【After Effects スクリプト】Random Placement",
     "description": "選択したレイヤーを複製し、ランダムな位置・スケール・回転で配置します。",
     "link": "https://okazakiyuki.booth.pm/items/7783900",
+    "tag": ""
+  },
+  {
+    "title": "【After Effects スクリプト】3D Shape Generator",
+    "description": "After Effects用の3D形状生成スクリプトです。 シェイプレイヤーを使用して様々な3D形状を簡単に作成できます。",
+    "link": "https://okazakiyuki.booth.pm/items/7794840",
+    "tag": ""
+  },
+  {
+    "title": "【After Effects スクリプト】レイヤー移動スクリプト",
+    "description": "レイヤーを一番上にしたり、一番下にしたりできます。 レイヤーを複数選択してる場合は、レイヤー構造を維持したまま移動できます。",
+    "link": "https://okazakiyuki.booth.pm/items/7763065",
+    "tag": ""
+  },
+  {
+    "title": "【After Effects スクリプト】oilpaint",
+    "description": "Paint_Effect は Adobe After Effects 用の油絵風エフェクトプラグインです。",
+    "link": "https://okazakiyuki.booth.pm/items/7813410",
     "tag": ""
   }
 ]
