@@ -565,7 +565,7 @@
         <div class="tab-content active" id="tab-top">
           <div class="admin-section">
             <h3>TOPページ モザイク動画管理</h3>
-            <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px; font-size: 14px;">各スロットの動画リンクとサムネイルを編集できます（配置位置は固定）</p>
+            <p style="color: #333; margin-bottom: 20px; font-size: 14px;">各スロットの動画リンクとサムネイルを編集できます（配置位置は固定）</p>
             <div class="video-list" id="topVideoList" style="max-height: 600px;"></div>
           </div>
 
@@ -578,7 +578,7 @@
             <div class="video-list" id="mixingVideoList"></div>
 
             <div class="add-form">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newTitle" placeholder="タイトル">
               <input type="text" id="newYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <input type="text" id="newThumbnail" placeholder="カスタムサムネイル（任意）">
@@ -595,7 +595,7 @@
             <div class="video-list" id="animation3dList"></div>
 
             <div class="add-form">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="new3dTitle" placeholder="タイトル">
               <input type="text" id="new3dYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <button onclick="add3dVideo()">追加</button>
@@ -611,7 +611,7 @@
             <div class="video-list" id="musicList"></div>
 
             <div class="add-form">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newMusicTitle" placeholder="曲名">
               <input type="text" id="newSoundcloudUrl" placeholder="SoundCloudのURL（例: https://soundcloud.com/artist/track）">
               <button onclick="addMusic()">追加</button>
@@ -627,7 +627,7 @@
             <div class="video-list" id="planningList"></div>
 
             <div class="add-form">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newPlanningTitle" placeholder="作品タイトル">
               <input type="text" id="newPlanningYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <button onclick="addPlanning()">追加</button>
@@ -640,11 +640,11 @@
         <div class="tab-content" id="tab-plugins">
           <div class="admin-section">
             <h3>プラグイン管理</h3>
-            <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px; font-size: 14px;">OtherページのPlug-inタブに表示されるプラグインを管理します</p>
+            <p style="color: #333; margin-bottom: 20px; font-size: 14px;">OtherページのPlug-inタブに表示されるプラグインを管理します</p>
             <div class="video-list" id="pluginsList"></div>
 
             <div class="add-form">
-              <h4 style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newPluginTitle" placeholder="プラグイン名">
               <input type="text" id="newPluginDescription" placeholder="説明">
               <input type="text" id="newPluginLink" placeholder="リンクURL（例: https://example.com/plugin）">
@@ -663,25 +663,25 @@
             <!-- GitHub認証状態 -->
             <div id="githubAuthStatus" style="margin-bottom: 20px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2)); border-radius: 8px;">
               <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                <span id="authStatusText" style="color: var(--text-dim, rgba(255,255,255,0.5)); font-weight: bold;">GitHub未認証</span>
+                <span id="authStatusText" style="color: #666; font-weight: bold;">GitHub未認証</span>
                 <div id="tokenInputContainer">
                   <input type="password" id="githubTokenInput" placeholder="GitHub Personal Access Token" style="padding: 10px 14px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); width: 300px; font-size: 14px;">
                   <button onclick="saveGitHubToken()" style="margin-left: 10px; padding: 10px 20px; background: linear-gradient(135deg, var(--accent-primary, #000000) 0%, var(--accent-secondary, #000000) 100%); border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px; font-weight: bold;">認証</button>
                 </div>
                 <button id="githubLogoutBtn" onclick="logoutGitHub()" style="display: none; padding: 10px 20px; background: #000000; border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px;">ログアウト</button>
               </div>
-              <p style="font-size: 12px; color: var(--text-dim, rgba(255,255,255,0.5)); margin-top: 12px;">
+              <p style="font-size: 12px; color: #666; margin-top: 12px;">
                 <a href="https://github.com/settings/tokens/new?scopes=repo&description=Portfolio%20Admin" target="_blank" style="color: var(--accent-primary, #000000); text-decoration: underline;">GitHub でトークンを作成</a>（repo スコープが必要です）
               </p>
             </div>
 
             <!-- 記事一覧 -->
             <div class="video-list" id="articlesList" style="max-height: 500px;">
-              <p style="color: var(--text-dim, rgba(255,255,255,0.5)); text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
+              <p style="color: #666; text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
             </div>
 
             <div class="add-form">
-              <h4 style="color: var(--text-secondary, rgba(255,255,255,0.8)); margin-bottom: 10px;">新規記事作成</h4>
+              <h4 style="color: #333; margin-bottom: 10px;">新規記事作成</h4>
               <input type="text" id="newArticleTitle" placeholder="記事タイトル" oninput="syncFolderName(this.value)">
               <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/フォルダ名/image.jpg）">
               <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
@@ -689,7 +689,7 @@
               <!-- 本文ファイルアップロード -->
               <div style="margin-top: 10px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin: 0 0 8px 0;">
-                  <p style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px; margin: 0;">本文ファイル（.docx, .txt, .md, .rtf）</p>
+                  <p style="color: #333; font-size: 14px; margin: 0;">本文ファイル（.docx, .txt, .md, .rtf）</p>
                   <a href="https://drive.google.com/drive/u/0/folders/1duApjHj8IWvCuQKtYVYYbyD4l8Rv3R7d?ths=true&q=sharedwith:public%20parent:1duApjHj8IWvCuQKtYVYYbyD4l8Rv3R7d" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(66, 133, 244, 0.2); border: 1px solid rgba(66, 133, 244, 0.5); border-radius: 4px; color: #4285f4; font-size: 12px; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(66, 133, 244, 0.3)'" onmouseout="this.style.background='rgba(66, 133, 244, 0.2)'">
                     <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M7.71 3.5L1.15 15l4.58 7.5h13.54l4.58-7.5L17.29 3.5H7.71zm.79 1.5h7l5.14 9H3.36l5.14-9zM8.5 17l-2-3.5 2-3.5h7l2 3.5-2 3.5h-7z"/></svg>
                     Google Drive
@@ -698,8 +698,8 @@
                 <input type="file" id="newArticleFileInput" accept=".docx,.txt,.md,.rtf,.doc" style="display: none;" onchange="handleArticleFileUpload(this, 'new')">
                 <div id="newArticleDropZone" onclick="document.getElementById('newArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(0, 0, 0, 0.5)); border-radius: 8px; padding: 25px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
                   <svg style="width: 32px; height: 32px; margin-bottom: 8px; fill: var(--accent-primary, #000000);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
-                  <p id="newArticleFileName" style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 14px; margin: 0;">ここに本文ファイルをドラッグ&ドロップ</p>
-                  <p style="color: var(--text-muted, rgba(255,255,255,0.4)); font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
+                  <p id="newArticleFileName" style="color: #444; font-size: 14px; margin: 0;">ここに本文ファイルをドラッグ&ドロップ</p>
+                  <p style="color: #888; font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
                 </div>
                 <div id="newArticlePreview" style="display: none; margin-top: 10px;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -721,7 +721,7 @@
               <!-- 画像アップロード（ドラッグ&ドロップ） -->
               <div style="margin-top: 15px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2)); border-radius: 8px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin: 0 0 10px 0;">
-                  <p style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px; margin: 0;">画像アップロード → <span id="folderPreview" style="color: var(--accent-primary, #000000);">/content/uploads/</span></p>
+                  <p style="color: #333; font-size: 14px; margin: 0;">画像アップロード → <span id="folderPreview" style="color: var(--accent-primary, #000000);">/content/uploads/</span></p>
                   <a href="https://github.com/okazaki893/portfolio-site/tree/main/content/uploads" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(66, 133, 244, 0.2); border: 1px solid rgba(66, 133, 244, 0.5); border-radius: 4px; color: #4285f4; font-size: 12px; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(66, 133, 244, 0.3)'" onmouseout="this.style.background='rgba(66, 133, 244, 0.2)'">
                     <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     GitHub
@@ -729,12 +729,12 @@
                 </div>
                 <input type="file" id="imageUploadInput" accept="image/*" multiple style="display: none;">
                 <div id="dropZone" onclick="document.getElementById('imageUploadInput').click()" style="border: 2px dashed var(--border-color, rgba(0, 0, 0, 0.4)); border-radius: 8px; padding: 30px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
-                  <svg style="width: 40px; height: 40px; margin-bottom: 10px; fill: var(--text-muted, rgba(255,255,255,0.4));" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-                  <p style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 14px; margin: 0;">ここに画像をドラッグ&ドロップ</p>
-                  <p style="color: var(--text-muted, rgba(255,255,255,0.4)); font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
+                  <svg style="width: 40px; height: 40px; margin-bottom: 10px; fill: #888;" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                  <p style="color: #444; font-size: 14px; margin: 0;">ここに画像をドラッグ&ドロップ</p>
+                  <p style="color: #888; font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
                 </div>
                 <div id="uploadProgress" style="display: none; margin-top: 12px;">
-                  <p id="uploadingFileName" style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 14px; margin: 0 0 8px 0;"></p>
+                  <p id="uploadingFileName" style="color: #444; font-size: 14px; margin: 0 0 8px 0;"></p>
                   <div style="background: var(--input-bg, rgba(10, 10, 15, 0.8)); border-radius: 4px; height: 6px; overflow: hidden;">
                     <div id="uploadProgressBar" style="background: linear-gradient(135deg, var(--accent-primary, #000000) 0%, var(--accent-secondary, #000000) 100%); height: 100%; width: 0%; transition: width 0.3s ease;"></div>
                   </div>
@@ -759,7 +759,7 @@
     <div class="modal" id="editTopModal">
       <div class="modal-content">
         <h3>TOPスロットを編集</h3>
-        <p id="editTopSlotName" style="color: rgba(255,255,255,0.6); margin-bottom: 15px; font-size: 14px;"></p>
+        <p id="editTopSlotName" style="color: #555; margin-bottom: 15px; font-size: 14px;"></p>
         <input type="text" id="editTopLink" placeholder="YouTubeのURL">
         <input type="text" id="editTopThumbnail" placeholder="カスタムサムネイル（任意、空欄でYouTubeサムネ使用）">
         <div class="modal-buttons">
@@ -849,11 +849,11 @@
 
         <!-- 本文ファイルアップロード（編集用） -->
         <div style="margin-top: 10px;">
-          <p style="color: var(--text-secondary, rgba(255,255,255,0.8)); font-size: 14px; margin: 0 0 8px 0;">本文ファイル（.docx, .txt, .md, .rtf）で上書き、または既存を維持</p>
+          <p style="color: #333; font-size: 14px; margin: 0 0 8px 0;">本文ファイル（.docx, .txt, .md, .rtf）で上書き、または既存を維持</p>
           <input type="file" id="editArticleFileInput" accept=".docx,.txt,.md,.rtf,.doc" style="display: none;" onchange="handleArticleFileUpload(this, 'edit')">
           <div id="editArticleDropZone" onclick="document.getElementById('editArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(0, 0, 0, 0.5)); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
             <svg style="width: 28px; height: 28px; margin-bottom: 6px; fill: var(--accent-primary, #000000);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
-            <p id="editArticleFileName" style="color: var(--text-secondary, rgba(255,255,255,0.7)); font-size: 13px; margin: 0;">新しいファイルで上書きする場合はここにドラッグ</p>
+            <p id="editArticleFileName" style="color: #444; font-size: 13px; margin: 0;">新しいファイルで上書きする場合はここにドラッグ</p>
           </div>
           <div id="editArticlePreview" style="margin-top: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -1062,7 +1062,7 @@
       list.innerHTML = '';
 
       if (videos.length === 0) {
-        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">動画がまだありません</p>';
+        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">動画がまだありません</p>';
         return;
       }
 
@@ -1257,7 +1257,7 @@
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-number" style="min-width: 40px;">
-            <span style="color: #ffffff; font-weight: bold;">${index + 1}</span>
+            <span style="color: #000; font-weight: bold;">${index + 1}</span>
           </div>
           ${thumbnailUrl ? `
             <a href="${slot.link}" target="_blank" style="display: block;">
@@ -1265,13 +1265,13 @@
             </a>
           ` : `
             <div style="width: 120px; height: 68px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-              <span style="color: rgba(255,255,255,0.5);">No Video</span>
+              <span style="color: #666;">No Video</span>
             </div>
           `}
           <div class="video-info">
             <h4>${slot.slotName}</h4>
             <p style="font-size: 11px; word-break: break-all;">${slot.link || '未設定'}</p>
-            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #ffffff;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
+            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #000;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
           </div>
           <div class="video-actions">
             <button class="btn-edit" onclick="openTopEdit(${index})">編集</button>
@@ -1356,7 +1356,7 @@
       list.innerHTML = '';
 
       if (musicList.length === 0) {
-        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">音源がまだありません</p>';
+        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">音源がまだありません</p>';
         return;
       }
 
@@ -1504,7 +1504,7 @@
       list.innerHTML = '';
 
       if (animation3dList.length === 0) {
-        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">動画がまだありません</p>';
+        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">動画がまだありません</p>';
         return;
       }
 
@@ -1652,7 +1652,7 @@
       list.innerHTML = '';
 
       if (planningList.length === 0) {
-        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">作品がまだありません</p>';
+        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">作品がまだありません</p>';
         return;
       }
 
@@ -1813,7 +1813,7 @@
       if (!listEl) return;
 
       if (pluginsList.length === 0) {
-        listEl.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">プラグインがまだありません</p>';
+        listEl.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">プラグインがまだありません</p>';
         return;
       }
 
@@ -1832,7 +1832,7 @@
             <h4>${plugin.title}</h4>
             <p style="margin-bottom: 3px;">${plugin.description || ''}</p>
             <p style="font-size: 11px; color: rgba(0, 0, 0, 0.8);">${plugin.link}</p>
-            ${plugin.tag ? `<span style="display: inline-block; margin-top: 5px; padding: 2px 8px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.7);">${plugin.tag}</span>` : ''}
+            ${plugin.tag ? `<span style="display: inline-block; margin-top: 5px; padding: 2px 8px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; font-size: 11px; color: #444;">${plugin.tag}</span>` : ''}
           </div>
           <div class="video-actions">
             <button class="btn-edit" onclick="openPluginEdit(${index})">編集</button>
@@ -2160,7 +2160,7 @@
         logoutBtn.style.display = 'inline-block';
       } else {
         statusText.textContent = 'GitHub未認証';
-        statusText.style.color = 'rgba(255,255,255,0.6)';
+        statusText.style.color = '#555';
         tokenInputContainer.style.display = 'block';
         logoutBtn.style.display = 'none';
       }
@@ -2241,7 +2241,7 @@
 
       } catch (error) {
         console.error('Error loading articles:', error);
-        document.getElementById('articlesList').innerHTML = '<p style="color: #ffffff; text-align: center; padding: 20px;">記事の読み込みに失敗しました</p>';
+        document.getElementById('articlesList').innerHTML = '<p style="color: #000; text-align: center; padding: 20px;">記事の読み込みに失敗しました</p>';
       }
     }
 
@@ -2280,7 +2280,7 @@
       const list = document.getElementById('articlesList');
 
       if (articlesList.length === 0) {
-        list.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">記事がまだありません</p>';
+        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">記事がまだありません</p>';
         return;
       }
 
@@ -2294,7 +2294,7 @@
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-number" style="min-width: 40px;">
-            <span style="color: #ffffff; font-weight: bold;">${index + 1}</span>
+            <span style="color: #000; font-weight: bold;">${index + 1}</span>
           </div>
           ${article.thumbnail ? `
             <img src="${article.thumbnail}" alt="${article.title}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">
@@ -2306,7 +2306,7 @@
           <div class="video-info">
             <h4>${article.title}</h4>
             <p>${date}</p>
-            ${article.summary ? `<p style="font-size: 11px; color: rgba(255,255,255,0.5);">${article.summary.substring(0, 50)}${article.summary.length > 50 ? '...' : ''}</p>` : ''}
+            ${article.summary ? `<p style="font-size: 11px; color: #666;">${article.summary.substring(0, 50)}${article.summary.length > 50 ? '...' : ''}</p>` : ''}
           </div>
           <div class="video-actions">
             <button class="btn-edit" onclick="openArticleEdit(${index})">編集</button>
