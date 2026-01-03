@@ -21,16 +21,16 @@
   <!-- mammoth.js for Word document conversion -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <style>
-    /* Admin用白黒テーマ */
+    /* Admin用白黒テーマ（ダーク背景用） */
     :root {
-      --accent-primary: #000 !important;
-      --accent-secondary: #000 !important;
-      --accent-glow: rgba(0, 0, 0, 0.3) !important;
-      --accent-muted: rgba(0, 0, 0, 0.2) !important;
-      --accent-dim: rgba(0, 0, 0, 0.1) !important;
-      --border-color: rgba(0, 0, 0, 0.2) !important;
-      --border-hover: rgba(0, 0, 0, 0.4) !important;
-      --border-active: #000 !important;
+      --accent-primary: #fff !important;
+      --accent-secondary: #ccc !important;
+      --accent-glow: rgba(255, 255, 255, 0.3) !important;
+      --accent-muted: rgba(255, 255, 255, 0.2) !important;
+      --accent-dim: rgba(255, 255, 255, 0.1) !important;
+      --border-color: rgba(255, 255, 255, 0.2) !important;
+      --border-hover: rgba(255, 255, 255, 0.4) !important;
+      --border-active: #fff !important;
     }
 
     .login-form button,
@@ -38,51 +38,38 @@
     .btn-edit,
     .btn-save,
     .modal-buttons button {
-      background: #000 !important;
-      color: #fff !important;
+      background: #fff !important;
+      color: #000 !important;
     }
 
     .login-form button:hover,
     .add-form button:hover,
     .btn-edit:hover,
     .btn-save:hover {
-      background: #000 !important;
+      background: #ddd !important;
     }
 
     .btn-delete {
-      background: #000 !important;
-      color: #fff !important;
+      background: #fff !important;
+      color: #000 !important;
     }
 
     .btn-delete:hover {
-      background: #333 !important;
+      background: #ddd !important;
     }
 
     .tab-button.active {
-      color: #000 !important;
-      border-bottom-color: #000 !important;
+      color: #fff !important;
+      border-bottom-color: #fff !important;
     }
 
     .tab-button:hover {
-      color: #000 !important;
+      color: #ccc !important;
     }
 
     .logout-btn {
-      background: #000 !important;
-    }
-
-    /* インライン紫・赤の上書き */
-    [style*="#000000"] {
+      background: #fff !important;
       color: #000 !important;
-    }
-
-    [style*="#000000"] {
-      color: #000 !important;
-      background: #000 !important;
-    }
-
-    svg[style*="#000000"] {
-      fill: #000 !important;
     }
 
     .admin-container {
@@ -160,7 +147,7 @@
     }
 
     .login-error {
-      color: #000000;
+      color: #ffffff;
       text-align: center;
       margin-top: 15px;
       font-size: 14px;
@@ -223,7 +210,7 @@
 
     .video-number input:focus {
       outline: none;
-      border-color: #000000;
+      border-color: #ffffff;
     }
 
     .video-item img {
@@ -337,7 +324,7 @@
       padding: 15px 25px;
       background: rgba(107, 255, 107, 0.9);
       border-radius: 8px;
-      color: #000;
+      color: #fff;
       font-size: 14px;
       display: none;
       z-index: 100;
@@ -1206,7 +1193,7 @@
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-number" style="min-width: 40px;">
-            <span style="color: #000000; font-weight: bold;">${index + 1}</span>
+            <span style="color: #ffffff; font-weight: bold;">${index + 1}</span>
           </div>
           ${thumbnailUrl ? `
             <a href="${slot.link}" target="_blank" style="display: block;">
@@ -1220,7 +1207,7 @@
           <div class="video-info">
             <h4>${slot.slotName}</h4>
             <p style="font-size: 11px; word-break: break-all;">${slot.link || '未設定'}</p>
-            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #000000;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
+            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #ffffff;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
           </div>
           <div class="video-actions">
             <button class="btn-edit" onclick="openTopEdit(${index})">編集</button>
@@ -1754,7 +1741,7 @@
     let editPluginIndex = -1;
 
     // プラグインアイコンSVG
-    const pluginIconSVG = `<svg style="width: 40px; height: 40px; fill: #000000;" viewBox="0 0 24 24"><path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7s2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/></svg>`;
+    const pluginIconSVG = `<svg style="width: 40px; height: 40px; fill: #ffffff;" viewBox="0 0 24 24"><path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7s2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/></svg>`;
 
     // プラグイン一覧表示
     function renderPluginsList() {
@@ -2190,7 +2177,7 @@
 
       } catch (error) {
         console.error('Error loading articles:', error);
-        document.getElementById('articlesList').innerHTML = '<p style="color: #000000; text-align: center; padding: 20px;">記事の読み込みに失敗しました</p>';
+        document.getElementById('articlesList').innerHTML = '<p style="color: #ffffff; text-align: center; padding: 20px;">記事の読み込みに失敗しました</p>';
       }
     }
 
@@ -2243,7 +2230,7 @@
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-number" style="min-width: 40px;">
-            <span style="color: #000000; font-weight: bold;">${index + 1}</span>
+            <span style="color: #ffffff; font-weight: bold;">${index + 1}</span>
           </div>
           ${article.thumbnail ? `
             <img src="${article.thumbnail}" alt="${article.title}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">
