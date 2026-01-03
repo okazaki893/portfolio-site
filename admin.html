@@ -21,16 +21,29 @@
   <!-- mammoth.js for Word document conversion -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <style>
-    /* Admin用アクセントカラー（紫系を維持） */
-    :root {
-      --accent-primary: #926bff !important;
-      --accent-secondary: #6b92ff !important;
-      --accent-glow: rgba(146, 107, 255, 0.5) !important;
-      --accent-muted: rgba(146, 107, 255, 0.3) !important;
-      --accent-dim: rgba(146, 107, 255, 0.2) !important;
-      --border-color: rgba(146, 107, 255, 0.2) !important;
-      --border-hover: rgba(146, 107, 255, 0.5) !important;
-      --border-active: #926bff !important;
+    /* Admin用ボタンスタイル（白黒テーマ対応） */
+    .login-form button,
+    .add-form button,
+    .btn-edit,
+    .btn-save {
+      background: #333 !important;
+      color: #fff !important;
+    }
+
+    .login-form button:hover,
+    .add-form button:hover,
+    .btn-edit:hover,
+    .btn-save:hover {
+      background: #555 !important;
+    }
+
+    .tab-button.active {
+      color: #333 !important;
+      border-bottom-color: #333 !important;
+    }
+
+    .tab-button:hover {
+      color: #555 !important;
     }
 
     .admin-container {
