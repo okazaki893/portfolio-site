@@ -651,6 +651,24 @@
           deliveries.push(name + ' x' + quantities.delivery[delivery]);
         }
       }
+
+      // 納期が未選択の場合、プランに応じてデフォルト値を設定
+      if (deliveries.length === 0) {
+        var shortCount = quantities.plans['Short'] || 0;
+        var oneChorusCount = quantities.plans['One Chorus'] || 0;
+        var fullChorusCount = quantities.plans['Full Chorus'] || 0;
+        var standardCount = oneChorusCount + fullChorusCount;
+
+        // One Chorus / Full Chorus がある場合は「2週間」をデフォルト
+        if (standardCount > 0) {
+          deliveries.push('2週間 x' + standardCount);
+        }
+        // Short がある場合は「3日」をデフォルト
+        if (shortCount > 0) {
+          deliveries.push('3日 x' + shortCount);
+        }
+      }
+
       return deliveries.join(', ');
     }
 
