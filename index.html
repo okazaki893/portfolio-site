@@ -40,6 +40,11 @@
   </script>
 </head>
 <body>
+  <!-- Splash Screen -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-text">NOUMENON</div>
+  </div>
+
   <div class="portfolio-cover">
     <!-- Hamburger Menu Button -->
     <div class="hamburger-menu" onclick="toggleMobileMenu()">
@@ -252,6 +257,28 @@
       document.addEventListener('DOMContentLoaded', loadMobileVideos);
     } else {
       setTimeout(loadMobileVideos, 100);
+    }
+
+    // Splash screen animation
+    function initSplashScreen() {
+      const splashScreen = document.getElementById('splashScreen');
+      if (!splashScreen) return;
+
+      // Hide splash screen after 2 seconds
+      setTimeout(() => {
+        splashScreen.classList.add('hide');
+        // Remove from DOM after fade completes
+        setTimeout(() => {
+          splashScreen.remove();
+        }, 400);
+      }, 2000);
+    }
+
+    // Initialize splash screen when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSplashScreen);
+    } else {
+      initSplashScreen();
     }
   </script>
 </body>

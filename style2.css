@@ -14,6 +14,72 @@ body {
   overflow: hidden;
 }
 
+/* Splash Screen */
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary, #000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.splash-screen.hide {
+  animation: splashFadeOut 0.4s ease-out forwards;
+}
+
+.splash-text {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 72px;
+  font-weight: bold;
+  color: var(--accent-primary, #926bff);
+  letter-spacing: 8px;
+  text-shadow:
+    0 0 40px var(--accent-glow, rgba(146, 107, 255, 0.5)),
+    0 0 80px var(--accent-muted, rgba(146, 107, 255, 0.3));
+  animation: splashFadeIn 1s ease-in;
+}
+
+@keyframes splashFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splashFadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 900px) {
+  .splash-text {
+    font-size: 48px;
+    letter-spacing: 4px;
+  }
+}
+
+@media (max-width: 600px) {
+  .splash-text {
+    font-size: 36px;
+    letter-spacing: 2px;
+  }
+}
+
 /* Side menu */
 .side-menu {
   position: fixed;
@@ -100,6 +166,12 @@ body {
   background-color: var(--bg-secondary, #0a0a0c);
   border-radius: 0;
   overflow: hidden;
+  transition: opacity 2.5s ease-in-out;
+  will-change: opacity;
+}
+
+body.content-hidden .portfolio-cover {
+  opacity: 0;
 }
 
 /* Animated gradient background */
