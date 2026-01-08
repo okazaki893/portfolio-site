@@ -13,10 +13,148 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <style>
+    /* Custom Font */
+    @font-face {
+      font-family: 'Star Shines Still';
+      src: url('../fonts/StarShinesStill.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    /* Splash Screen */
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      overflow: hidden;
+    }
+
+    .splash-screen.hide {
+      animation: splashFadeOut 0.4s ease-out forwards;
+    }
+
+    .splash-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .splash-text {
+      font-family: 'Star Shines Still', 'Times New Roman', Times, serif;
+      font-size: 72px;
+      font-weight: normal;
+      color: #111;
+      letter-spacing: 8px;
+      animation: splashFadeIn 1s ease-out forwards;
+      opacity: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .splash-line {
+      width: 300px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #111, transparent);
+      margin-top: 20px;
+      animation: lineExpand 1s ease-out 0.5s forwards;
+      transform: scaleX(0);
+    }
+
+    .shooting-star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #111;
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(0,0,0,0.3);
+      offset-path: path('M -380,30 C -200,-150 200,-150 380,30');
+      offset-rotate: auto;
+      animation: starMove 1.8s linear forwards;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    .shooting-star::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 2px;
+      background: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+      border-radius: 2px;
+    }
+
+    @keyframes splashFadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes splashFadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes lineExpand {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+
+    @keyframes starMove {
+      0% { offset-distance: 0%; opacity: 0; }
+      5% { offset-distance: 5%; opacity: 1; }
+      25% { offset-distance: 25%; opacity: 1; }
+      50% { offset-distance: 50%; opacity: 1; }
+      75% { offset-distance: 75%; opacity: 1; }
+      95% { offset-distance: 95%; opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+
+    @media (max-width: 900px) {
+      .splash-text {
+        font-size: 48px;
+        letter-spacing: 4px;
+      }
+      .shooting-star {
+        width: 8px;
+        height: 8px;
+        offset-path: path('M -280,25 C -150,-120 150,-120 280,25');
+      }
+      .shooting-star::after {
+        width: 35px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .splash-text {
+        font-size: 36px;
+        letter-spacing: 2px;
+      }
+      .shooting-star {
+        width: 6px;
+        height: 6px;
+        offset-path: path('M -200,20 C -100,-100 100,-100 200,20');
+      }
+      .shooting-star::after {
+        width: 25px;
+        right: 5px;
+      }
     }
 
     body {
@@ -149,6 +287,15 @@
   </style>
 </head>
 <body>
+  <!-- Splash Screen -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-content">
+      <div class="shooting-star"></div>
+      <div class="splash-text">NOUMENON</div>
+      <div class="splash-line"></div>
+    </div>
+  </div>
+
   <div class="container">
     <!-- Profile -->
     <div class="profile">
@@ -203,5 +350,29 @@
     <!-- Footer -->
     <div class="footer">NOUMENON</div>
   </div>
+
+  <script>
+    // Splash screen animation
+    function initSplashScreen() {
+      const splashScreen = document.getElementById('splashScreen');
+      if (!splashScreen) return;
+
+      // Hide splash screen after 2.5 seconds
+      setTimeout(() => {
+        splashScreen.classList.add('hide');
+        // Remove from DOM after fade completes
+        setTimeout(() => {
+          splashScreen.remove();
+        }, 400);
+      }, 2500);
+    }
+
+    // Initialize splash screen when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSplashScreen);
+    } else {
+      initSplashScreen();
+    }
+  </script>
 </body>
 </html>

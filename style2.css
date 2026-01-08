@@ -1,3 +1,11 @@
+/* Custom Font */
+@font-face {
+  font-family: 'Star Shines Still';
+  src: url('fonts/StarShinesStill.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -21,7 +29,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--bg-primary, #000);
+  background-color: var(--bg-secondary, #000);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,16 +41,127 @@ body {
   animation: splashFadeOut 0.4s ease-out forwards;
 }
 
+.splash-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.splash-line {
+  width: 300px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--text-primary, #fff), transparent);
+  margin-top: 20px;
+  animation: lineExpand 1s ease-out 0.5s forwards;
+  transform: scaleX(0);
+}
+
+@keyframes lineExpand {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
 .splash-text {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Star Shines Still', 'Times New Roman', Times, serif;
   font-size: 72px;
-  font-weight: bold;
+  font-weight: normal;
   color: var(--accent-primary, #926bff);
   letter-spacing: 8px;
   text-shadow:
     0 0 40px var(--accent-glow, rgba(146, 107, 255, 0.5)),
     0 0 80px var(--accent-muted, rgba(146, 107, 255, 0.3));
-  animation: splashFadeIn 1s ease-in;
+  animation: splashFadeIn 1s ease-out forwards;
+  opacity: 0;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes splashFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Shooting Star Animation */
+.shooting-star {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--text-primary, #fff);
+  border-radius: 50%;
+  box-shadow:
+    0 0 6px var(--text-primary, #fff),
+    0 0 12px var(--accent-primary, #926bff),
+    0 0 20px var(--accent-primary, #926bff);
+  offset-path: path('M -380,30 C -200,-150 200,-150 380,30');
+  offset-rotate: auto;
+  animation: starMove 1.8s linear forwards;
+  opacity: 0;
+  z-index: 1;
+}
+
+.shooting-star::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background: var(--text-primary, #fff);
+  border-radius: 50%;
+}
+
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(to left, var(--text-secondary, rgba(255,255,255,0.9)), transparent);
+  border-radius: 2px;
+}
+
+@keyframes starMove {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  5% {
+    offset-distance: 5%;
+    opacity: 1;
+  }
+  25% {
+    offset-distance: 25%;
+    opacity: 1;
+  }
+  50% {
+    offset-distance: 50%;
+    opacity: 1;
+  }
+  75% {
+    offset-distance: 75%;
+    opacity: 1;
+  }
+  95% {
+    offset-distance: 95%;
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
 }
 
 @keyframes splashFadeIn {
@@ -71,12 +190,29 @@ body {
     font-size: 48px;
     letter-spacing: 4px;
   }
+  .shooting-star {
+    width: 8px;
+    height: 8px;
+    offset-path: path('M -280,25 C -150,-120 150,-120 280,25');
+  }
+  .shooting-star::after {
+    width: 35px;
+  }
 }
 
 @media (max-width: 600px) {
   .splash-text {
     font-size: 36px;
     letter-spacing: 2px;
+  }
+  .shooting-star {
+    width: 6px;
+    height: 6px;
+    offset-path: path('M -200,20 C -100,-100 100,-100 200,20');
+  }
+  .shooting-star::after {
+    width: 25px;
+    right: 5px;
   }
 }
 

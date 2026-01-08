@@ -42,7 +42,11 @@
 <body>
   <!-- Splash Screen -->
   <div class="splash-screen" id="splashScreen">
-    <div class="splash-text">NOUMENON</div>
+    <div class="splash-content">
+      <div class="shooting-star"></div>
+      <div class="splash-text">NOUMENON</div>
+      <div class="splash-line"></div>
+    </div>
   </div>
 
   <div class="portfolio-cover">
@@ -264,14 +268,14 @@
       const splashScreen = document.getElementById('splashScreen');
       if (!splashScreen) return;
 
-      // Hide splash screen after 2 seconds
+      // Hide splash screen after 2.5 seconds
       setTimeout(() => {
         splashScreen.classList.add('hide');
         // Remove from DOM after fade completes
         setTimeout(() => {
           splashScreen.remove();
         }, 400);
-      }, 2000);
+      }, 2500);
     }
 
     // Initialize splash screen when page loads
