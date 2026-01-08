@@ -102,11 +102,45 @@ body {
     0 0 6px var(--text-primary, #fff),
     0 0 12px var(--accent-primary, #926bff),
     0 0 20px var(--accent-primary, #926bff);
-  offset-path: path('M -380,30 C -200,-150 200,-150 380,30');
-  offset-rotate: auto;
-  animation: starMove 1.8s linear forwards;
+  animation: starMoveFallback 1.8s ease-in-out forwards;
   opacity: 0;
   z-index: 1;
+}
+
+/* Fallback animation for browsers without offset-path support */
+@keyframes starMoveFallback {
+  0% {
+    transform: translate(-380px, 30px);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-190px, -100px);
+  }
+  50% {
+    transform: translate(0px, -150px);
+  }
+  75% {
+    transform: translate(190px, -100px);
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(380px, 30px);
+    opacity: 0;
+  }
+}
+
+/* Enhanced animation for browsers with offset-path support */
+@supports (offset-path: path('M 0,0')) {
+  .shooting-star {
+    offset-path: path('M -380,30 C -200,-150 200,-150 380,30');
+    offset-rotate: auto;
+    animation: starMove 1.8s linear forwards;
+  }
 }
 
 .shooting-star::before {
@@ -182,10 +216,25 @@ body {
   .shooting-star {
     width: 8px;
     height: 8px;
-    offset-path: path('M -280,25 C -150,-120 150,-120 280,25');
+    animation: starMoveFallback900 1.8s ease-in-out forwards;
+  }
+  @supports (offset-path: path('M 0,0')) {
+    .shooting-star {
+      offset-path: path('M -280,25 C -150,-120 150,-120 280,25');
+      animation: starMove 1.8s linear forwards;
+    }
   }
   .shooting-star::after {
     width: 35px;
+  }
+  @keyframes starMoveFallback900 {
+    0% { transform: translate(-280px, 25px); opacity: 0; }
+    5% { opacity: 1; }
+    25% { transform: translate(-140px, -70px); }
+    50% { transform: translate(0px, -120px); }
+    75% { transform: translate(140px, -70px); }
+    95% { opacity: 1; }
+    100% { transform: translate(280px, 25px); opacity: 0; }
   }
 }
 
@@ -197,11 +246,26 @@ body {
   .shooting-star {
     width: 6px;
     height: 6px;
-    offset-path: path('M -200,20 C -100,-100 100,-100 200,20');
+    animation: starMoveFallback600 1.8s ease-in-out forwards;
+  }
+  @supports (offset-path: path('M 0,0')) {
+    .shooting-star {
+      offset-path: path('M -200,20 C -100,-100 100,-100 200,20');
+      animation: starMove 1.8s linear forwards;
+    }
   }
   .shooting-star::after {
     width: 25px;
     right: 5px;
+  }
+  @keyframes starMoveFallback600 {
+    0% { transform: translate(-200px, 20px); opacity: 0; }
+    5% { opacity: 1; }
+    25% { transform: translate(-100px, -50px); }
+    50% { transform: translate(0px, -100px); }
+    75% { transform: translate(100px, -50px); }
+    95% { opacity: 1; }
+    100% { transform: translate(200px, 20px); opacity: 0; }
   }
 }
 
