@@ -215,9 +215,9 @@
           <label>プラン <span class="required">*</span></label>
           <div class="contact-cards" id="planCards">
             <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-plan="Short" data-price="2000" onclick="tapPlan(this)">
+              <div class="contact-card tap-select" data-plan="Short" data-price="3000" onclick="tapPlan(this)">
                 <span class="contact-card-name">Short</span>
-                <span class="contact-card-price">¥2,000~</span>
+                <span class="contact-card-price">¥3,000~</span>
               </div>
               <div class="qty-display small" data-for="Short">
                 <button type="button" class="qty-btn minus" onclick="changePlanQty('Short', -1, event)">-</button>
@@ -226,9 +226,9 @@
               </div>
             </div>
             <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-plan="One Chorus" data-price="3000" onclick="tapPlan(this)">
+              <div class="contact-card tap-select" data-plan="One Chorus" data-price="5000" onclick="tapPlan(this)">
                 <span class="contact-card-name">One Chorus</span>
-                <span class="contact-card-price">¥3,000~</span>
+                <span class="contact-card-price">¥5,000~</span>
               </div>
               <div class="qty-display small" data-for="One Chorus">
                 <button type="button" class="qty-btn minus" onclick="changePlanQty('One Chorus', -1, event)">-</button>
@@ -237,9 +237,9 @@
               </div>
             </div>
             <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-plan="Full Chorus" data-price="6000" onclick="tapPlan(this)">
+              <div class="contact-card tap-select" data-plan="Full Chorus" data-price="8000" onclick="tapPlan(this)">
                 <span class="contact-card-name">Full Chorus</span>
-                <span class="contact-card-price">¥6,000~</span>
+                <span class="contact-card-price">¥8,000~</span>
               </div>
               <div class="qty-display small" data-for="Full Chorus">
                 <button type="button" class="qty-btn minus" onclick="changePlanQty('Full Chorus', -1, event)">-</button>
@@ -509,7 +509,7 @@
       let hasVariable = false;
 
       // プラン料金
-      const planPrices = { 'Short': 2000, 'One Chorus': 3000, 'Full Chorus': 6000 };
+      const planPrices = { 'Short': 3000, 'One Chorus': 5000, 'Full Chorus': 8000 };
       for (const [plan, qty] of Object.entries(quantities.plans)) {
         if (qty > 0) {
           total += (planPrices[plan] || 0) * qty;

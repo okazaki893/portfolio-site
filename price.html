@@ -168,12 +168,12 @@
       <div class="price-cards">
         <!-- Short -->
         <div class="price-card-wrapper">
-          <div class="price-card tap-select" data-plan="Short" data-price="2000" onclick="tapCard(this)">
+          <div class="price-card tap-select" data-plan="Short" data-price="3000" onclick="tapCard(this)">
             <div class="card-header">
               <span class="plan-name">Short</span>
               <div class="price">
                 <span class="currency">¥</span>
-                <span class="amount">2,000</span>
+                <span class="amount">3,000</span>
                 <span class="period">~</span>
               </div>
             </div>
@@ -192,12 +192,12 @@
 
         <!-- One Chorus -->
         <div class="price-card-wrapper">
-          <div class="price-card tap-select" data-plan="One Chorus" data-price="3000" onclick="tapCard(this)">
+          <div class="price-card tap-select" data-plan="One Chorus" data-price="5000" onclick="tapCard(this)">
             <div class="card-header">
               <span class="plan-name">One Chorus</span>
               <div class="price">
                 <span class="currency">¥</span>
-                <span class="amount">3,000</span>
+                <span class="amount">5,000</span>
                 <span class="period">~</span>
               </div>
             </div>
@@ -216,12 +216,12 @@
 
         <!-- Full Chorus -->
         <div class="price-card-wrapper">
-          <div class="price-card tap-select" data-plan="Full Chorus" data-price="6000" onclick="tapCard(this)">
+          <div class="price-card tap-select" data-plan="Full Chorus" data-price="8000" onclick="tapCard(this)">
             <div class="card-header">
               <span class="plan-name">Full Chorus</span>
               <div class="price">
                 <span class="currency">¥</span>
-                <span class="amount">6,000</span>
+                <span class="amount">8,000</span>
                 <span class="period">~</span>
               </div>
             </div>
@@ -459,7 +459,7 @@
       let hasVariable = false;
 
       // プラン料金
-      const planPrices = { 'Short': 2000, 'One Chorus': 3000, 'Full Chorus': 6000 };
+      const planPrices = { 'Short': 3000, 'One Chorus': 5000, 'Full Chorus': 8000 };
       for (const [plan, qty] of Object.entries(quantities.plans)) {
         if (qty > 0) {
           total += (planPrices[plan] || 0) * qty;
