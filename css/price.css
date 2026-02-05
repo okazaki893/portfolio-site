@@ -31,6 +31,8 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--text-subtle, rgba(255, 255, 255, 0.15));
 }
 
 .menu-item {
