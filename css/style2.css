@@ -73,9 +73,6 @@ body {
   font-weight: normal;
   color: var(--accent-primary, #926bff);
   letter-spacing: 8px;
-  text-shadow:
-    0 0 40px var(--accent-glow, rgba(146, 107, 255, 0.5)),
-    0 0 80px var(--accent-muted, rgba(146, 107, 255, 0.3));
   animation: splashFadeIn 1s ease-out forwards;
   opacity: 0;
   position: relative;
@@ -286,6 +283,8 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--text-subtle, rgba(255, 255, 255, 0.15));
 }
 
 .menu-item {
@@ -365,16 +364,7 @@ body.content-hidden .portfolio-cover {
 
 /* Animated gradient background */
 .gradient-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(ellipse at 20% 20%, var(--gradient-bg-1, rgba(146, 107, 255, 0.08)) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, var(--gradient-bg-2, rgba(107, 146, 255, 0.06)) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, var(--gradient-bg-3, rgba(80, 60, 120, 0.04)) 0%, transparent 70%);
-  animation: gradientShift 10s ease-in-out infinite;
+  display: none;
 }
 
 @keyframes gradientShift {
@@ -393,10 +383,7 @@ body.content-hidden .portfolio-cover {
 
 /* Floating orbs */
 .orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  pointer-events: none;
+  display: none;
 }
 
 .orb-1 {
@@ -497,17 +484,11 @@ body.content-hidden .portfolio-cover {
   font-weight: bold;
   color: var(--accent-primary, #926bff);
   line-height: 1;
-  text-shadow:
-    0 0 40px var(--accent-glow, rgba(146, 107, 255, 0.5)),
-    0 0 80px var(--accent-muted, rgba(146, 107, 255, 0.3));
-  transition: transform 0.3s ease, text-shadow 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .char:hover {
   transform: translateY(-10px);
-  text-shadow:
-    0 0 60px var(--accent-primary, rgba(146, 107, 255, 0.8)),
-    0 0 120px var(--accent-glow, rgba(146, 107, 255, 0.5));
 }
 
 .char.scatter:nth-child(odd) {
@@ -1236,9 +1217,6 @@ body.content-hidden .portfolio-cover {
     font-weight: bold;
     color: var(--accent-primary, #926bff);
     letter-spacing: 8px;
-    text-shadow:
-      0 0 40px var(--accent-glow, rgba(146, 107, 255, 0.5)),
-      0 0 80px var(--accent-muted, rgba(146, 107, 255, 0.3));
     text-align: center;
     margin-bottom: 40px;
   }
@@ -1334,38 +1312,26 @@ body.content-hidden .portfolio-cover {
   }
 }
 
-/* Social Icons */
+/* Social Links */
 .social-icons {
   display: flex;
-  flex-direction: row;
-  gap: 12px;
-  margin-top: 30px;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
   padding-left: 6px;
 }
 
-.social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--text-faint, rgba(255, 255, 255, 0.1));
-  transition: all 0.3s ease;
+.social-link {
+  font-family: 'Arial', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text-muted, rgba(255, 255, 255, 0.5));
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-.social-icon:hover {
-  background: var(--accent-muted, rgba(146, 107, 255, 0.3));
-  transform: scale(1.1);
-}
-
-.social-icon svg {
-  width: 18px;
-  height: 18px;
-  fill: var(--text-muted, rgba(255, 255, 255, 0.6));
-  transition: fill 0.3s ease;
-}
-
-.social-icon:hover svg {
-  fill: var(--accent-primary, #926bff);
+.social-link:hover {
+  color: var(--accent-primary, #926bff);
 }

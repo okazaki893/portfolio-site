@@ -19,5 +19,10 @@
       "Bash(cd:*)",
       "WebFetch(domain:noumenon.jp)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "serena",
+    "notion"
+  ],
+  "enableAllProjectMcpServers": true
 }

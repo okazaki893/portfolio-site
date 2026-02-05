@@ -119,7 +119,6 @@ function generateArticlePages(articles) {
       .replace(/href="\.\.\/favicon\.png"/g, 'href="../../favicon.png"')
       .replace(/href="\.\.\/theme\.css"/g, 'href="../../theme.css"')
       .replace(/href="\.\.\/style2\.css"/g, 'href="../../style2.css"')
-      .replace(/src="\.\.\/theme\.js"/g, 'src="../../theme.js"')
       .replace(/href="\.\.\/"/g, 'href="../../"')
       .replace(/href="\.\.\/mixing"/g, 'href="../../mixing"')
       .replace(/href="\.\.\/3danimation"/g, 'href="../../3danimation"')

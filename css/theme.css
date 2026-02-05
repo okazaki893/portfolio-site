@@ -1,0 +1,48 @@
+/* Theme Variables - Dark Mode Only */
+
+:root {
+  /* Background colors */
+  --bg-primary: #101016;
+  --bg-secondary: #0a0a0c;
+  --bg-card: rgba(20, 20, 25, 0.8);
+  --bg-card-hover: rgba(30, 30, 35, 0.9);
+
+  /* Text colors */
+  --text-primary: #fff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-dim: rgba(255, 255, 255, 0.5);
+  --text-subtle: rgba(255, 255, 255, 0.4);
+  --text-faint: rgba(255, 255, 255, 0.3);
+
+  /* Accent colors */
+  --accent-primary: #ffffff;
+  --accent-secondary: #cccccc;
+  --accent-glow: rgba(255, 255, 255, 0.5);
+  --accent-muted: rgba(255, 255, 255, 0.3);
+  --accent-dim: rgba(255, 255, 255, 0.2);
+
+  /* Border colors */
+  --border-color: rgba(255, 255, 255, 0.2);
+  --border-hover: rgba(255, 255, 255, 0.5);
+  --border-active: #ffffff;
+
+  /* Background effects */
+  --grid-line: rgba(255, 255, 255, 0.02);
+  --orb-purple: rgba(255, 255, 255, 0.1);
+  --orb-blue: rgba(200, 200, 200, 0.08);
+  --orb-pink: rgba(180, 180, 180, 0.05);
+
+  /* Gradients */
+  --gradient-bg-1: rgba(255, 255, 255, 0.04);
+  --gradient-bg-2: rgba(200, 200, 200, 0.03);
+  --gradient-bg-3: rgba(150, 150, 150, 0.02);
+
+  /* Overlays */
+  --overlay-bg: rgba(10, 10, 15, 0.98);
+  --popup-bg: rgba(20, 20, 30, 0.95);
+
+  /* Misc */
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --input-bg: rgba(10, 10, 15, 0.8);
+}

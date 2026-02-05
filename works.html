@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works - Noumenon</title>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VSVT7TT4R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0VSVT7TT4R');
+  </script>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <!-- OGP -->
+  <meta property="og:title" content="Works - Noumenon">
+  <meta property="og:description" content="Works Portfolio">
+  <meta property="og:image" content="https://noumenon.jp/OGP.png">
+  <meta property="og:url" content="https://noumenon.jp/works">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Works - Noumenon">
+  <meta name="twitter:description" content="Works Portfolio">
+  <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/style2.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    .works-content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 60px 60px 340px;
+    }
+
+    .works-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 50px;
+    }
+
+    .page-title-works {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-weight: 400;
+      font-style: italic;
+      text-transform: uppercase;
+      color: var(--accent-primary, #926bff);
+      letter-spacing: 15px;
+      margin: 0;
+      font-variant-numeric: lining-nums;
+      font-feature-settings: 'lnum' 1;
+    }
+
+    .page-title-works::after {
+      content: '_';
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Filter - Tag Style */
+    .filter-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0;
+    }
+
+    .filter-btn {
+      position: relative;
+      padding: 8px 0;
+      margin-left: 24px;
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: var(--text-muted, rgba(255, 255, 255, 0.5));
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.4s cubic-bezier(0.4, 0.4, 0, 1);
+    }
+
+    .filter-btn:first-child { margin-left: 0; }
+
+    .filter-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--text-primary, #fff);
+      transition: width 0.4s cubic-bezier(0.4, 0.4, 0, 1);
+    }
+
+    .filter-btn:hover { color: var(--text-secondary, rgba(255, 255, 255, 0.8)); }
+    .filter-btn.active { color: var(--text-primary, #fff); }
+    .filter-btn.active::after { width: 100%; }
+
+    /* Content Sections */
+    .content-section {
+      width: 100%;
+      max-width: 1200px;
+      display: none;
+    }
+
+    .content-section.active { display: block; }
+
+    /* Video Grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      width: 100%;
+    }
+
+    .video-card {
+      background: var(--bg-card, rgba(20, 20, 25, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-hover, rgba(146, 107, 255, 0.5));
+      box-shadow: 0 10px 30px var(--accent-dim, rgba(146, 107, 255, 0.2));
+    }
+
+    .video-thumbnail {
+      display: block;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+
+    .video-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .play-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-thumbnail:hover .play-overlay { opacity: 1; }
+
+    .play-button {
+      width: 70px;
+      height: 70px;
+      background: var(--accent-primary, rgba(146, 107, 255, 0.9));
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .play-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 55%;
+      transform: translate(-50%, -50%);
+      border-style: solid;
+      border-width: 12px 0 12px 20px;
+      border-color: transparent transparent transparent var(--text-primary, #fff);
+    }
+
+    .video-title {
+      padding: 15px;
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary, rgba(255, 255, 255, 0.9));
+      letter-spacing: 1px;
+    }
+
+    /* Music Grid */
+    .music-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      width: 100%;
+    }
+
+    .music-card {
+      background: var(--bg-card, rgba(20, 20, 25, 0.8));
+      border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+      border-radius: 16px;
+      padding: 20px;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .music-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-hover, rgba(146, 107, 255, 0.5));
+      box-shadow: 0 10px 30px var(--accent-dim, rgba(146, 107, 255, 0.2));
+    }
+
+    .music-card iframe {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+    }
+
+    /* Category Label */
+    .category-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: var(--accent-primary, #926bff);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* PC/Mobile scroll */
+    html, body {
+      overflow: hidden !important;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .portfolio-cover {
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .works-content { padding-bottom: 100px; }
+
+    @media (max-width: 900px) {
+      .works-content { padding: 80px 20px 40px 20px; }
+
+      .works-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .page-title-works {
+        font-size: 36px;
+        letter-spacing: 8px;
+      }
+
+      .video-grid, .music-grid { grid-template-columns: 1fr; }
+
+      .filter-container { justify-content: center; }
+
+      .filter-btn {
+        padding: 6px 0;
+        margin-left: 16px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="portfolio-cover">
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger-menu" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+      <ul class="mobile-menu-list">
+        <li><a href="/">Top</a></li>
+        <li><a href="works" class="active">Works</a></li>
+        <li><a href="price">Price</a></li>
+        <li><a href="contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Side menu -->
+    <nav class="side-menu">
+      <ul class="menu-list">
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="/" class="menu-link">Top</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet active"></span>
+          <span class="menu-line"></span>
+          <a href="works" class="menu-link active">Works</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <span class="menu-line"></span>
+          <a href="price" class="menu-link">Price</a>
+        </li>
+        <li class="menu-item">
+          <span class="menu-bullet"></span>
+          <a href="contact" class="menu-link">Contact</a>
+        </li>
+      </ul>
+      <!-- Social Links -->
+      <div class="social-icons">
+        <a href="https://x.com/okazaki_yuki01" target="_blank" class="social-link">X (main)</a>
+        <a href="https://x.com/DOSUKOI_JK" target="_blank" class="social-link">X (mix)</a>
+        <a href="https://discord.com/users/528093170484117518" target="_blank" class="social-link">Discord</a>
+        <a href="https://okazakiyuki.booth.pm/" target="_blank" class="social-link">BOOTH</a>
+      </div>
+    </nav>
+
+    <!-- Animated gradient background -->
+    <div class="gradient-bg"></div>
+
+    <!-- Grid pattern overlay -->
+    <div class="grid-pattern"></div>
+
+    <!-- Floating orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Main content -->
+    <div class="works-content">
+      <div class="works-header">
+        <h1 class="page-title-works">Works</h1>
+        <!-- Filter -->
+        <div class="filter-container">
+          <button class="filter-btn filter-all active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="mixing">Mixing</button>
+          <button class="filter-btn" data-filter="3d">3D Animation</button>
+          <button class="filter-btn" data-filter="music">Music</button>
+          <button class="filter-btn" data-filter="planning">Planning</button>
+        </div>
+      </div>
+
+      <!-- All Content -->
+      <div class="content-section active" id="section-all"></div>
+
+      <!-- Mixing Content -->
+      <div class="content-section" id="section-mixing">
+        <div class="video-grid" id="mixingGrid"></div>
+      </div>
+
+      <!-- 3D Animation Content -->
+      <div class="content-section" id="section-3d">
+        <div class="video-grid" id="animationGrid"></div>
+      </div>
+
+      <!-- Music Content -->
+      <div class="content-section" id="section-music">
+        <div class="music-grid" id="musicGrid"></div>
+      </div>
+
+      <!-- Planning Content -->
+      <div class="content-section" id="section-planning">
+        <div class="video-grid" id="planningGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const hamburger = document.querySelector('.hamburger-menu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      hamburger.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    // Scramble text animation
+    function scrambleText(element, newText, duration = 800) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+      const originalText = element.textContent;
+      const maxLength = Math.max(originalText.length, newText.length);
+      const iterations = 15;
+      const intervalTime = duration / iterations;
+      let currentIteration = 0;
+
+      const interval = setInterval(() => {
+        currentIteration++;
+        let displayText = '';
+
+        for (let i = 0; i < maxLength; i++) {
+          const progress = currentIteration / iterations;
+          const charProgress = i / maxLength;
+
+          if (charProgress < progress && i < newText.length) {
+            displayText += newText[i];
+          } else if (i < newText.length) {
+            displayText += chars[Math.floor(Math.random() * chars.length)];
+          }
+        }
+
+        element.textContent = displayText;
+
+        if (currentIteration >= iterations) {
+          clearInterval(interval);
+          element.textContent = newText;
+        }
+      }, intervalTime);
+    }
+
+    // Default data
+    const defaultMixingWorks = [
+      { id: '3qpLV6US96M', title: '18歳が / 全力で【化けの花】歌ってみた', link: 'https://www.youtube.com/watch?v=3qpLV6US96M' },
+      { id: 'XP-nYV8GAOo', title: "Hell's Greatest Dad/Hazbin Hotel - ver.Rim", link: 'https://www.youtube.com/watch?v=XP-nYV8GAOo' },
+      { id: 'd21zmSD-Oh4', title: '【怜巳】百花繚乱☆スターマイン / 雪乃イト【歌ってみた】', link: 'https://www.youtube.com/watch?v=d21zmSD-Oh4' },
+      { id: '6hn1pNWSCNI', title: '【お化け5人が】HALLOWEEN PARTY/歌ってみた【どるれく】', link: 'https://www.youtube.com/watch?v=6hn1pNWSCNI' },
+      { id: 'Ag9Ay7XJC24', title: '【オリジナルMV】脱法ロック／歌ってみた【あぽす×みぬた】', link: 'https://www.youtube.com/watch?v=Ag9Ay7XJC24' },
+      { id: 'KWbXAIrVWxk', title: 'ファタール / GEMN 歌ってみた 【まいたけxかにちゃん】', link: 'https://www.youtube.com/watch?v=KWbXAIrVWxk' },
+      { id: 'ArdkSMvRqxo', title: 'ハオ / 歌ってみた【みそら】', link: 'https://www.youtube.com/watch?v=ArdkSMvRqxo' },
+      { id: 'khYh9nJxO9o', title: 'Love Forever - ジョアンナ町田×緋赤まい(Cover)', link: 'https://www.youtube.com/watch?v=khYh9nJxO9o' },
+      { id: '2X77fyZSIM4', title: 'アンノウン・マザーグース(wowaka)/尾長真昼cover', link: 'https://www.youtube.com/watch?v=2X77fyZSIM4' },
+      { id: 'VVUW23SBnoE', title: 'セリフありで】キングスレイヤー / あれと【歌ってみた / めるぷれ】', link: 'https://www.youtube.com/watch?v=VVUW23SBnoE' },
+      { id: '-W3QisNkoCQ', title: '【三兄弟で】のだ / 歌ってみた 【まぎすと】', link: 'https://www.youtube.com/watch?v=-W3QisNkoCQ' },
+      { id: 'Et7CpkC1ilI', title: '【ボカデュオ2024】　泡沫　Team 響曲〜kyoma〜', link: 'https://www.youtube.com/watch?v=Et7CpkC1ilI' },
+      { id: 'PBd2yrrnZ-4', title: 'UNDEAD/cover.ネア', link: 'https://www.youtube.com/watch?v=PBd2yrrnZ-4' },
+      { id: 'ZSEfPjaEjEs', title: '【歌ってみた】私は、私達は(Guiano)/尾長真昼cover', link: 'https://www.youtube.com/watch?v=ZSEfPjaEjEs' },
+      { id: 'BAFzZ3hgccU', title: '【ショタカテ配信者が】3周年記念に【しわ】歌ってみた', link: 'https://www.youtube.com/watch?v=BAFzZ3hgccU' },
+      { id: '73K8Q4F-Uo0', title: '【アニメ賭ケグルイOP】Deal with the devil / coverはなまる', link: 'https://www.youtube.com/watch?v=73K8Q4F-Uo0' },
+      { id: 'wXdpFwtZk5A', title: 'Tonight ~月の下眠る君~ - マクドナルド･ジョアンナ･まい (Cover)', link: 'https://www.youtube.com/watch?v=wXdpFwtZk5A' }
+    ];
+
+    const default3dVideos = [
+      { id: 'YlREYofJlZU', title: 'マイクラでHANAのROSE踊ってみた', link: 'https://www.youtube.com/watch?v=YlREYofJlZU' },
+      { id: 'FQwnJEvqYfE', title: '友達とケンチャナ Dance Challenge', link: 'https://www.youtube.com/watch?v=FQwnJEvqYfE' },
+      { id: '_J-Dhutoz_k', title: 'ピンクガード先生と"まるくまるく"Dance Challenge', link: 'https://www.youtube.com/watch?v=_J-Dhutoz_k' }
+    ];
+
+    const defaultMusic = [
+      { title: '01a1', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F01a1&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true' },
+      { title: '02a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F02a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true' },
+      { title: '03a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F03a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true' },
+      { title: '04a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F04a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true' },
+      { title: '05wav', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F05wav&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true' },
+      { title: '06a1', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F06a1&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true' }
+    ];
+
+    const defaultPlanningWorks = [
+      { id: 'UAV_q6xKtu4', title: 'ドキシック/かわいいJKふぁん倶楽部', link: 'https://www.youtube.com/watch?v=UAV_q6xKtu4' }
+    ];
+
+    // Load data from localStorage or use defaults
+    function loadMixingWorks() {
+      const saved = localStorage.getItem('portfolio_videos');
+      return saved ? JSON.parse(saved) : defaultMixingWorks;
+    }
+
+    function load3dVideos() {
+      const saved = localStorage.getItem('portfolio_3d_animation');
+      return saved ? JSON.parse(saved) : default3dVideos;
+    }
+
+    function loadMusic() {
+      const saved = localStorage.getItem('portfolio_music');
+      return saved ? JSON.parse(saved) : defaultMusic;
+    }
+
+    function loadPlanningWorks() {
+      const saved = localStorage.getItem('portfolio_planning');
+      return saved ? JSON.parse(saved) : defaultPlanningWorks;
+    }
+
+    // Create video card HTML
+    function createVideoCard(video, category) {
+      let videoId = video.id;
+      if (video.link) {
+        const match = video.link.match(/[?&]v=([^&]+)/);
+        if (match) videoId = match[1];
+      }
+      const videoLink = video.link || `https://www.youtube.com/watch?v=${videoId}`;
+
+      return `
+        <div class="video-card" data-category="${category}">
+          <a href="${videoLink}" target="_blank" class="video-thumbnail" title="${video.title}">
+            <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg"
+                 alt="${video.title}"
+                 onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
+            <div class="play-overlay">
+              <div class="play-button"></div>
+            </div>
+          </a>
+          <div class="video-title">${video.title}</div>
+        </div>
+      `;
+    }
+
+    // Create music card HTML
+    function createMusicCard(track) {
+      return `
+        <div class="music-card" data-category="music">
+          <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="${track.embedUrl}"></iframe>
+        </div>
+      `;
+    }
+
+    // Render all content
+    function renderAllContent() {
+      const allSection = document.getElementById('section-all');
+      const mixingSection = document.getElementById('mixingGrid');
+      const animationSection = document.getElementById('animationGrid');
+      const musicSection = document.getElementById('musicGrid');
+      const planningSection = document.getElementById('planningGrid');
+
+      const mixingWorks = loadMixingWorks();
+      const animation3d = load3dVideos();
+      const music = loadMusic();
+      const planningWorks = loadPlanningWorks();
+
+      // Render individual sections
+      mixingSection.innerHTML = mixingWorks.map(v => createVideoCard(v, 'mixing')).join('');
+      animationSection.innerHTML = animation3d.map(v => createVideoCard(v, '3d')).join('');
+      musicSection.innerHTML = music.map(t => createMusicCard(t)).join('');
+      planningSection.innerHTML = planningWorks.map(v => createVideoCard(v, 'planning')).join('');
+
+      // Render All section (combined)
+      let allHtml = '<div class="video-grid">';
+
+      // Add mixing
+      mixingWorks.forEach(v => { allHtml += createVideoCard(v, 'mixing'); });
+      // Add 3D
+      animation3d.forEach(v => { allHtml += createVideoCard(v, '3d'); });
+      // Add planning
+      planningWorks.forEach(v => { allHtml += createVideoCard(v, 'planning'); });
+
+      allHtml += '</div>';
+
+      // Add music section
+      allHtml += '<div class="music-grid" style="margin-top: 30px;">';
+      music.forEach(t => { allHtml += createMusicCard(t); });
+      allHtml += '</div>';
+
+      allSection.innerHTML = allHtml;
+    }
+
+    // Filter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      renderAllContent();
+
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const sections = document.querySelectorAll('.content-section');
+      const pageTitle = document.querySelector('.page-title-works');
+
+      const titleMap = {
+        'all': 'Works',
+        'mixing': 'Mixing',
+        '3d': '3D Animation',
+        'music': 'Music',
+        'planning': 'Planning'
+      };
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+
+          const filter = this.dataset.filter;
+
+          // Update page title with scramble animation
+          if (pageTitle && titleMap[filter]) {
+            scrambleText(pageTitle, titleMap[filter]);
+          }
+
+          // Show/hide sections
+          sections.forEach(section => {
+            section.classList.remove('active');
+          });
+          document.getElementById(`section-${filter}`).classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
