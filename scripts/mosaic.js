@@ -24,6 +24,21 @@ const defaultTopSlots = [
   { slotName: 'スロット17: 化けの花（最大）', link: 'https://www.youtube.com/watch?v=3qpLV6US96M', customThumbnail: '' }
 ];
 
+// 古いサムネイルパスを新しいパスに修正
+function migrateOldThumbnailPaths(slots) {
+  let updated = false;
+  slots.forEach(slot => {
+    if (slot.customThumbnail && slot.customThumbnail === 'onaga-saisho.jpg') {
+      slot.customThumbnail = 'images/onaga-saisho.jpg';
+      updated = true;
+    }
+  });
+  if (updated) {
+    localStorage.setItem(TOP_STORAGE_KEY, JSON.stringify(slots));
+  }
+  return slots;
+}
+
 // ローカルストレージからスロットデータを読み込み
 function loadTopSlots() {
   const saved = localStorage.getItem(TOP_STORAGE_KEY);
@@ -31,7 +46,7 @@ function loadTopSlots() {
     const parsed = JSON.parse(saved);
     // 新しいフォーマット（slotNameを持つ）かチェック
     if (parsed.length > 0 && parsed[0].slotName) {
-      return parsed;
+      return migrateOldThumbnailPaths(parsed);
     }
     // 古いフォーマットの場合はデフォルトを使用
   }
