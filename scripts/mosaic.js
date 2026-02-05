@@ -20,7 +20,7 @@ const defaultTopSlots = [
   { slotName: 'スロット13: Tonight（横長）', link: 'https://www.youtube.com/watch?v=wXdpFwtZk5A', customThumbnail: '' },
   { slotName: 'スロット14: キングスレイヤー（縦長）', link: 'https://www.youtube.com/watch?v=VVUW23SBnoE', customThumbnail: '' },
   { slotName: 'スロット15: ファタール（横長）', link: 'https://www.youtube.com/watch?v=KWbXAIrVWxk', customThumbnail: '' },
-  { slotName: 'スロット16: 私は、私達は（横長）', link: 'https://www.youtube.com/watch?v=ZSEfPjaEjEs', customThumbnail: 'onaga-saisho.jpg' },
+  { slotName: 'スロット16: 私は、私達は（横長）', link: 'https://www.youtube.com/watch?v=ZSEfPjaEjEs', customThumbnail: 'images/onaga-saisho.jpg' },
   { slotName: 'スロット17: 化けの花（最大）', link: 'https://www.youtube.com/watch?v=3qpLV6US96M', customThumbnail: '' }
 ];
 
