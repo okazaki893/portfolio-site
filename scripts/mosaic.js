@@ -218,7 +218,7 @@ function setupWheelScroll(gallery, track, totalWidth, loopWidth) {
   gallery.addEventListener('wheel', (e) => {
     e.preventDefault();
 
-    scrollPosition += e.deltaY * 3;
+    scrollPosition += e.deltaY * 2;
 
     if (scrollPosition < 0) {
       scrollPosition = loopWidth + scrollPosition;
