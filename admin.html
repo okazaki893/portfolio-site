@@ -20,32 +20,32 @@
   <!-- mammoth.js for Word document conversion -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <style>
-    /* Admin用白黒テーマ */
+    /* Admin用ダークテーマ */
     :root {
-      --accent-primary: #000 !important;
-      --accent-secondary: #333 !important;
-      --accent-glow: rgba(0, 0, 0, 0.3) !important;
-      --accent-muted: rgba(0, 0, 0, 0.2) !important;
-      --accent-dim: rgba(0, 0, 0, 0.1) !important;
-      --border-color: rgba(0, 0, 0, 0.3) !important;
-      --border-hover: rgba(0, 0, 0, 0.5) !important;
-      --border-active: #000 !important;
-      --bg-primary: #fff !important;
-      --bg-secondary: #f5f5f5 !important;
-      --bg-card: #fff !important;
-      --popup-bg: #fff !important;
-      --input-bg: #f5f5f5 !important;
-      --text-primary: #000 !important;
-      --text-secondary: #333 !important;
-      --text-dim: #666 !important;
+      --accent-primary: #fff !important;
+      --accent-secondary: #ccc !important;
+      --accent-glow: rgba(255, 255, 255, 0.3) !important;
+      --accent-muted: rgba(255, 255, 255, 0.2) !important;
+      --accent-dim: rgba(255, 255, 255, 0.1) !important;
+      --border-color: rgba(255, 255, 255, 0.2) !important;
+      --border-hover: rgba(255, 255, 255, 0.4) !important;
+      --border-active: #fff !important;
+      --bg-primary: #101016 !important;
+      --bg-secondary: #1a1a22 !important;
+      --bg-card: #101016 !important;
+      --popup-bg: #101016 !important;
+      --input-bg: #1a1a22 !important;
+      --text-primary: #fff !important;
+      --text-secondary: #ccc !important;
+      --text-dim: #999 !important;
     }
 
     body {
-      background: #fff !important;
+      background: #101016 !important;
     }
 
     .admin-container {
-      background: #fff !important;
+      background: #101016 !important;
     }
 
     .login-form,
@@ -54,24 +54,24 @@
     .plugin-item,
     .add-form,
     .edit-form {
-      background: #f5f5f5 !important;
+      background: #1a1a22 !important;
     }
 
     .edit-popup-content {
-      background: #fff !important;
+      background: #101016 !important;
     }
 
     input, textarea, select {
-      background: #fff !important;
-      color: #000 !important;
-      border-color: #ccc !important;
+      background: #1a1a22 !important;
+      color: #fff !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
     }
 
     input::placeholder, textarea::placeholder {
-      color: #999 !important;
+      color: #666 !important;
     }
 
-    /* ボタン（背景あり）: 背景黒、文字白 */
+    /* ボタン（背景あり）: 背景白、文字黒 */
     .login-form button,
     .add-form button,
     .btn-edit,
@@ -81,8 +81,8 @@
     .modal-buttons button,
     .logout-btn,
     button[onclick] {
-      background: #000 !important;
-      color: #fff !important;
+      background: #fff !important;
+      color: #000 !important;
     }
 
     .login-form button:hover,
@@ -91,48 +91,48 @@
     .btn-save:hover,
     .btn-delete:hover,
     .logout-btn:hover {
-      background: #333 !important;
+      background: #ccc !important;
     }
 
-    /* タブボタン: 背景黒、文字白 */
+    /* タブボタン: 背景白、文字黒 */
     .tab-button {
-      color: #fff !important;
-      background: #000 !important;
+      color: #000 !important;
+      background: #fff !important;
     }
 
     .tab-button.active {
-      color: #fff !important;
-      background: #333 !important;
-      border-bottom-color: #000 !important;
+      color: #000 !important;
+      background: #ccc !important;
+      border-bottom-color: #fff !important;
     }
 
     .tab-button:hover {
-      color: #fff !important;
-      background: #333 !important;
+      color: #000 !important;
+      background: #ccc !important;
     }
 
-    /* 背景なしのテキスト: 黒 */
+    /* 背景なしのテキスト: 白 */
     .admin-title,
     .section-title,
     .video-info h4,
     .video-info p,
     h3, h4, label {
-      color: #000 !important;
+      color: #fff !important;
     }
 
-    /* リンク: 黒 */
+    /* リンク: 白 */
     a:not(.btn-edit):not(.btn-delete) {
-      color: #000 !important;
+      color: #fff !important;
     }
 
-    /* SVGアイコン: 黒 */
+    /* SVGアイコン: 白 */
     svg:not(button svg) {
-      fill: #000 !important;
+      fill: #fff !important;
     }
 
-    /* ボタン内のSVG: 白 */
+    /* ボタン内のSVG: 黒 */
     button svg {
-      fill: #fff !important;
+      fill: #000 !important;
     }
 
     .admin-container {
@@ -147,10 +147,10 @@
       font-family: 'Times New Roman', Times, serif;
       font-size: 48px;
       font-weight: bold;
-      color: var(--accent-primary, #000000);
+      color: var(--accent-primary, #ffffff);
       letter-spacing: 10px;
       margin-bottom: 40px;
-      text-shadow: 0 0 40px var(--accent-glow, rgba(0, 0, 0, 0.5));
+      text-shadow: 0 0 40px var(--accent-glow, rgba(255, 255, 255, 0.5));
     }
 
     /* Login Form */
@@ -167,7 +167,7 @@
 
     .login-form {
       background: var(--bg-card, rgba(20, 20, 25, 0.9));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
       border-radius: 16px;
       padding: 40px;
       width: 100%;
@@ -177,7 +177,7 @@
     .login-form h2 {
       font-family: 'Times New Roman', Times, serif;
       font-size: 32px;
-      color: var(--accent-primary, #000000);
+      color: var(--accent-primary, #ffffff);
       text-align: center;
       margin-bottom: 30px;
     }
@@ -185,8 +185,8 @@
     .login-form input {
       width: 100%;
       padding: 15px;
-      background: var(--input-bg, rgba(10, 10, 15, 0.8));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3));
+      background: var(--input-bg, rgba(26, 26, 34, 0.8));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
       border-radius: 8px;
       color: var(--text-primary, #fff);
       font-size: 16px;
@@ -196,7 +196,7 @@
     .login-form button {
       width: 100%;
       padding: 15px;
-      background: linear-gradient(135deg, var(--accent-primary, #000000) 0%, var(--accent-secondary, #000000) 100%);
+      background: linear-gradient(135deg, var(--accent-primary, #ffffff) 0%, var(--accent-secondary, #cccccc) 100%);
       border: none;
       border-radius: 8px;
       color: var(--text-primary, #fff);
@@ -206,11 +206,11 @@
     }
 
     .login-form button:hover {
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
     }
 
     .login-error {
-      color: #ffffff;
+      color: #ff6b6b;
       text-align: center;
       margin-top: 15px;
       font-size: 14px;
@@ -223,7 +223,7 @@
 
     .admin-section {
       background: var(--bg-card, rgba(20, 20, 25, 0.8));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
       border-radius: 16px;
       padding: 30px;
       margin-bottom: 30px;
@@ -232,7 +232,7 @@
     .admin-section h3 {
       font-family: 'Arial', sans-serif;
       font-size: 20px;
-      color: var(--accent-primary, #000000);
+      color: var(--accent-primary, #ffffff);
       margin-bottom: 20px;
       letter-spacing: 2px;
     }
@@ -247,8 +247,8 @@
       align-items: center;
       gap: 15px;
       padding: 15px;
-      background: var(--input-bg, rgba(10, 10, 15, 0.5));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+      background: var(--input-bg, rgba(26, 26, 34, 0.5));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
       border-radius: 8px;
       margin-bottom: 10px;
     }
@@ -263,8 +263,8 @@
     .video-number input {
       width: 45px;
       padding: 8px;
-      background: var(--input-bg, rgba(10, 10, 15, 0.8));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3));
+      background: var(--input-bg, rgba(26, 26, 34, 0.8));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
       border-radius: 4px;
       color: var(--text-primary, #fff);
       font-size: 14px;
@@ -273,7 +273,7 @@
 
     .video-number input:focus {
       outline: none;
-      border-color: #ffffff;
+      border-color: #fff;
     }
 
     .video-item img {
@@ -313,12 +313,12 @@
     }
 
     .btn-edit {
-      background: var(--accent-primary, #000000);
+      background: var(--accent-primary, #ffffff);
       color: var(--text-primary, #fff);
     }
 
     .btn-delete {
-      background: #000000;
+      background: #ffffff;
       color: var(--text-primary, #fff);
     }
 
@@ -332,13 +332,13 @@
       gap: 15px;
       margin-top: 20px;
       padding-top: 20px;
-      border-top: 1px solid rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .add-form input {
       padding: 12px 15px;
-      background: var(--input-bg, rgba(10, 10, 15, 0.8));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3));
+      background: var(--input-bg, rgba(26, 26, 34, 0.8));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
       border-radius: 8px;
       color: var(--text-primary, #fff);
       font-size: 14px;
@@ -346,7 +346,7 @@
 
     .add-form button {
       padding: 12px 20px;
-      background: linear-gradient(135deg, var(--accent-primary, #000000) 0%, var(--accent-secondary, #000000) 100%);
+      background: linear-gradient(135deg, var(--accent-primary, #ffffff) 0%, var(--accent-secondary, #cccccc) 100%);
       border: none;
       border-radius: 8px;
       color: var(--text-primary, #fff);
@@ -366,7 +366,7 @@
       top: 20px;
       right: 20px;
       padding: 10px 20px;
-      background: rgba(255, 107, 107, 0.8);
+      background: rgba(255, 107, 107, 0.9);
       border: none;
       border-radius: 8px;
       color: var(--text-primary, #fff);
@@ -376,7 +376,7 @@
     }
 
     .logout-btn:hover {
-      background: #000000;
+      background: rgba(255, 80, 80, 1);
     }
 
     /* Save Status */
@@ -408,8 +408,8 @@
     }
 
     .modal-content {
-      background: var(--popup-bg, rgba(20, 20, 25, 0.95));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3));
+      background: var(--popup-bg, rgba(16, 16, 22, 0.98));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
       border-radius: 16px;
       padding: 30px;
       width: 100%;
@@ -417,15 +417,15 @@
     }
 
     .modal-content h3 {
-      color: var(--accent-primary, #000000);
+      color: var(--accent-primary, #ffffff);
       margin-bottom: 20px;
     }
 
     .modal-content input {
       width: 100%;
       padding: 12px 15px;
-      background: var(--input-bg, rgba(10, 10, 15, 0.8));
-      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3));
+      background: var(--input-bg, rgba(26, 26, 34, 0.8));
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
       border-radius: 8px;
       color: var(--text-primary, #fff);
       font-size: 14px;
@@ -446,7 +446,7 @@
     }
 
     .btn-save {
-      background: var(--accent-primary, #000000);
+      background: var(--accent-primary, #ffffff);
       color: var(--text-primary, #fff);
     }
 
@@ -460,7 +460,7 @@
       display: flex;
       gap: 10px;
       margin-bottom: 30px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       padding-bottom: 0;
     }
 
@@ -482,8 +482,8 @@
     }
 
     .tab-button.active {
-      color: var(--accent-primary, #000000);
-      border-bottom-color: var(--accent-primary, #000000);
+      color: var(--accent-primary, #ffffff);
+      border-bottom-color: var(--accent-primary, #ffffff);
     }
 
     .tab-content {
@@ -564,7 +564,7 @@
         <div class="tab-content active" id="tab-top">
           <div class="admin-section">
             <h3>TOPページ モザイク動画管理</h3>
-            <p style="color: #333; margin-bottom: 20px; font-size: 14px;">各スロットの動画リンクとサムネイルを編集できます（配置位置は固定）</p>
+            <p style="color: #ccc; margin-bottom: 20px; font-size: 14px;">各スロットの動画リンクとサムネイルを編集できます（配置位置は固定）</p>
             <div class="video-list" id="topVideoList" style="max-height: 600px;"></div>
           </div>
 
@@ -577,7 +577,7 @@
             <div class="video-list" id="mixingVideoList"></div>
 
             <div class="add-form">
-              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newTitle" placeholder="タイトル">
               <input type="text" id="newYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <input type="text" id="newThumbnail" placeholder="カスタムサムネイル（任意）">
@@ -594,7 +594,7 @@
             <div class="video-list" id="animation3dList"></div>
 
             <div class="add-form">
-              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="new3dTitle" placeholder="タイトル">
               <input type="text" id="new3dYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <button onclick="add3dVideo()">追加</button>
@@ -610,7 +610,7 @@
             <div class="video-list" id="musicList"></div>
 
             <div class="add-form">
-              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newMusicTitle" placeholder="曲名">
               <input type="text" id="newSoundcloudUrl" placeholder="SoundCloudのURL（例: https://soundcloud.com/artist/track）">
               <button onclick="addMusic()">追加</button>
@@ -626,7 +626,7 @@
             <div class="video-list" id="planningList"></div>
 
             <div class="add-form">
-              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newPlanningTitle" placeholder="作品タイトル">
               <input type="text" id="newPlanningYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <button onclick="addPlanning()">追加</button>
@@ -639,11 +639,11 @@
         <div class="tab-content" id="tab-plugins">
           <div class="admin-section">
             <h3>プラグイン管理</h3>
-            <p style="color: #333; margin-bottom: 20px; font-size: 14px;">OtherページのPlug-inタブに表示されるプラグインを管理します</p>
+            <p style="color: #ccc; margin-bottom: 20px; font-size: 14px;">OtherページのPlug-inタブに表示されるプラグインを管理します</p>
             <div class="video-list" id="pluginsList"></div>
 
             <div class="add-form">
-              <h4 style="color: #000; margin-bottom: 10px;">新規追加</h4>
+              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
               <input type="text" id="newPluginTitle" placeholder="プラグイン名">
               <input type="text" id="newPluginDescription" placeholder="説明">
               <input type="text" id="newPluginLink" placeholder="リンクURL（例: https://example.com/plugin）">
@@ -660,82 +660,82 @@
             <h3>記事管理</h3>
 
             <!-- GitHub認証状態 -->
-            <div id="githubAuthStatus" style="margin-bottom: 20px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2)); border-radius: 8px;">
+            <div id="githubAuthStatus" style="margin-bottom: 20px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15)); border-radius: 8px;">
               <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                <span id="authStatusText" style="color: #666; font-weight: bold;">GitHub未認証</span>
+                <span id="authStatusText" style="color: #999; font-weight: bold;">GitHub未認証</span>
                 <div id="tokenInputContainer">
-                  <input type="password" id="githubTokenInput" placeholder="GitHub Personal Access Token" style="padding: 10px 14px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); width: 300px; font-size: 14px;">
-                  <button onclick="saveGitHubToken()" style="margin-left: 10px; padding: 10px 20px; background: linear-gradient(135deg, var(--accent-primary, #000000) 0%, var(--accent-secondary, #000000) 100%); border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px; font-weight: bold;">認証</button>
+                  <input type="password" id="githubTokenInput" placeholder="GitHub Personal Access Token" style="padding: 10px 14px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)); border-radius: 8px; color: var(--text-primary, #fff); width: 300px; font-size: 14px;">
+                  <button onclick="saveGitHubToken()" style="margin-left: 10px; padding: 10px 20px; background: linear-gradient(135deg, var(--accent-primary, #ffffff) 0%, var(--accent-secondary, #cccccc) 100%); border: none; border-radius: 8px; color: #000; cursor: pointer; font-size: 14px; font-weight: bold;">認証</button>
                 </div>
-                <button id="githubLogoutBtn" onclick="logoutGitHub()" style="display: none; padding: 10px 20px; background: #000000; border: none; border-radius: 8px; color: var(--text-primary, #fff); cursor: pointer; font-size: 14px;">ログアウト</button>
+                <button id="githubLogoutBtn" onclick="logoutGitHub()" style="display: none; padding: 10px 20px; background: #ffffff; border: none; border-radius: 8px; color: #000; cursor: pointer; font-size: 14px;">ログアウト</button>
               </div>
-              <p style="font-size: 12px; color: #666; margin-top: 12px;">
-                <a href="https://github.com/settings/tokens/new?scopes=repo&description=Portfolio%20Admin" target="_blank" style="color: var(--accent-primary, #000000); text-decoration: underline;">GitHub でトークンを作成</a>（repo スコープが必要です）
+              <p style="font-size: 12px; color: #999; margin-top: 12px;">
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=Portfolio%20Admin" target="_blank" style="color: var(--accent-primary, #ffffff); text-decoration: underline;">GitHub でトークンを作成</a>（repo スコープが必要です）
               </p>
             </div>
 
             <!-- 記事一覧 -->
             <div class="video-list" id="articlesList" style="max-height: 500px;">
-              <p style="color: #666; text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
+              <p style="color: #999; text-align: center; padding: 20px;">GitHubで認証して記事を読み込んでください</p>
             </div>
 
             <div class="add-form">
-              <h4 style="color: #333; margin-bottom: 10px;">新規記事作成</h4>
+              <h4 style="color: #ccc; margin-bottom: 10px;">新規記事作成</h4>
               <input type="text" id="newArticleTitle" placeholder="記事タイトル" oninput="syncFolderName(this.value)">
               <input type="text" id="newArticleThumbnail" placeholder="サムネイル画像パス（任意、例: /content/uploads/フォルダ名/image.jpg）">
-              <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
+              <textarea id="newArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
 
               <!-- 本文ファイルアップロード -->
               <div style="margin-top: 10px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin: 0 0 8px 0;">
-                  <p style="color: #333; font-size: 14px; margin: 0;">本文ファイル（.docx, .txt, .md, .rtf）</p>
+                  <p style="color: #ccc; font-size: 14px; margin: 0;">本文ファイル（.docx, .txt, .md, .rtf）</p>
                   <a href="https://drive.google.com/drive/u/0/folders/1duApjHj8IWvCuQKtYVYYbyD4l8Rv3R7d?ths=true&q=sharedwith:public%20parent:1duApjHj8IWvCuQKtYVYYbyD4l8Rv3R7d" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(66, 133, 244, 0.2); border: 1px solid rgba(66, 133, 244, 0.5); border-radius: 4px; color: #4285f4; font-size: 12px; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(66, 133, 244, 0.3)'" onmouseout="this.style.background='rgba(66, 133, 244, 0.2)'">
                     <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M7.71 3.5L1.15 15l4.58 7.5h13.54l4.58-7.5L17.29 3.5H7.71zm.79 1.5h7l5.14 9H3.36l5.14-9zM8.5 17l-2-3.5 2-3.5h7l2 3.5-2 3.5h-7z"/></svg>
                     Google Drive
                   </a>
                 </div>
                 <input type="file" id="newArticleFileInput" accept=".docx,.txt,.md,.rtf,.doc" style="display: none;" onchange="handleArticleFileUpload(this, 'new')">
-                <div id="newArticleDropZone" onclick="document.getElementById('newArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(0, 0, 0, 0.5)); border-radius: 8px; padding: 25px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
-                  <svg style="width: 32px; height: 32px; margin-bottom: 8px; fill: var(--accent-primary, #000000);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
-                  <p id="newArticleFileName" style="color: #444; font-size: 14px; margin: 0;">ここに本文ファイルをドラッグ&ドロップ</p>
-                  <p style="color: #888; font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
+                <div id="newArticleDropZone" onclick="document.getElementById('newArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(255, 255, 255, 0.4)); border-radius: 8px; padding: 25px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
+                  <svg style="width: 32px; height: 32px; margin-bottom: 8px; fill: var(--accent-primary, #ffffff);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
+                  <p id="newArticleFileName" style="color: #bbb; font-size: 14px; margin: 0;">ここに本文ファイルをドラッグ&ドロップ</p>
+                  <p style="color: #777; font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
                 </div>
                 <div id="newArticlePreview" style="display: none; margin-top: 10px;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <span style="color: var(--accent-primary, #000000); font-size: 13px;">本文（編集可能）</span>
+                    <span style="color: var(--accent-primary, #ffffff); font-size: 13px;">本文（編集可能）</span>
                     <button type="button" onclick="clearArticleFile('new')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(102,102,102,0.5); border-radius: 4px; color: rgba(102,102,102,0.8); cursor: pointer; font-size: 12px;">クリア</button>
                   </div>
                   <!-- 書式ツールバー -->
-                  <div style="display: flex; gap: 5px; margin-bottom: 5px; padding: 8px; background: var(--input-bg, rgba(10, 10, 15, 0.6)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2)); border-radius: 8px 8px 0 0; border-bottom: none;">
-                    <button type="button" onclick="insertLink('newArticleBody')" style="padding: 6px 12px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 0, 0, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;" title="リンクを挿入">
+                  <div style="display: flex; gap: 5px; margin-bottom: 5px; padding: 8px; background: var(--input-bg, rgba(10, 10, 15, 0.6)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15)); border-radius: 8px 8px 0 0; border-bottom: none;">
+                    <button type="button" onclick="insertLink('newArticleBody')" style="padding: 6px 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;" title="リンクを挿入">
                       <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
                       リンク
                     </button>
-                    <button type="button" onclick="insertBold('newArticleBody')" style="padding: 6px 12px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 0, 0, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; font-weight: bold;" title="太字">B</button>
+                    <button type="button" onclick="insertBold('newArticleBody')" style="padding: 6px 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; font-weight: bold;" title="太字">B</button>
                   </div>
-                  <textarea id="newArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3)); border-radius: 0 0 8px 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
+                  <textarea id="newArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)); border-radius: 0 0 8px 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
                 </div>
               </div>
 
               <!-- 画像アップロード（ドラッグ&ドロップ） -->
-              <div style="margin-top: 15px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2)); border-radius: 8px;">
+              <div style="margin-top: 15px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.5)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15)); border-radius: 8px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin: 0 0 10px 0;">
-                  <p style="color: #333; font-size: 14px; margin: 0;">画像アップロード → <span id="folderPreview" style="color: var(--accent-primary, #000000);">/content/uploads/</span></p>
+                  <p style="color: #ccc; font-size: 14px; margin: 0;">画像アップロード → <span id="folderPreview" style="color: var(--accent-primary, #ffffff);">/content/uploads/</span></p>
                   <a href="https://github.com/okazaki893/portfolio-site/tree/main/content/uploads" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(66, 133, 244, 0.2); border: 1px solid rgba(66, 133, 244, 0.5); border-radius: 4px; color: #4285f4; font-size: 12px; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(66, 133, 244, 0.3)'" onmouseout="this.style.background='rgba(66, 133, 244, 0.2)'">
                     <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     GitHub
                   </a>
                 </div>
                 <input type="file" id="imageUploadInput" accept="image/*" multiple style="display: none;">
-                <div id="dropZone" onclick="document.getElementById('imageUploadInput').click()" style="border: 2px dashed var(--border-color, rgba(0, 0, 0, 0.4)); border-radius: 8px; padding: 30px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
+                <div id="dropZone" onclick="document.getElementById('imageUploadInput').click()" style="border: 2px dashed var(--border-color, rgba(255, 255, 255, 0.3)); border-radius: 8px; padding: 30px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
                   <svg style="width: 40px; height: 40px; margin-bottom: 10px; fill: #888;" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-                  <p style="color: #444; font-size: 14px; margin: 0;">ここに画像をドラッグ&ドロップ</p>
-                  <p style="color: #888; font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
+                  <p style="color: #bbb; font-size: 14px; margin: 0;">ここに画像をドラッグ&ドロップ</p>
+                  <p style="color: #777; font-size: 12px; margin: 5px 0 0 0;">またはクリックしてファイルを選択</p>
                 </div>
                 <div id="uploadProgress" style="display: none; margin-top: 12px;">
-                  <p id="uploadingFileName" style="color: #444; font-size: 14px; margin: 0 0 8px 0;"></p>
+                  <p id="uploadingFileName" style="color: #bbb; font-size: 14px; margin: 0 0 8px 0;"></p>
                   <div style="background: var(--input-bg, rgba(10, 10, 15, 0.8)); border-radius: 4px; height: 6px; overflow: hidden;">
-                    <div id="uploadProgressBar" style="background: linear-gradient(135deg, var(--accent-primary, #000000) 0%, var(--accent-secondary, #000000) 100%); height: 100%; width: 0%; transition: width 0.3s ease;"></div>
+                    <div id="uploadProgressBar" style="background: linear-gradient(135deg, var(--accent-primary, #ffffff) 0%, var(--accent-secondary, #cccccc) 100%); height: 100%; width: 0%; transition: width 0.3s ease;"></div>
                   </div>
                 </div>
                 <div id="uploadedImagePath" style="margin-top: 12px; display: none; padding: 12px; background: rgba(107, 255, 107, 0.1); border: 1px solid rgba(107, 255, 107, 0.3); border-radius: 8px;">
@@ -758,7 +758,7 @@
     <div class="modal" id="editTopModal">
       <div class="modal-content">
         <h3>TOPスロットを編集</h3>
-        <p id="editTopSlotName" style="color: #555; margin-bottom: 15px; font-size: 14px;"></p>
+        <p id="editTopSlotName" style="color: #aaa; margin-bottom: 15px; font-size: 14px;"></p>
         <input type="text" id="editTopLink" placeholder="YouTubeのURL">
         <input type="text" id="editTopThumbnail" placeholder="カスタムサムネイル（任意、空欄でYouTubeサムネ使用）">
         <div class="modal-buttons">
@@ -844,30 +844,30 @@
         <input type="hidden" id="editArticleSha">
         <input type="text" id="editArticleTitle" placeholder="タイトル">
         <input type="text" id="editArticleThumbnail" placeholder="サムネイル画像パス（任意）">
-        <textarea id="editArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
+        <textarea id="editArticleSummary" placeholder="概要（任意）" style="width: 100%; padding: 12px 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)); border-radius: 8px; color: var(--text-primary, #fff); font-size: 14px; min-height: 60px; resize: vertical;"></textarea>
 
         <!-- 本文ファイルアップロード（編集用） -->
         <div style="margin-top: 10px;">
-          <p style="color: #333; font-size: 14px; margin: 0 0 8px 0;">本文ファイル（.docx, .txt, .md, .rtf）で上書き、または既存を維持</p>
+          <p style="color: #ccc; font-size: 14px; margin: 0 0 8px 0;">本文ファイル（.docx, .txt, .md, .rtf）で上書き、または既存を維持</p>
           <input type="file" id="editArticleFileInput" accept=".docx,.txt,.md,.rtf,.doc" style="display: none;" onchange="handleArticleFileUpload(this, 'edit')">
-          <div id="editArticleDropZone" onclick="document.getElementById('editArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(0, 0, 0, 0.5)); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
-            <svg style="width: 28px; height: 28px; margin-bottom: 6px; fill: var(--accent-primary, #000000);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
-            <p id="editArticleFileName" style="color: #444; font-size: 13px; margin: 0;">新しいファイルで上書きする場合はここにドラッグ</p>
+          <div id="editArticleDropZone" onclick="document.getElementById('editArticleFileInput').click()" style="border: 2px dashed var(--accent-primary, rgba(255, 255, 255, 0.4)); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--input-bg, rgba(10, 10, 15, 0.3));">
+            <svg style="width: 28px; height: 28px; margin-bottom: 6px; fill: var(--accent-primary, #ffffff);" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01V17h8v-1.99H8z"/></svg>
+            <p id="editArticleFileName" style="color: #bbb; font-size: 13px; margin: 0;">新しいファイルで上書きする場合はここにドラッグ</p>
           </div>
           <div id="editArticlePreview" style="margin-top: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <span style="color: var(--accent-primary, #000000); font-size: 13px;">本文（編集可能）</span>
+              <span style="color: var(--accent-primary, #ffffff); font-size: 13px;">本文（編集可能）</span>
               <button type="button" onclick="clearArticleFile('edit')" style="padding: 4px 10px; background: transparent; border: 1px solid rgba(102,102,102,0.5); border-radius: 4px; color: rgba(102,102,102,0.8); cursor: pointer; font-size: 12px;">クリア</button>
             </div>
             <!-- 書式ツールバー -->
-            <div style="display: flex; gap: 5px; margin-bottom: 5px; padding: 8px; background: var(--input-bg, rgba(10, 10, 15, 0.6)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2)); border-radius: 8px 8px 0 0; border-bottom: none;">
-              <button type="button" onclick="insertLink('editArticleBody')" style="padding: 6px 12px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 0, 0, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;" title="リンクを挿入">
+            <div style="display: flex; gap: 5px; margin-bottom: 5px; padding: 8px; background: var(--input-bg, rgba(10, 10, 15, 0.6)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15)); border-radius: 8px 8px 0 0; border-bottom: none;">
+              <button type="button" onclick="insertLink('editArticleBody')" style="padding: 6px 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;" title="リンクを挿入">
                 <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
                 リンク
               </button>
-              <button type="button" onclick="insertBold('editArticleBody')" style="padding: 6px 12px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(0, 0, 0, 0.4); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; font-weight: bold;" title="太字">B</button>
+              <button type="button" onclick="insertBold('editArticleBody')" style="padding: 6px 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; color: var(--text-primary, #fff); cursor: pointer; font-size: 12px; font-weight: bold;" title="太字">B</button>
             </div>
-            <textarea id="editArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(0, 0, 0, 0.3)); border-radius: 0 0 8px 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
+            <textarea id="editArticleBody" style="width: 100%; min-height: 300px; padding: 15px; background: var(--input-bg, rgba(10, 10, 15, 0.8)); border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)); border-radius: 0 0 8px 8px; color: var(--text-primary, #fff); font-size: 13px; font-family: monospace; line-height: 1.6; resize: vertical;"></textarea>
           </div>
         </div>
 
@@ -1061,7 +1061,7 @@
       list.innerHTML = '';
 
       if (videos.length === 0) {
-        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">動画がまだありません</p>';
+        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">動画がまだありません</p>';
         return;
       }
 
@@ -1256,21 +1256,21 @@
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-number" style="min-width: 40px;">
-            <span style="color: #000; font-weight: bold;">${index + 1}</span>
+            <span style="color: #fff; font-weight: bold;">${index + 1}</span>
           </div>
           ${thumbnailUrl ? `
             <a href="${slot.link}" target="_blank" style="display: block;">
               <img src="${thumbnailUrl}" alt="${slot.slotName}" onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'" style="cursor: pointer;">
             </a>
           ` : `
-            <div style="width: 120px; height: 68px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-              <span style="color: #666;">No Video</span>
+            <div style="width: 120px; height: 68px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+              <span style="color: #999;">No Video</span>
             </div>
           `}
           <div class="video-info">
             <h4>${slot.slotName}</h4>
             <p style="font-size: 11px; word-break: break-all;">${slot.link || '未設定'}</p>
-            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #000;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
+            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #ccc;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
           </div>
           <div class="video-actions">
             <button class="btn-edit" onclick="openTopEdit(${index})">編集</button>
@@ -1355,7 +1355,7 @@
       list.innerHTML = '';
 
       if (musicList.length === 0) {
-        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">音源がまだありません</p>';
+        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">音源がまだありません</p>';
         return;
       }
 
@@ -1366,7 +1366,7 @@
           <div class="video-number">
             <input type="number" value="${index + 1}" min="1" max="${musicList.length}" onchange="moveMusicToPosition(${index}, this.value)" title="順番を変更">
           </div>
-          <a href="${track.originalUrl || '#'}" target="_blank" style="display: block; width: 120px; height: 68px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+          <a href="${track.originalUrl || '#'}" target="_blank" style="display: block; width: 120px; height: 68px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
             <span style="font-size: 24px;">🎵</span>
           </a>
           <div class="video-info">
@@ -1503,7 +1503,7 @@
       list.innerHTML = '';
 
       if (animation3dList.length === 0) {
-        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">動画がまだありません</p>';
+        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">動画がまだありません</p>';
         return;
       }
 
@@ -1651,7 +1651,7 @@
       list.innerHTML = '';
 
       if (planningList.length === 0) {
-        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">作品がまだありません</p>';
+        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">作品がまだありません</p>';
         return;
       }
 
@@ -1812,7 +1812,7 @@
       if (!listEl) return;
 
       if (pluginsList.length === 0) {
-        listEl.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">プラグインがまだありません</p>';
+        listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">プラグインがまだありません</p>';
         return;
       }
 
@@ -1824,14 +1824,14 @@
               onclick="this.select()"
               title="順番を変更">
           </div>
-          <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.1); border-radius: 8px;">
+          <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.1); border-radius: 8px;">
             ${pluginIconSVG}
           </div>
           <div class="video-info">
             <h4>${plugin.title}</h4>
             <p style="margin-bottom: 3px;">${plugin.description || ''}</p>
-            <p style="font-size: 11px; color: rgba(0, 0, 0, 0.8);">${plugin.link}</p>
-            ${plugin.tag ? `<span style="display: inline-block; margin-top: 5px; padding: 2px 8px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; font-size: 11px; color: #444;">${plugin.tag}</span>` : ''}
+            <p style="font-size: 11px; color: rgba(255, 255, 255, 0.6);">${plugin.link}</p>
+            ${plugin.tag ? `<span style="display: inline-block; margin-top: 5px; padding: 2px 8px; background: rgba(255, 255, 255, 0.15); border-radius: 4px; font-size: 11px; color: #bbb;">${plugin.tag}</span>` : ''}
           </div>
           <div class="video-actions">
             <button class="btn-edit" onclick="openPluginEdit(${index})">編集</button>
@@ -2268,7 +2268,7 @@
 
       } catch (error) {
         console.error('Error loading articles:', error);
-        document.getElementById('articlesList').innerHTML = '<p style="color: #000; text-align: center; padding: 20px;">記事の読み込みに失敗しました</p>';
+        document.getElementById('articlesList').innerHTML = '<p style="color: #ff6b6b; text-align: center; padding: 20px;">記事の読み込みに失敗しました</p>';
       }
     }
 
@@ -2307,7 +2307,7 @@
       const list = document.getElementById('articlesList');
 
       if (articlesList.length === 0) {
-        list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">記事がまだありません</p>';
+        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">記事がまだありません</p>';
         return;
       }
 
@@ -2321,19 +2321,19 @@
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-number" style="min-width: 40px;">
-            <span style="color: #000; font-weight: bold;">${index + 1}</span>
+            <span style="color: #fff; font-weight: bold;">${index + 1}</span>
           </div>
           ${article.thumbnail ? `
             <img src="${article.thumbnail}" alt="${article.title}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px;" onerror="this.style.display='none'">
           ` : `
-            <div style="width: 120px; height: 68px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 120px; height: 68px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
               <span style="font-size: 24px;">📝</span>
             </div>
           `}
           <div class="video-info">
             <h4>${article.title}</h4>
             <p>${date}</p>
-            ${article.summary ? `<p style="font-size: 11px; color: #666;">${article.summary.substring(0, 50)}${article.summary.length > 50 ? '...' : ''}</p>` : ''}
+            ${article.summary ? `<p style="font-size: 11px; color: #999;">${article.summary.substring(0, 50)}${article.summary.length > 50 ? '...' : ''}</p>` : ''}
           </div>
           <div class="video-actions">
             <button class="btn-edit" onclick="openArticleEdit(${index})">編集</button>
@@ -2410,7 +2410,7 @@
         // ファイルアップロード表示をリセット
         document.getElementById('newArticlePreview').style.display = 'none';
         document.getElementById('newArticleFileName').textContent = 'ここに本文ファイルをドラッグ&ドロップ';
-        document.getElementById('newArticleDropZone').style.borderColor = 'rgba(0, 0, 0, 0.5)';
+        document.getElementById('newArticleDropZone').style.borderColor = 'rgba(255, 255, 255, 0.3)';
         currentFolderName = '';
         document.getElementById('folderPreview').textContent = '/content/uploads/';
 
@@ -2436,7 +2436,7 @@
       document.getElementById('editArticleSummary').value = article.summary || '';
       document.getElementById('editArticleBody').value = article.body || '';
       document.getElementById('editArticleFileName').textContent = '新しいファイルで上書きする場合はここにドラッグ';
-      document.getElementById('editArticleDropZone').style.borderColor = 'rgba(0, 0, 0, 0.5)';
+      document.getElementById('editArticleDropZone').style.borderColor = 'rgba(255, 255, 255, 0.3)';
       document.getElementById('editArticleModal').style.display = 'flex';
     }
 
@@ -2645,14 +2645,14 @@
         dropZone.addEventListener('dragover', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          dropZone.style.borderColor = 'var(--accent-primary, #000000)';
-          dropZone.style.background = 'rgba(0, 0, 0, 0.1)';
+          dropZone.style.borderColor = 'var(--accent-primary, #ffffff)';
+          dropZone.style.background = 'rgba(255, 255, 255, 0.08)';
         });
 
         dropZone.addEventListener('dragleave', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          dropZone.style.borderColor = 'var(--border-color, rgba(0, 0, 0, 0.4))';
+          dropZone.style.borderColor = 'var(--border-color, rgba(255, 255, 255, 0.3))';
           dropZone.style.background = 'var(--input-bg, rgba(10, 10, 15, 0.3))';
         });
 
@@ -2660,7 +2660,7 @@
         dropZone.addEventListener('drop', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          dropZone.style.borderColor = 'var(--border-color, rgba(0, 0, 0, 0.4))';
+          dropZone.style.borderColor = 'var(--border-color, rgba(255, 255, 255, 0.3))';
           dropZone.style.background = 'var(--input-bg, rgba(10, 10, 15, 0.3))';
 
           const files = e.dataTransfer.files;
@@ -2882,7 +2882,7 @@
       } catch (error) {
         console.error('File conversion error:', error);
         document.getElementById(`${prefix}FileName`).textContent = `エラー: ${error.message}`;
-        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(0, 0, 0, 0.5)';
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(255, 255, 255, 0.3)';
       }
 
       // input をリセット（同じファイルを再選択できるように）
@@ -3123,7 +3123,7 @@
       document.getElementById(`${prefix}FileName`).textContent = mode === 'new'
         ? 'ここに本文ファイルをドラッグ&ドロップ'
         : '新しいファイルで上書きする場合はここにドラッグ';
-      document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(0, 0, 0, 0.5)';
+      document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(255, 255, 255, 0.3)';
     }
 
     // ドラッグ&ドロップのセットアップ
@@ -3142,15 +3142,15 @@
 
       ['dragenter', 'dragover'].forEach(eventName => {
         dropZone.addEventListener(eventName, () => {
-          dropZone.style.background = 'rgba(0, 0, 0, 0.1)';
-          dropZone.style.borderColor = 'rgba(0, 0, 0, 0.8)';
+          dropZone.style.background = 'rgba(255, 255, 255, 0.08)';
+          dropZone.style.borderColor = 'rgba(255, 255, 255, 0.5)';
         }, false);
       });
 
       ['dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, () => {
           dropZone.style.background = 'var(--input-bg, rgba(10, 10, 15, 0.3))';
-          dropZone.style.borderColor = 'rgba(0, 0, 0, 0.5)';
+          dropZone.style.borderColor = 'rgba(255, 255, 255, 0.3)';
         }, false);
       });
 
@@ -3173,7 +3173,7 @@
 
       if (!allowedExtensions.includes(extension)) {
         document.getElementById(`${prefix}FileName`).textContent = 'エラー: サポートされていないファイル形式です';
-        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(0, 0, 0, 0.5)';
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(255, 255, 255, 0.3)';
         return;
       }
 
@@ -3189,7 +3189,7 @@
       } catch (error) {
         console.error('File conversion error:', error);
         document.getElementById(`${prefix}FileName`).textContent = `エラー: ${error.message}`;
-        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(0, 0, 0, 0.5)';
+        document.getElementById(`${prefix}DropZone`).style.borderColor = 'rgba(255, 255, 255, 0.3)';
       }
     }
 
