@@ -190,7 +190,7 @@ function initMosaicGallery() {
 function setupWheelScroll(gallery, track, totalWidth, loopWidth) {
   let scrollPosition = 0;
   let isAutoScrolling = true;
-  let autoScrollSpeed = 0.5;
+  let autoScrollSpeed = 0.75;
 
   function autoScroll() {
     if (isAutoScrolling) {
@@ -216,19 +216,17 @@ function setupWheelScroll(gallery, track, totalWidth, loopWidth) {
   });
 
   gallery.addEventListener('wheel', (e) => {
-    if (e.shiftKey) {
-      e.preventDefault();
+    e.preventDefault();
 
-      scrollPosition += e.deltaY * 2;
+    scrollPosition += e.deltaY * 3;
 
-      if (scrollPosition < 0) {
-        scrollPosition = loopWidth + scrollPosition;
-      } else if (scrollPosition >= loopWidth) {
-        scrollPosition = scrollPosition - loopWidth;
-      }
-
-      track.style.transform = `translateX(-${scrollPosition}px)`;
+    if (scrollPosition < 0) {
+      scrollPosition = loopWidth + scrollPosition;
+    } else if (scrollPosition >= loopWidth) {
+      scrollPosition = scrollPosition - loopWidth;
     }
+
+    track.style.transform = `translateX(-${scrollPosition}px)`;
   }, { passive: false });
 
   let touchStartX = 0;
