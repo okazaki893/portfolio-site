@@ -1150,16 +1150,7 @@ body.content-hidden .portfolio-cover {
 
   /* Mobile TOP page - solid background */
   .portfolio-cover {
-    background: var(--bg-primary, #0a0a0f);
-  }
-
-  :root[data-theme="light"] .portfolio-cover,
-  :root:not([data-theme]) .portfolio-cover {
-    background: #ffffff;
-  }
-
-  :root[data-theme="dark"] .portfolio-cover {
-    background: #000000;
+    background: var(--bg-primary, #101016);
   }
 
   .mobile-mixing-grid {
@@ -1191,23 +1182,21 @@ body.content-hidden .portfolio-cover {
     display: none;
   }
 
-  /* Light theme: show light icon, hide dark icon */
-  :root[data-theme="light"] .top-icon-light,
-  :root:not([data-theme]) .top-icon-light {
-    display: block;
-  }
-
-  :root[data-theme="light"] .top-icon-dark,
-  :root:not([data-theme]) .top-icon-dark {
+  /* Default: show dark icon, hide light icon */
+  .top-icon-light {
     display: none;
   }
 
-  /* Dark theme: show dark icon, hide light icon */
-  :root[data-theme="dark"] .top-icon-dark {
+  .top-icon-dark {
     display: block;
   }
 
-  :root[data-theme="dark"] .top-icon-light {
+  /* Light theme: show light icon, hide dark icon */
+  :root[data-theme="light"] .top-icon-light {
+    display: block;
+  }
+
+  :root[data-theme="light"] .top-icon-dark {
     display: none;
   }
 
