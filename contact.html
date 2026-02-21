@@ -764,6 +764,14 @@
   <script>
     function copyDiscordId(e) {
       e.preventDefault();
+      e.stopPropagation();
+      // Close any open contact popups first
+      var contactPopup = document.getElementById('contactPopupOverlay');
+      var successPopup = document.getElementById('submitSuccessPopup');
+      if (contactPopup) contactPopup.classList.remove('active');
+      if (successPopup) successPopup.classList.remove('active');
+      document.body.style.overflow = '';
+
       var popup = document.getElementById('discordPopup');
       navigator.clipboard.writeText('.okazaki').then(function() {
         popup.style.display = 'flex';
