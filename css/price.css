@@ -529,9 +529,10 @@ body {
 }
 
 .period {
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: var(--text-dim);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--text-primary, #fff);
 }
 
 /* Card body */
