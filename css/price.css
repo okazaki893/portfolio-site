@@ -730,8 +730,8 @@ body {
 
 .option-price {
   font-family: 'Arial', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--accent-primary, #926bff);
   white-space: nowrap;
 }
@@ -1572,8 +1572,8 @@ body {
 
 .contact-card-price {
   font-family: 'Arial', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--accent-primary);
   white-space: nowrap;
 }
