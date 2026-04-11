@@ -170,6 +170,7 @@
 
       <div class="price-note">
         <p>※ すべてのプランにピッチ補正、タイミング補正、ハモリ生成、マスタリングが含まれています</p>
+        <p>※ ハモリ・ダブルはメインボーカル1ラインにつき最大+50%、掛け声・コーラスなどは最大+20%の追加料金が発生します（1人あたり上限150%）</p>
       </div>
 
       <!-- 納期短縮オプション -->
@@ -253,50 +254,20 @@
         </div>
       </div>
 
-      <!-- トラック追加オプション -->
-      <h2 class="section-title">トラック追加オプション</h2>
-      <div class="option-cards track-options">
-        <div class="option-card-wrapper">
-          <div class="option-card tap-select" data-track="コラボ" data-price-percent="100" onclick="tapTrack(this)">
-            <span class="option-name">コラボ</span>
-            <span class="option-price">+1人分</span>
-          </div>
-          <div class="qty-display small" data-for="track-コラボ">
-            <button type="button" class="qty-btn minus" onclick="changeTrackQty('コラボ', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeTrackQty('コラボ', 1, event)">+</button>
-          </div>
-        </div>
-        <div class="option-card-wrapper">
-          <div class="option-card tap-select" data-track="ハモリ・ダブル" data-price-percent="50" onclick="tapTrack(this)">
-            <span class="option-name">ハモリ・ダブル（1ライン）</span>
-            <span class="option-price">最大+50%</span>
-          </div>
-          <div class="qty-display small" data-for="track-ハモリ・ダブル">
-            <button type="button" class="qty-btn minus" onclick="changeTrackQty('ハモリ・ダブル', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeTrackQty('ハモリ・ダブル', 1, event)">+</button>
-          </div>
-        </div>
-        <div class="option-card-wrapper">
-          <div class="option-card tap-select" data-track="掛け声・コーラスなど" data-price-percent="20" onclick="tapTrack(this)">
-            <span class="option-name">掛け声・コーラスなど（1ライン）</span>
-            <span class="option-price">最大+20%</span>
-          </div>
-          <div class="qty-display small" data-for="track-掛け声・コーラスなど">
-            <button type="button" class="qty-btn minus" onclick="changeTrackQty('掛け声・コーラスなど', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeTrackQty('掛け声・コーラスなど', 1, event)">+</button>
-          </div>
-        </div>
-      </div>
-      <div class="price-note">
-        <p>※ 1人あたりの追加料金上限: 基本料金の150%まで</p>
-      </div>
-
       <!-- その他オプション -->
       <h2 class="section-title">その他オプション</h2>
       <div class="option-cards other-options">
+        <div class="option-card-wrapper">
+          <div class="option-card tap-select" data-option="コラボ" data-price="collab" onclick="tapOption(this)">
+            <span class="option-name">コラボ</span>
+            <span class="option-price">+1人分</span>
+          </div>
+          <div class="qty-display small" data-for="コラボ">
+            <button type="button" class="qty-btn minus" onclick="changeOptionQty('コラボ', -1, event)">-</button>
+            <span class="qty-value">0</span>
+            <button type="button" class="qty-btn plus" onclick="changeOptionQty('コラボ', 1, event)">+</button>
+          </div>
+        </div>
         <div class="option-card-wrapper">
           <div class="option-card tap-select" data-option="カットアップ" data-price="2000" data-variable="true" onclick="tapOption(this)">
             <span class="option-name">カットアップ</span>
@@ -341,7 +312,7 @@
         <span class="estimate-label">概算見積り金額</span>
         <span class="estimate-amount" id="estimateAmount">¥0~</span>
       </div>
-      <p class="estimate-note">※ ハモリ・ダブル等の追加料金は作業の工数により上記上限内で変動します</p>
+      <p class="estimate-note">※ ハモリ等の追加トラックがある場合、工数に応じて料金が変動します</p>
 
       <!-- 依頼するボタン -->
       <div class="estimate-button-container">
@@ -391,28 +362,6 @@
       calculateEstimate();
     }
 
-    // トラック追加カードをタップ
-    function tapTrack(card) {
-      const track = card.getAttribute('data-track');
-      quantities.tracks[track] = (quantities.tracks[track] || 0) + 1;
-      updateDisplay('track-' + track, quantities.tracks[track], '.option-card');
-      // カード自体のselected状態も更新
-      if (quantities.tracks[track] > 0) { card.classList.add('selected'); } else { card.classList.remove('selected'); }
-      calculateEstimate();
-    }
-
-    // トラック数量変更
-    function changeTrackQty(track, delta, event) {
-      event.stopPropagation();
-      quantities.tracks[track] = Math.max(0, (quantities.tracks[track] || 0) + delta);
-      updateDisplay('track-' + track, quantities.tracks[track], '.option-card');
-      const card = document.querySelector('.option-card[data-track="' + track + '"]');
-      if (card) {
-        if (quantities.tracks[track] > 0) { card.classList.add('selected'); } else { card.classList.remove('selected'); }
-      }
-      calculateEstimate();
-    }
-
     // オプションカードをタップ
     function tapOption(card) {
       const option = card.getAttribute('data-option');
@@ -459,37 +408,14 @@
         }
       }
 
-      // トラック追加料金（コラボ・ハモリ等）
-      const collabCount = quantities.tracks['コラボ'] || 0;
-      const totalPeople = 1 + collabCount;
-      // 1人あたりのトラック追加率を計算（コラボ除く）
-      let perPersonPercent = 0;
-      for (const [track, qty] of Object.entries(quantities.tracks)) {
-        if (track === 'コラボ' || qty <= 0) continue;
-        const card = document.querySelector('.option-card[data-track="' + track + '"]');
-        if (card) {
-          const pct = parseInt(card.getAttribute('data-price-percent')) || 0;
-          perPersonPercent += pct * qty;
+      // コラボ料金（プラン料金 × 追加人数）
+      const collabCount = quantities.options['コラボ'] || 0;
+      if (collabCount > 0) {
+        let planTotal = 0;
+        for (const [plan, qty] of Object.entries(quantities.plans)) {
+          if (qty > 0) planTotal += (planPrices[plan] || 0) * qty;
         }
-      }
-      // 1人あたり上限150%
-      perPersonPercent = Math.min(perPersonPercent, 150);
-      if (perPersonPercent > 0 || collabCount > 0) hasVariable = true;
-      // 基本料金の加重平均を算出
-      let basePriceTotal = 0;
-      let basePlanCount = 0;
-      for (const [plan, qty] of Object.entries(quantities.plans)) {
-        if (qty > 0) {
-          basePriceTotal += (planPrices[plan] || 0) * qty;
-          basePlanCount += qty;
-        }
-      }
-      if (basePlanCount > 0) {
-        const avgBasePrice = basePriceTotal / basePlanCount;
-        // コラボ: 追加人数 × 基本料金(全曲分)
-        total += collabCount * basePriceTotal;
-        // トラック追加: 1人あたりの追加率 × 基本料金(1曲平均) × 全人数 × 曲数
-        total += Math.floor(avgBasePrice * (perPersonPercent / 100)) * totalPeople * basePlanCount;
+        total += collabCount * planTotal;
       }
 
       // 納期オプション料金
@@ -503,9 +429,9 @@
         }
       }
 
-      // その他オプション料金
+      // その他オプション料金（コラボは上で計算済みなのでスキップ）
       for (const [option, qty] of Object.entries(quantities.options)) {
-        if (qty > 0) {
+        if (qty > 0 && option !== 'コラボ') {
           const card = document.querySelector(`.option-card[data-option="${option}"]`);
           if (card) {
             const price = parseInt(card.getAttribute('data-price')) || 0;
@@ -549,14 +475,6 @@
         }
       }
 
-      // 選択されたトラック追加を収集
-      const tracks = [];
-      for (const [track, qty] of Object.entries(quantities.tracks)) {
-        if (qty > 0) {
-          tracks.push(track + ' x' + qty);
-        }
-      }
-
       // 選択されたオプションを収集
       const options = [];
       for (const [option, qty] of Object.entries(quantities.options)) {
@@ -571,9 +489,6 @@
       }
       if (deliveries.length > 0) {
         params.append('delivery', deliveries.join(', '));
-      }
-      if (tracks.length > 0) {
-        params.append('tracks', tracks.join(', '));
       }
       if (options.length > 0) {
         params.append('options', options.join(', '));
