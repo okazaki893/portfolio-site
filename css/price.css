@@ -1027,12 +1027,16 @@ body {
 /* Subscribe Details */
 .subscribe-details {
   width: 100%;
+  background: var(--bg-card, rgba(20, 20, 25, 0.8));
+  border: 1px solid var(--border-color, rgba(146, 107, 255, 0.2));
+  border-radius: 12px;
+  padding: 10px 30px;
 }
 
 .detail-item {
   display: flex;
   align-items: baseline;
-  padding: 14px 0;
+  padding: 16px 0;
   border-bottom: 1px solid var(--border-color, rgba(146, 107, 255, 0.15));
 }
 
@@ -1041,7 +1045,7 @@ body {
 }
 
 .detail-label {
-  flex: 0 0 140px;
+  flex: 0 0 150px;
   font-family: 'Arial', sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -1052,7 +1056,7 @@ body {
 .detail-value {
   font-family: 'Arial', sans-serif;
   font-size: 14px;
-  color: var(--text-secondary, #ccc);
+  color: var(--text-primary, #fff);
   line-height: 1.6;
 }
 
