@@ -256,6 +256,80 @@
           </div>
         </div>
 
+        <!-- トラック追加オプション -->
+        <div class="form-group">
+          <label>トラック追加オプション</label>
+          <div class="contact-cards" id="trackOptionCards">
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-track="コラボ" data-price-percent="100" onclick="tapTrack(this)">
+                <span class="contact-card-name">コラボ</span>
+                <span class="contact-card-price">+1人分</span>
+              </div>
+              <div class="qty-display small" data-for="track-コラボ">
+                <button type="button" class="qty-btn minus" onclick="changeTrackQty('コラボ', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeTrackQty('コラボ', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-track="ハモリ" data-price-percent="50" onclick="tapTrack(this)">
+                <span class="contact-card-name">ハモリ</span>
+                <span class="contact-card-price">最大+50%/1ライン</span>
+              </div>
+              <div class="qty-display small" data-for="track-ハモリ">
+                <button type="button" class="qty-btn minus" onclick="changeTrackQty('ハモリ', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeTrackQty('ハモリ', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-track="ダブル" data-price-percent="50" onclick="tapTrack(this)">
+                <span class="contact-card-name">ダブル</span>
+                <span class="contact-card-price">最大+50%/1ライン</span>
+              </div>
+              <div class="qty-display small" data-for="track-ダブル">
+                <button type="button" class="qty-btn minus" onclick="changeTrackQty('ダブル', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeTrackQty('ダブル', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-track="掛け声" data-price-percent="20" onclick="tapTrack(this)">
+                <span class="contact-card-name">掛け声</span>
+                <span class="contact-card-price">最大+20%/1ライン</span>
+              </div>
+              <div class="qty-display small" data-for="track-掛け声">
+                <button type="button" class="qty-btn minus" onclick="changeTrackQty('掛け声', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeTrackQty('掛け声', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-track="コーラス" data-price-percent="20" onclick="tapTrack(this)">
+                <span class="contact-card-name">コーラス</span>
+                <span class="contact-card-price">最大+20%/1ライン</span>
+              </div>
+              <div class="qty-display small" data-for="track-コーラス">
+                <button type="button" class="qty-btn minus" onclick="changeTrackQty('コーラス', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeTrackQty('コーラス', 1, event)">+</button>
+              </div>
+            </div>
+            <div class="contact-card-wrapper">
+              <div class="contact-card tap-select" data-track="ウィスパー" data-price-percent="20" onclick="tapTrack(this)">
+                <span class="contact-card-name">ウィスパー</span>
+                <span class="contact-card-price">最大+20%/1ライン</span>
+              </div>
+              <div class="qty-display small" data-for="track-ウィスパー">
+                <button type="button" class="qty-btn minus" onclick="changeTrackQty('ウィスパー', -1, event)">-</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" onclick="changeTrackQty('ウィスパー', 1, event)">+</button>
+              </div>
+            </div>
+          </div>
+          <p class="form-note" style="margin-top: 8px;">※ 1人あたりの追加料金上限: 基本料金の150%まで</p>
+        </div>
+
         <!-- その他オプション -->
         <div class="form-group">
           <label>その他オプション</label>
@@ -364,7 +438,8 @@
     const quantities = {
       plans: {},
       delivery: {},
-      options: {}
+      options: {},
+      tracks: {}
     };
 
     // プランカードをタップ
@@ -396,6 +471,27 @@
       event.stopPropagation();
       quantities.delivery[delivery] = Math.max(0, (quantities.delivery[delivery] || 0) + delta);
       updateDisplay(delivery, quantities.delivery[delivery], '.contact-card');
+      calculateEstimate();
+    }
+
+    // トラック追加カードをタップ
+    function tapTrack(card) {
+      const track = card.getAttribute('data-track');
+      quantities.tracks[track] = (quantities.tracks[track] || 0) + 1;
+      updateDisplay('track-' + track, quantities.tracks[track], '.contact-card');
+      if (quantities.tracks[track] > 0) { card.classList.add('selected'); } else { card.classList.remove('selected'); }
+      calculateEstimate();
+    }
+
+    // トラック数量変更
+    function changeTrackQty(track, delta, event) {
+      event.stopPropagation();
+      quantities.tracks[track] = Math.max(0, (quantities.tracks[track] || 0) + delta);
+      updateDisplay('track-' + track, quantities.tracks[track], '.contact-card');
+      const card = document.querySelector('.contact-card[data-track="' + track + '"]');
+      if (card) {
+        if (quantities.tracks[track] > 0) { card.classList.add('selected'); } else { card.classList.remove('selected'); }
+      }
       calculateEstimate();
     }
 
@@ -443,6 +539,34 @@
         if (qty > 0) {
           total += (planPrices[plan] || 0) * qty;
         }
+      }
+
+      // トラック追加料金（コラボ・ハモリ等）
+      const collabCount = quantities.tracks['コラボ'] || 0;
+      const totalPeople = 1 + collabCount;
+      let perPersonPercent = 0;
+      for (const [track, qty] of Object.entries(quantities.tracks)) {
+        if (track === 'コラボ' || qty <= 0) continue;
+        const card = document.querySelector('.contact-card[data-track="' + track + '"]');
+        if (card) {
+          const pct = parseInt(card.getAttribute('data-price-percent')) || 0;
+          perPersonPercent += pct * qty;
+        }
+      }
+      perPersonPercent = Math.min(perPersonPercent, 150);
+      if (perPersonPercent > 0 || collabCount > 0) hasVariable = true;
+      let basePriceTotal = 0;
+      let basePlanCount = 0;
+      for (const [plan, qty] of Object.entries(quantities.plans)) {
+        if (qty > 0) {
+          basePriceTotal += (planPrices[plan] || 0) * qty;
+          basePlanCount += qty;
+        }
+      }
+      if (basePlanCount > 0) {
+        const avgBasePrice = basePriceTotal / basePlanCount;
+        total += collabCount * basePriceTotal;
+        total += Math.floor(avgBasePrice * (perPersonPercent / 100)) * totalPeople * basePlanCount;
       }
 
       // 納期オプション料金
@@ -601,6 +725,16 @@
       return deliveries.join(', ');
     }
 
+    function getSelectedTracks() {
+      var tracks = [];
+      for (var track in quantities.tracks) {
+        if (quantities.tracks[track] > 0) {
+          tracks.push(track + ' x' + quantities.tracks[track]);
+        }
+      }
+      return tracks.join(', ');
+    }
+
     function getSelectedOptions() {
       var options = [];
       for (var option in quantities.options) {
@@ -655,6 +789,7 @@
               songName: formData.get('songName'),
               plan: selectedPlans,
               deliveryOption: getSelectedDeliveries(),
+              trackOptions: getSelectedTracks(),
               otherOptions: getSelectedOptions(),
               fileUrl: formData.get('fileUrl') || '',
               remarks: formData.get('remarks') || ''
