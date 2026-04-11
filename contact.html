@@ -24,7 +24,7 @@
   <meta name="twitter:description" content="お問い合わせ">
   <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
   <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/price.css?v=20260412">
+  <link rel="stylesheet" href="css/price.css?v=20260412b">
 </head>
 <body>
   <div class="price-page">
@@ -352,14 +352,15 @@
           <p class="file-note" style="margin-left: 1em;">- 1つのzipファイルにまとめてください</p>
         </div>
 
-        <!-- 見積金額表示 -->
-        <div class="estimate-total" id="contactEstimate">
-          <span class="estimate-label">概算見積り金額</span>
-          <span class="estimate-amount" id="estimateAmount">¥0~</span>
+        <!-- 見積金額 + 送信ボタン -->
+        <div class="submit-area">
+          <div class="estimate-total-inline">
+            <span class="estimate-label">概算見積り金額</span>
+            <span class="estimate-amount" id="estimateAmount">¥0~</span>
+          </div>
+          <p class="estimate-note">※ トラック数や作業の工数によって金額が上下する場合があります</p>
+          <button type="submit" class="submit-btn" id="submitBtn">送信する</button>
         </div>
-        <p class="estimate-note">※ トラック数や作業の工数によって金額が上下する場合があります</p>
-
-        <button type="submit" class="submit-btn" id="submitBtn">送信する</button>
         <div id="uploadProgress" class="upload-progress" style="display: none;">
           <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
           <p class="progress-text" id="progressText">アップロード中...</p>
