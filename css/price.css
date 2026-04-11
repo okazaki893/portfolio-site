@@ -1593,7 +1593,7 @@ body {
 }
 
 .contact-cards .contact-card-wrapper {
-  flex: 1;
+  flex: 0 0 calc(25% - 12px);
   min-width: 0;
 }
 
