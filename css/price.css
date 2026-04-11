@@ -1036,7 +1036,7 @@ body {
   background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent-muted) 100%);
   border: 1px solid var(--border-hover);
   border-radius: 12px;
-  max-width: 500px;
+  width: 100%;
 }
 
 .estimate-label {
