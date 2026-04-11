@@ -720,16 +720,18 @@ body {
 
 .option-name {
   font-family: 'Arial', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .option-price {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   color: var(--accent-primary, #926bff);
+  white-space: nowrap;
 }
 
 /* Estimate Form */
@@ -1559,7 +1561,7 @@ body {
 
 .contact-card-name {
   font-family: 'Arial', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-primary);
   text-align: center;
@@ -1568,9 +1570,10 @@ body {
 
 .contact-card-price {
   font-family: 'Times New Roman', Times, serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: var(--accent-primary);
+  white-space: nowrap;
 }
 
 /* Responsive for contact cards */
