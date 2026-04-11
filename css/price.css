@@ -1511,6 +1511,20 @@ body {
   align-items: flex-start;
 }
 
+#trackOptionCards {
+  flex-wrap: nowrap;
+}
+
+#trackOptionCards .contact-card-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+#trackOptionCards .contact-card {
+  width: 100%;
+  min-width: 0;
+}
+
 .contact-card-wrapper .qty-display .qty-value {
   color: var(--text-primary);
 }
