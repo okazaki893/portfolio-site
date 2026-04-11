@@ -668,7 +668,7 @@ body {
 }
 
 .option-cards.four-cols .option-card {
-  width: auto;
+  width: 100%;
   flex: 1;
   min-width: 0;
 }
@@ -1404,6 +1404,8 @@ body {
 
 .option-cards.four-cols .option-card {
   width: 100%;
+  min-width: 0 !important;
+  box-sizing: border-box;
 }
 
 /* Responsive adjustments for quantity display */
