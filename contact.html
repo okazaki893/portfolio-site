@@ -144,9 +144,9 @@
           <label>プラン <span class="required">*</span></label>
           <div class="contact-cards" id="planCards">
             <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-plan="Short" data-price="4000" onclick="tapPlan(this)">
+              <div class="contact-card tap-select" data-plan="Short" data-price="3000" onclick="tapPlan(this)">
                 <span class="contact-card-name">Short</span>
-                <span class="contact-card-price">¥4,000~</span>
+                <span class="contact-card-price">¥3,000~</span>
               </div>
               <div class="qty-display small" data-for="Short">
                 <button type="button" class="qty-btn minus" onclick="changePlanQty('Short', -1, event)">-</button>
@@ -438,7 +438,7 @@
       let hasVariable = false;
 
       // プラン料金
-      const planPrices = { 'Short': 4000, 'One Chorus': 6000, 'Full Chorus': 10000 };
+      const planPrices = { 'Short': 3000, 'One Chorus': 6000, 'Full Chorus': 10000 };
       for (const [plan, qty] of Object.entries(quantities.plans)) {
         if (qty > 0) {
           total += (planPrices[plan] || 0) * qty;
