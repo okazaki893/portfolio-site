@@ -1507,7 +1507,7 @@ body {
 .contact-cards {
   display: flex;
   gap: 15px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   margin-top: 10px;
   align-items: flex-start;
 }
@@ -1587,8 +1587,14 @@ body {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 120px;
+  width: 100%;
   min-height: 80px;
+  box-sizing: border-box;
+}
+
+.contact-cards .contact-card-wrapper {
+  flex: 1;
+  min-width: 0;
 }
 
 .contact-cards.four-cols .contact-card {
