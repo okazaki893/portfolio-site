@@ -1512,17 +1512,20 @@ body {
 }
 
 #trackOptionCards {
-  flex-wrap: nowrap;
+  flex-wrap: nowrap !important;
+  flex-direction: row !important;
 }
 
 #trackOptionCards .contact-card-wrapper {
-  flex: 1;
-  min-width: 0;
+  flex: 1 1 0;
+  min-width: 0 !important;
 }
 
 #trackOptionCards .contact-card {
   width: 100%;
-  min-width: 0;
+  min-width: 0 !important;
+  min-height: auto;
+  padding: 15px 10px;
 }
 
 .contact-card-wrapper .qty-display .qty-value {
