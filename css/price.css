@@ -1545,7 +1545,7 @@ body {
 
 .submit-area .estimate-note {
   margin: 10px 0;
-  text-align: center;
+  text-align: left;
 }
 
 .submit-area .submit-btn {
