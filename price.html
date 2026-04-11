@@ -97,12 +97,12 @@
       <div class="price-cards">
         <!-- Short -->
         <div class="price-card-wrapper">
-          <div class="price-card tap-select" data-plan="Short" data-price="3000" onclick="tapCard(this)">
+          <div class="price-card tap-select" data-plan="Short" data-price="4000" onclick="tapCard(this)">
             <div class="card-header">
               <span class="plan-name">Short</span>
               <div class="price">
                 <span class="currency">¥</span>
-                <span class="amount">3,000</span>
+                <span class="amount">4,000</span>
                 <span class="period">~</span>
               </div>
             </div>
@@ -388,7 +388,7 @@
       let hasVariable = false;
 
       // プラン料金
-      const planPrices = { 'Short': 3000, 'One Chorus': 6000, 'Full Chorus': 10000 };
+      const planPrices = { 'Short': 4000, 'One Chorus': 6000, 'Full Chorus': 10000 };
       for (const [plan, qty] of Object.entries(quantities.plans)) {
         if (qty > 0) {
           total += (planPrices[plan] || 0) * qty;
