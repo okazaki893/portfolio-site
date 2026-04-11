@@ -1505,11 +1505,11 @@ body {
 
 /* Contact Cards (for Contact page) */
 .contact-cards {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
-  flex-wrap: nowrap;
   margin-top: 10px;
-  align-items: flex-start;
+  align-items: start;
 }
 
 #trackOptionCards {
@@ -1593,7 +1593,6 @@ body {
 }
 
 .contact-cards .contact-card-wrapper {
-  flex: 0 0 calc(25% - 12px);
   min-width: 0;
 }
 
@@ -1631,26 +1630,14 @@ body {
 
 /* Responsive for contact cards */
 @media (max-width: 900px) {
-  .contact-cards.four-cols {
-    flex-wrap: wrap;
-  }
-
-  .contact-cards.four-cols .contact-card-wrapper {
-    flex: 0 0 calc(50% - 10px);
+  .contact-cards {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .contact-cards {
-    flex-direction: column;
-  }
-
-  .contact-card-wrapper {
-    width: 100%;
-  }
-
-  .contact-card {
-    width: 100%;
+    grid-template-columns: 1fr;
   }
 
   .contact-cards.four-cols .contact-card-wrapper {
