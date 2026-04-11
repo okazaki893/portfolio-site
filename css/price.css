@@ -664,7 +664,7 @@ body {
 
 .option-cards.four-cols {
   flex-wrap: nowrap;
-  max-width: 1200px;
+  max-width: 1000px;
 }
 
 .option-cards.four-cols .option-card {
