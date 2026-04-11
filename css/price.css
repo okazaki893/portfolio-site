@@ -1528,6 +1528,19 @@ body {
   padding: 15px 10px;
 }
 
+#contactEstimate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px 30px;
+  margin: 0;
+  border: none;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent-muted) 100%);
+}
+
 .contact-card-wrapper .qty-display .qty-value {
   color: var(--text-primary);
 }
