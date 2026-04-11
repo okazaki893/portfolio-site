@@ -1029,15 +1029,14 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 20px 40px;
   gap: 40px;
   margin-top: 40px;
   margin-bottom: 0;
   background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent-muted) 100%);
-  border: none;
-  border-radius: 8px;
-  width: 100%;
-  box-sizing: border-box;
+  border: 1px solid var(--border-hover);
+  border-radius: 12px;
+  max-width: 500px;
 }
 
 .estimate-label {
@@ -1528,17 +1527,29 @@ body {
   padding: 15px 10px;
 }
 
-#contactEstimate {
+.submit-area {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.estimate-total-inline {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   padding: 15px 30px;
-  margin: 0;
-  border: none;
+  background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent-muted) 100%);
   border-radius: 8px;
   box-sizing: border-box;
-  background: linear-gradient(135deg, var(--accent-dim) 0%, var(--accent-muted) 100%);
+}
+
+.submit-area .estimate-note {
+  margin: 10px 0;
+}
+
+.submit-area .submit-btn {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contact-card-wrapper .qty-display .qty-value {
