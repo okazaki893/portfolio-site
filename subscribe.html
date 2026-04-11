@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio</title>
+  <title>Subscribe</title>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VSVT7TT4R"></script>
   <script>
@@ -13,43 +13,21 @@
     gtag('config', 'G-0VSVT7TT4R');
   </script>
   <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="preload" href="fonts/StarShinesStill.ttf" as="font" type="font/ttf" crossorigin>
   <!-- OGP -->
-  <meta property="og:title" content="Portfolio - Noumenon">
-  <meta property="og:description" content="Mixing / 3D Animation / Music / Planning">
+  <meta property="og:title" content="Subscribe - Noumenon">
+  <meta property="og:description" content="歌ってみたMIX サブスクリプションプラン">
   <meta property="og:image" content="https://noumenon.jp/OGP.png">
-  <meta property="og:url" content="https://noumenon.jp/">
+  <meta property="og:url" content="https://noumenon.jp/subscribe">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Portfolio - Noumenon">
-  <meta name="twitter:description" content="Mixing / 3D Animation / Music / Planning">
+  <meta name="twitter:title" content="Subscribe - Noumenon">
+  <meta name="twitter:description" content="歌ってみたMIX サブスクリプションプラン">
   <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
   <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/style2.css">
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
-  </script>
+  <link rel="stylesheet" href="css/price.css?v=20260412c">
 </head>
 <body>
-  <!-- Splash Screen -->
-  <div class="splash-screen" id="splashScreen">
-    <div class="splash-content">
-      <div class="shooting-star"></div>
-      <div class="splash-text">NOUMENON</div>
-      <div class="splash-line"></div>
-    </div>
-  </div>
-
-  <div class="portfolio-cover">
+  <div class="price-page">
     <!-- Hamburger Menu Button -->
     <div class="hamburger-menu" onclick="toggleMobileMenu()">
       <span></span>
@@ -60,10 +38,10 @@
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay">
       <ul class="mobile-menu-list">
-        <li><a href="/" class="active">Top</a></li>
+        <li><a href="/">Top</a></li>
         <li><a href="works">Works</a></li>
         <li><a href="price">Price</a></li>
-        <li><a href="subscribe">Subscribe</a></li>
+        <li><a href="subscribe" class="active">Subscribe</a></li>
         <li><a href="contact">Contact</a></li>
       </ul>
     </div>
@@ -72,9 +50,9 @@
     <nav class="side-menu">
       <ul class="menu-list">
         <li class="menu-item">
-          <span class="menu-bullet active"></span>
+          <span class="menu-bullet"></span>
           <span class="menu-line"></span>
-          <a href="/" class="menu-link active">Top</a>
+          <a href="/" class="menu-link">Top</a>
         </li>
         <li class="menu-item">
           <span class="menu-bullet"></span>
@@ -87,9 +65,9 @@
           <a href="price" class="menu-link">Price</a>
         </li>
         <li class="menu-item">
-          <span class="menu-bullet"></span>
+          <span class="menu-bullet active"></span>
           <span class="menu-line"></span>
-          <a href="subscribe" class="menu-link">Subscribe</a>
+          <a href="subscribe" class="menu-link active">Subscribe</a>
         </li>
         <li class="menu-item">
           <span class="menu-bullet"></span>
@@ -116,29 +94,104 @@
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
+    <!-- Main content -->
+    <div class="content">
+      <h1 class="page-title">SUBSCRIBE</h1>
+      <p class="price-subtitle">SHORT MIX サブスクリプション</p>
 
-    <!-- Video thumbnail gallery - Mosaic Layout (PC) -->
-    <div class="mosaic-gallery-container">
-      <div class="mosaic-gallery-wrapper">
-        <div class="mosaic-gallery" id="mosaicGallery">
-          <!-- Items will be generated dynamically by JavaScript -->
+      <!-- メインプラン -->
+      <div class="price-cards" style="justify-content: center;">
+        <div class="price-card-wrapper">
+          <div class="price-card featured" style="width: 350px;">
+            <div class="card-header">
+              <span class="plan-name">MONTHLY PLAN</span>
+              <div class="price">
+                <span class="currency">¥</span>
+                <span class="amount">12,000</span>
+                <span class="period">/月</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="features">
+                <li>SHORT MIX 月4本まで</li>
+                <li>基本納期: 3日以内</li>
+                <li>単発比 25% OFF</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="color-underlay"></div>
-    </div>
 
-    <!-- Mobile Video Grid (Smartphone) -->
-    <div class="mobile-mixing-grid">
-      <div class="mobile-top-icon">
-        <img src="images/33f11a62ab08fd19.png" alt="Top Icon">
+      <div class="price-note">
+        <p>※ 単発料金 ¥4,000 × 4本 = ¥16,000 のところ、¥12,000 でご利用いただけます</p>
       </div>
-      <div class="mobile-video-grid" id="mobileVideoGrid">
-        <!-- Videos will be loaded by JavaScript -->
+
+      <!-- プラン内容 -->
+      <h2 class="section-title">PLAN DETAILS</h2>
+      <div class="option-section">
+        <div class="subscribe-details">
+          <div class="detail-item">
+            <span class="detail-label">対象</span>
+            <span class="detail-value">SHORT MIX（1分半以内）</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">月間本数</span>
+            <span class="detail-value">4本まで</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">基本納期</span>
+            <span class="detail-value">3日以内</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">繰り越し</span>
+            <span class="detail-value">1本まで翌月繰越OK</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">含まれるもの</span>
+            <span class="detail-value">ピッチ補正 / タイミング補正 / ハモリ生成 / マスタリング</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">超過分</span>
+            <span class="detail-value">1本あたり ¥3,000（会員特別価格）</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 継続特典 -->
+      <h2 class="section-title">BENEFITS</h2>
+      <div class="option-section">
+        <div class="subscribe-details">
+          <div class="detail-item">
+            <span class="detail-label">常時</span>
+            <span class="detail-value">優先対応（他の依頼より先にMIX）</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">3ヶ月継続</span>
+            <span class="detail-value">月の上限 +1本（計5本）</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">6ヶ月継続</span>
+            <span class="detail-value">ONE CHORUS 1回無料/月</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">ストック</span>
+            <span class="detail-value">未使用分は最大4本までストック可能（解約時に消滅）</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-note">
+        <p>※ ハモリ・ダブルはメインボーカル1ラインにつき最大+50%、掛け声・コーラスなどは最大+20%の追加料金が発生します（1人あたり上限150%）</p>
+        <p>※ コラボの場合は人数分の基本料金が加算されます</p>
+      </div>
+
+      <!-- 申し込みボタン -->
+      <div class="estimate-button-container" style="margin-top: 40px;">
+        <a href="contact" class="estimate-btn">CONTACT</a>
       </div>
     </div>
   </div>
 
-  <script src="scripts/mosaic.js"></script>
   <script>
     // Mobile menu toggle
     function toggleMobileMenu() {
@@ -146,78 +199,6 @@
       const overlay = document.getElementById('mobileMenuOverlay');
       hamburger.classList.toggle('active');
       overlay.classList.toggle('active');
-    }
-
-    // Close menu when clicking a link
-    document.querySelectorAll('.mobile-menu-list a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.querySelector('.hamburger-menu').classList.remove('active');
-        document.getElementById('mobileMenuOverlay').classList.remove('active');
-      });
-    });
-
-    // Load mobile video grid
-    function loadMobileVideos() {
-      const grid = document.getElementById('mobileVideoGrid');
-      if (!grid) return;
-
-      // Use the same video data from mosaic.js
-      const videos = typeof youtubeVideos !== 'undefined' ? youtubeVideos : [];
-
-      grid.innerHTML = '';
-      videos.forEach(video => {
-        let thumbnailId = video.id;
-        if (video.link) {
-          const match = video.link.match(/[?&]v=([^&]+)/);
-          if (match) thumbnailId = match[1];
-        }
-
-        const videoLink = video.link || `https://www.youtube.com/watch?v=${video.id}`;
-        const thumbnailUrl = video.customThumbnail || `https://img.youtube.com/vi/${thumbnailId}/maxresdefault.jpg`;
-        const fallbackUrl = `https://img.youtube.com/vi/${thumbnailId}/hqdefault.jpg`;
-
-        const card = document.createElement('div');
-        card.className = 'mobile-video-card';
-        card.innerHTML = `
-          <a href="${videoLink}" target="_blank" class="mobile-video-thumbnail">
-            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='${fallbackUrl}'">
-            <div class="mobile-play-overlay">
-              <div class="mobile-play-button"></div>
-            </div>
-          </a>
-          <div class="mobile-video-title">${video.title}</div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    // Initialize mobile grid after mosaic.js loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadMobileVideos);
-    } else {
-      setTimeout(loadMobileVideos, 100);
-    }
-
-    // Splash screen animation
-    function initSplashScreen() {
-      const splashScreen = document.getElementById('splashScreen');
-      if (!splashScreen) return;
-
-      // Hide splash screen after 2.5 seconds
-      setTimeout(() => {
-        splashScreen.classList.add('hide');
-        // Remove from DOM after fade completes
-        setTimeout(() => {
-          splashScreen.remove();
-        }, 400);
-      }, 2500);
-    }
-
-    // Initialize splash screen when page loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSplashScreen);
-    } else {
-      initSplashScreen();
     }
   </script>
 

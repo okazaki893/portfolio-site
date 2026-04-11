@@ -1024,6 +1024,38 @@ body {
   margin-top: 10px;
 }
 
+/* Subscribe Details */
+.subscribe-details {
+  width: 100%;
+}
+
+.detail-item {
+  display: flex;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-color, rgba(146, 107, 255, 0.15));
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  flex: 0 0 140px;
+  font-family: 'Arial', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-primary, #926bff);
+  letter-spacing: 1px;
+}
+
+.detail-value {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary, #ccc);
+  line-height: 1.6;
+}
+
 /* Estimate Total */
 .estimate-total {
   display: flex;
