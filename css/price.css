@@ -691,43 +691,6 @@ body {
   }
 }
 
-/* Subscribe Contact Buttons */
-.subscribe-contact {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-.subscribe-contact-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 30px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.subscribe-contact-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-}
-
-.subscribe-contact-btn svg {
-  flex-shrink: 0;
-}
-
 /* Section title */
 .section-title {
   font-family: 'Times New Roman', Times, serif;
