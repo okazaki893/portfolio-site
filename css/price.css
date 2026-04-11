@@ -623,6 +623,72 @@ body {
   letter-spacing: 1px;
 }
 
+/* Subscribe Banner */
+.subscribe-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, rgba(146, 107, 255, 0.15) 0%, rgba(107, 146, 255, 0.15) 100%);
+  border: 1px solid var(--accent-primary, rgba(146, 107, 255, 0.4));
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.subscribe-banner:hover {
+  background: linear-gradient(135deg, rgba(146, 107, 255, 0.25) 0%, rgba(107, 146, 255, 0.25) 100%);
+  border-color: var(--accent-primary, #926bff);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(146, 107, 255, 0.2);
+}
+
+.subscribe-banner-tag {
+  font-family: 'Arial', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  background: var(--accent-primary, #926bff);
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.subscribe-banner-text {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary, #fff);
+  letter-spacing: 0.5px;
+}
+
+.subscribe-banner-arrow {
+  font-size: 18px;
+  color: var(--accent-primary, #926bff);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.subscribe-banner:hover .subscribe-banner-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 600px) {
+  .subscribe-banner {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  .subscribe-banner-text {
+    font-size: 12px;
+  }
+}
+
 /* Section title */
 .section-title {
   font-family: 'Times New Roman', Times, serif;
