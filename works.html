@@ -121,6 +121,35 @@
 
     .content-section.active { display: block; }
 
+    /* Mixing Sub-tab Bar */
+    .mixing-subtab-bar {
+      display: flex;
+      gap: 10px;
+      margin: 0 0 24px;
+    }
+
+    .mixing-subtab-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 24px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .mixing-subtab-btn.active {
+      background: #926bff;
+      color: #fff;
+      border-color: #926bff;
+    }
+
+    .mixing-subtab-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
     /* Video Grid */
     .video-grid {
       display: grid;
@@ -417,12 +446,14 @@
 
       <!-- Mixing Content -->
       <div class="content-section" id="section-mixing">
+        <div class="mixing-subtab-bar">
+          <button class="mixing-subtab-btn active" data-subtab="full" onclick="switchMixingSubtabPublic('full')">FULL</button>
+          <button class="mixing-subtab-btn" data-subtab="short" onclick="switchMixingSubtabPublic('short')">short</button>
+        </div>
         <div id="mixingFullSection">
-          <h3 style="color: #fff; margin: 16px 0 12px; font-size: 18px; font-weight: 500;">Mixing - FULL</h3>
           <div class="video-grid" id="mixingFullGrid"></div>
         </div>
-        <div id="mixingShortSection" style="margin-top: 32px;">
-          <h3 style="color: #fff; margin: 16px 0 12px; font-size: 18px; font-weight: 500;">Mixing - Shorts</h3>
+        <div id="mixingShortSection" style="display: none;">
           <div class="video-grid" id="mixingShortGrid"></div>
         </div>
       </div>
@@ -606,10 +637,14 @@
       const planningWorks = loadPlanningWorks();
 
       // Render individual sections
-      mixingFullGrid.innerHTML = mixingFull.map(v => createVideoCard(v, 'mixing')).join('');
-      mixingShortGrid.innerHTML = mixingShort.map(v => createVideoCard(v, 'mixing')).join('');
-      mixingFullWrap.style.display = mixingFull.length > 0 ? '' : 'none';
-      mixingShortWrap.style.display = mixingShort.length > 0 ? '' : 'none';
+      const emptyMsg = label => `<p style="color: #999; padding: 40px; text-align: center;">${label}動画はまだありません</p>`;
+      mixingFullGrid.innerHTML = mixingFull.length > 0
+        ? mixingFull.map(v => createVideoCard(v, 'mixing')).join('')
+        : emptyMsg('FULL');
+      mixingShortGrid.innerHTML = mixingShort.length > 0
+        ? mixingShort.map(v => createVideoCard(v, 'mixing')).join('')
+        : emptyMsg('Short');
+      // display 制御は switchMixingSubtabPublic に任せる（初期はHTML側で FULL がactive）
       animationSection.innerHTML = animation3d.map(v => createVideoCard(v, '3d')).join('');
       musicSection.innerHTML = music.map(t => createMusicCard(t)).join('');
       planningSection.innerHTML = planningWorks.map(v => createVideoCard(v, 'planning')).join('');
@@ -633,6 +668,18 @@
       allHtml += '</div>';
 
       allSection.innerHTML = allHtml;
+    }
+
+    // Mixingセクション内のFULL/shortサブタブ切替
+    function switchMixingSubtabPublic(name) {
+      if (name !== 'full' && name !== 'short') return;
+      const fullSection = document.getElementById('mixingFullSection');
+      const shortSection = document.getElementById('mixingShortSection');
+      if (fullSection) fullSection.style.display = name === 'full' ? '' : 'none';
+      if (shortSection) shortSection.style.display = name === 'short' ? '' : 'none';
+      document.querySelectorAll('#section-mixing .mixing-subtab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.subtab === name);
+      });
     }
 
     // Filter functionality
