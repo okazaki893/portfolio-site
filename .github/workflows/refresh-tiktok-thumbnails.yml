@@ -1,0 +1,45 @@
+name: Refresh TikTok thumbnails
+
+# TikTok oEmbed のサムネ URL は署名付きで約2日で期限切れになるので、
+# 毎日再取得して content/videos.json を更新する。
+# 変更があれば commit & push、push をトリガに既存 static.yml が自動でデプロイする。
+
+on:
+  schedule:
+    # 毎日 UTC 03:00（JST 12:00）
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-tiktok-thumbnails
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Refresh TikTok thumbnails
+        run: python scripts/refresh_tiktok_thumbnails.py
+
+      - name: Commit and push if changed
+        run: |
+          if [[ -z "$(git status --porcelain content/videos.json)" ]]; then
+            echo "No changes to videos.json; skipping commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/videos.json
+          git commit -m "chore: refresh TikTok thumbnails (oEmbed)"
+          git push
