@@ -956,15 +956,17 @@
       }
 
       filtered.forEach((video, index) => {
+        const isTikTok = video.platform === 'tiktok';
         let thumbnailId = video.id;
-        if (video.link) {
+        if (!isTikTok && video.link) {
           const match = video.link.match(/[?&]v=([^&]+)/);
           if (match) thumbnailId = match[1];
         }
 
-        const thumbnailUrl = video.customThumbnail || `https://img.youtube.com/vi/${thumbnailId}/mqdefault.jpg`;
+        const thumbnailUrl = video.customThumbnail
+          || (isTikTok ? '' : `https://img.youtube.com/vi/${thumbnailId}/mqdefault.jpg`);
 
-        const videoLink = video.link || `https://www.youtube.com/watch?v=${thumbnailId}`;
+        const videoLink = video.link || (isTikTok ? '#' : `https://www.youtube.com/watch?v=${thumbnailId}`);
 
         const item = document.createElement('div');
         item.className = 'video-item';
@@ -973,7 +975,7 @@
             <input type="number" value="${index + 1}" min="1" max="${filtered.length}" onchange="moveVideoToPosition(${index}, this.value)" title="順番を変更">
           </div>
           <a href="${videoLink}" target="_blank" style="display: block;">
-            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/mqdefault.jpg'" style="cursor: pointer;">
+            <img src="${thumbnailUrl}" alt="${video.title}" onerror="${isTikTok ? `this.style.display='none'; this.parentElement.style.background='#111';` : `this.src='https://img.youtube.com/vi/${video.id}/mqdefault.jpg'`}" style="cursor: pointer;">
           </a>
           <div class="video-info">
             <h4>${video.title}</h4>
@@ -1005,32 +1007,90 @@
       return null;
     }
 
+    // URL から platform と video ID を判定
+    function detectPlatform(url) {
+      if (!url) return null;
+
+      // TikTok パターン
+      const tiktokVideo = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+      if (tiktokVideo) return { platform: 'tiktok', id: tiktokVideo[1] };
+      const tiktokShort = url.match(/(?:vm|vt)\.tiktok\.com\/(\w+)/);
+      if (tiktokShort) return { platform: 'tiktok', id: tiktokShort[1] };
+      const tiktokT = url.match(/tiktok\.com\/t\/(\w+)/);
+      if (tiktokT) return { platform: 'tiktok', id: tiktokT[1] };
+
+      // YouTube（既存 extractVideoId を流用）
+      const youtubeId = extractVideoId(url);
+      if (youtubeId) return { platform: 'youtube', id: youtubeId };
+
+      return null;
+    }
+
+    // TikTok oEmbed で title と thumbnail_url を取得
+    async function fetchTikTokOembed(url) {
+      const endpoint = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+      const r = await fetch(endpoint);
+      if (!r.ok) throw new Error(`oEmbed failed: ${r.status}`);
+      const data = await r.json();
+      return {
+        title: data.title || '',
+        thumbnail_url: data.thumbnail_url || ''
+      };
+    }
+
     // 動画追加
     async function addVideo() {
       const title = document.getElementById('newTitle').value.trim();
       const youtubeUrl = document.getElementById('newYoutubeUrl').value.trim();
       const thumbnail = document.getElementById('newThumbnail').value.trim();
 
-      if (!title || !youtubeUrl) {
-        alert('タイトルとYouTubeのURLは必須です');
+      if (!youtubeUrl) {
+        alert('URLは必須です');
         return;
       }
 
-      const videoId = extractVideoId(youtubeUrl);
-      if (!videoId) {
-        alert('有効なYouTubeのURLを入力してください');
+      const detected = detectPlatform(youtubeUrl);
+      if (!detected) {
+        alert('有効な YouTube または TikTok の URL を入力してください');
+        return;
+      }
+
+      let finalTitle = title;
+      let finalThumbnail = thumbnail;
+
+      // TikTok は oEmbed で title / thumbnail を自動取得
+      if (detected.platform === 'tiktok') {
+        try {
+          const oembed = await fetchTikTokOembed(youtubeUrl);
+          if (!finalTitle && oembed.title) finalTitle = oembed.title;
+          if (!finalThumbnail && oembed.thumbnail_url) finalThumbnail = oembed.thumbnail_url;
+        } catch (e) {
+          console.error('TikTok oEmbed failed', e);
+          if (!finalThumbnail) {
+            alert('TikTokのサムネ自動取得に失敗しました。カスタムサムネイル欄に手動で画像URLを入力してください。');
+            return;
+          }
+        }
+      }
+
+      if (!finalTitle) {
+        alert('タイトルは必須です');
         return;
       }
 
       const newVideo = {
-        id: videoId,
-        title: title,
+        id: detected.id,
+        title: finalTitle,
         link: youtubeUrl,
         isShort: activeMixingSubtab === 'short'
       };
 
-      if (thumbnail) {
-        newVideo.customThumbnail = thumbnail;
+      if (detected.platform === 'tiktok') {
+        newVideo.platform = 'tiktok';
+      }
+
+      if (finalThumbnail) {
+        newVideo.customThumbnail = finalThumbnail;
       }
 
       videos.unshift(newVideo);
@@ -1132,27 +1192,53 @@
       const youtubeUrl = document.getElementById('editYoutubeUrl').value.trim();
       const thumbnail = document.getElementById('editThumbnail').value.trim();
 
-      if (!title || !youtubeUrl) {
-        alert('タイトルとYouTubeのURLは必須です');
+      if (!youtubeUrl) {
+        alert('URLは必須です');
         return;
       }
 
-      const videoId = extractVideoId(youtubeUrl);
-      if (!videoId) {
-        alert('有効なYouTubeのURLを入力してください');
+      const detected = detectPlatform(youtubeUrl);
+      if (!detected) {
+        alert('有効な YouTube または TikTok の URL を入力してください');
+        return;
+      }
+
+      let finalTitle = title;
+      let finalThumbnail = thumbnail;
+
+      // TikTok は oEmbed で title / thumbnail を自動取得（入力されていれば上書きしない）
+      if (detected.platform === 'tiktok') {
+        try {
+          const oembed = await fetchTikTokOembed(youtubeUrl);
+          if (!finalTitle && oembed.title) finalTitle = oembed.title;
+          if (!finalThumbnail && oembed.thumbnail_url) finalThumbnail = oembed.thumbnail_url;
+        } catch (e) {
+          console.error('TikTok oEmbed failed', e);
+          if (!finalThumbnail) {
+            alert('TikTokのサムネ自動取得に失敗しました。カスタムサムネイル欄に手動で画像URLを入力してください。');
+            return;
+          }
+        }
+      }
+
+      if (!finalTitle) {
+        alert('タイトルは必須です');
         return;
       }
 
       const oldVideo = { ...videos[editIndex] };
       const isShortChecked = document.getElementById('editIsShort').checked;
       videos[editIndex] = {
-        id: videoId,
-        title: title,
+        id: detected.id,
+        title: finalTitle,
         link: youtubeUrl,
         isShort: isShortChecked
       };
-      if (thumbnail) {
-        videos[editIndex].customThumbnail = thumbnail;
+      if (detected.platform === 'tiktok') {
+        videos[editIndex].platform = 'tiktok';
+      }
+      if (finalThumbnail) {
+        videos[editIndex].customThumbnail = finalThumbnail;
       }
 
       const success = await saveVideos();

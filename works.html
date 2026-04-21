@@ -589,16 +589,37 @@
 
     // Create video card HTML
     function createVideoCard(video, category) {
+      const isTikTok = video.platform === 'tiktok';
+
+      if (isTikTok) {
+        const thumb = video.customThumbnail || '';
+        const safeTitle = (video.title || '').replace(/"/g, '&quot;');
+        return `
+          <div class="video-card" data-category="${category}">
+            <a href="${video.link}" target="_blank" rel="noopener" class="video-thumbnail" title="${safeTitle}" style="cursor: pointer; display: block; background: #111;">
+              <img src="${thumb}" alt="${safeTitle}" onerror="this.style.display='none';">
+              <div class="play-overlay">
+                <div class="play-button"></div>
+              </div>
+            </a>
+            <div class="video-title">${video.title}</div>
+          </div>
+        `;
+      }
+
+      // YouTube
       let videoId = video.id;
       if (video.link) {
         const match = video.link.match(/[?&]v=([^&]+)/);
         if (match) videoId = match[1];
       }
 
+      const thumbUrl = video.customThumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
       return `
         <div class="video-card" data-category="${category}">
           <div class="video-thumbnail" data-video-id="${videoId}" title="${video.title}" onclick="openVideoModal('${videoId}')" style="cursor: pointer;">
-            <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg"
+            <img src="${thumbUrl}"
                  alt="${video.title}"
                  onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
             <div class="play-overlay">
