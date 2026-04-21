@@ -491,6 +491,33 @@
       display: block;
     }
 
+    .mixing-subtab-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .mixing-subtab-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .mixing-subtab-btn.active {
+      background: #926bff;
+      color: #fff;
+      border-color: #926bff;
+    }
+
+    .mixing-subtab-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
     @media (max-width: 900px) {
       .admin-container {
         padding: 20px;
@@ -570,10 +597,14 @@
         <div class="tab-content" id="tab-mixing">
           <div class="admin-section">
             <h3>Mixing Portfolio 動画管理</h3>
+            <div class="mixing-subtab-bar" id="mixingSubtabBar">
+              <button class="mixing-subtab-btn active" data-subtab="full" onclick="switchMixingSubtab('full')">FULL</button>
+              <button class="mixing-subtab-btn" data-subtab="short" onclick="switchMixingSubtab('short')">short</button>
+            </div>
             <div class="video-list" id="mixingVideoList"></div>
 
             <div class="add-form">
-              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
+              <h4 id="newVideoFormHeading" style="color: #fff; margin-bottom: 10px;">新規追加 (FULL)</h4>
               <input type="text" id="newTitle" placeholder="タイトル">
               <input type="text" id="newYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <input type="text" id="newThumbnail" placeholder="カスタムサムネイル（任意）">
@@ -674,6 +705,10 @@
         <input type="text" id="editTitle" placeholder="タイトル">
         <input type="text" id="editYoutubeUrl" placeholder="YouTubeのURL">
         <input type="text" id="editThumbnail" placeholder="カスタムサムネイル（任意）">
+        <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; color: #ccc; font-size: 14px;">
+          <input type="checkbox" id="editIsShort">
+          Short動画として扱う
+        </label>
         <div class="modal-buttons">
           <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
           <button class="btn-save" onclick="saveEdit()">保存</button>
@@ -748,6 +783,20 @@
     const ANIMATION3D_STORAGE_KEY = 'portfolio_3d_animation';
     const PLANNING_STORAGE_KEY = 'portfolio_planning';
     const TOP_STORAGE_KEY = 'portfolio_top_videos';
+    const MIXING_SUBTAB_KEY = 'admin_mixing_subtab';
+    let activeMixingSubtab = 'full'; // 'full' | 'short'
+
+    function getCurrentSubtabFilter() {
+      return activeMixingSubtab === 'short'
+        ? (v => v.isShort === true)
+        : (v => !v.isShort);
+    }
+
+    function toAbsoluteIndex(relativeIndex) {
+      const filtered = videos.filter(getCurrentSubtabFilter());
+      const target = filtered[relativeIndex];
+      return target ? videos.indexOf(target) : -1;
+    }
 
     // デフォルトの動画データ
     const defaultVideos = [
@@ -886,6 +935,7 @@
       document.getElementById('adminPanel').style.display = 'block';
       renderTopList();
       renderVideoList();
+      restoreMixingSubtab();
       render3dList();
       renderMusicList();
       renderPlanningList();
@@ -897,12 +947,15 @@
       const list = document.getElementById('mixingVideoList');
       list.innerHTML = '';
 
-      if (videos.length === 0) {
-        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">動画がまだありません</p>';
+      const filtered = videos.filter(getCurrentSubtabFilter());
+
+      if (filtered.length === 0) {
+        const label = activeMixingSubtab === 'short' ? 'short' : 'FULL';
+        list.innerHTML = `<p style="color: #999; text-align: center; padding: 20px;">${label}動画がまだありません</p>`;
         return;
       }
 
-      videos.forEach((video, index) => {
+      filtered.forEach((video, index) => {
         let thumbnailId = video.id;
         if (video.link) {
           const match = video.link.match(/[?&]v=([^&]+)/);
@@ -917,7 +970,7 @@
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-number">
-            <input type="number" value="${index + 1}" min="1" max="${videos.length}" onchange="moveVideoToPosition(${index}, this.value)" title="順番を変更">
+            <input type="number" value="${index + 1}" min="1" max="${filtered.length}" onchange="moveVideoToPosition(${index}, this.value)" title="順番を変更">
           </div>
           <a href="${videoLink}" target="_blank" style="display: block;">
             <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/mqdefault.jpg'" style="cursor: pointer;">
@@ -972,7 +1025,8 @@
       const newVideo = {
         id: videoId,
         title: title,
-        link: youtubeUrl
+        link: youtubeUrl,
+        isShort: activeMixingSubtab === 'short'
       };
 
       if (thumbnail) {
@@ -995,46 +1049,72 @@
 
     // 動画削除
     async function deleteVideo(index) {
-      if (!confirm(`「${videos[index].title}」を削除しますか？`)) return;
-      const removed = videos.splice(index, 1)[0];
+      const absIdx = toAbsoluteIndex(index);
+      if (absIdx < 0) return;
+      if (!confirm(`「${videos[absIdx].title}」を削除しますか？`)) return;
+      const removed = videos.splice(absIdx, 1)[0];
       const success = await saveVideos();
       if (success) {
         renderVideoList();
         showSaveStatus();
       } else {
-        videos.splice(index, 0, removed);
+        videos.splice(absIdx, 0, removed);
       }
     }
 
-    // Mixing動画を指定位置に移動
+    // Mixing動画を指定位置に移動（filter 後の相対 index / position を絶対 index に変換）
     async function moveVideoToPosition(currentIndex, newPosition) {
-      const targetIndex = parseInt(newPosition) - 1;
-      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= videos.length || targetIndex === currentIndex) {
-        renderVideoList(); // 無効な値の場合はリセット
+      const targetRelative = parseInt(newPosition) - 1;
+      const filtered = videos.filter(getCurrentSubtabFilter());
+      if (isNaN(targetRelative) || targetRelative < 0 || targetRelative >= filtered.length || targetRelative === currentIndex) {
+        renderVideoList();
         return;
       }
 
-      const item = videos.splice(currentIndex, 1)[0];
-      videos.splice(targetIndex, 0, item);
+      const currentItem = filtered[currentIndex];
+      const currentAbs = videos.indexOf(currentItem);
+      if (currentAbs < 0) { renderVideoList(); return; }
+
+      // 現在のアイテムを取り出し
+      videos.splice(currentAbs, 1);
+
+      // 目的位置の絶対 index を再計算
+      const filteredAfter = videos.filter(getCurrentSubtabFilter());
+      let insertAbs;
+      if (targetRelative >= filteredAfter.length) {
+        insertAbs = filteredAfter.length > 0
+          ? videos.indexOf(filteredAfter[filteredAfter.length - 1]) + 1
+          : videos.length;
+      } else {
+        insertAbs = videos.indexOf(filteredAfter[targetRelative]);
+      }
+
+      videos.splice(insertAbs, 0, currentItem);
+
       const success = await saveVideos();
       if (success) {
         renderVideoList();
         showSaveStatus();
       } else {
         // ロールバック
-        const reverted = videos.splice(targetIndex, 1)[0];
-        videos.splice(currentIndex, 0, reverted);
+        const revertedIdx = videos.indexOf(currentItem);
+        if (revertedIdx >= 0) videos.splice(revertedIdx, 1);
+        videos.splice(currentAbs, 0, currentItem);
         renderVideoList();
       }
     }
 
-    // 編集モーダルを開く
+    // 編集モーダルを開く（index は filter 後の相対 index）
     function openEdit(index) {
-      editIndex = index;
-      const video = videos[index];
+      const absIdx = toAbsoluteIndex(index);
+      if (absIdx < 0) return;
+      editIndex = absIdx;
+      const video = videos[absIdx];
       document.getElementById('editTitle').value = video.title;
       document.getElementById('editYoutubeUrl').value = video.link || `https://www.youtube.com/watch?v=${video.id}`;
       document.getElementById('editThumbnail').value = video.customThumbnail || '';
+      const editIsShortEl = document.getElementById('editIsShort');
+      if (editIsShortEl) editIsShortEl.checked = video.isShort === true;
       document.getElementById('editModal').style.display = 'flex';
     }
 
@@ -1064,10 +1144,12 @@
       }
 
       const oldVideo = { ...videos[editIndex] };
+      const isShortChecked = document.getElementById('editIsShort').checked;
       videos[editIndex] = {
         id: videoId,
         title: title,
-        link: youtubeUrl
+        link: youtubeUrl,
+        isShort: isShortChecked
       };
       if (thumbnail) {
         videos[editIndex].customThumbnail = thumbnail;
@@ -2174,6 +2256,34 @@
 
     // ページ読み込み時にタブを復元
     document.addEventListener('DOMContentLoaded', restoreTab);
+
+    // Mixing サブタブ切替（FULL / short）
+    function switchMixingSubtab(name) {
+      if (name !== 'full' && name !== 'short') return;
+      activeMixingSubtab = name;
+      localStorage.setItem(MIXING_SUBTAB_KEY, name);
+
+      document.querySelectorAll('.mixing-subtab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.subtab === name);
+      });
+
+      const newFormHeading = document.getElementById('newVideoFormHeading');
+      if (newFormHeading) {
+        newFormHeading.textContent = name === 'short' ? '新規追加 (short)' : '新規追加 (FULL)';
+      }
+
+      if (typeof renderVideoList === 'function') {
+        renderVideoList();
+      }
+    }
+
+    function restoreMixingSubtab() {
+      const saved = localStorage.getItem(MIXING_SUBTAB_KEY);
+      if (saved === 'full' || saved === 'short') {
+        activeMixingSubtab = saved;
+      }
+      switchMixingSubtab(activeMixingSubtab);
+    }
 
     // ========== ここまでタブ切り替え機能 ==========
 

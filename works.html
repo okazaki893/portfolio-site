@@ -417,7 +417,14 @@
 
       <!-- Mixing Content -->
       <div class="content-section" id="section-mixing">
-        <div class="video-grid" id="mixingGrid"></div>
+        <div id="mixingFullSection">
+          <h3 style="color: #fff; margin: 16px 0 12px; font-size: 18px; font-weight: 500;">Mixing - FULL</h3>
+          <div class="video-grid" id="mixingFullGrid"></div>
+        </div>
+        <div id="mixingShortSection" style="margin-top: 32px;">
+          <h3 style="color: #fff; margin: 16px 0 12px; font-size: 18px; font-weight: 500;">Mixing - Shorts</h3>
+          <div class="video-grid" id="mixingShortGrid"></div>
+        </div>
       </div>
 
       <!-- 3D Animation Content -->
@@ -583,18 +590,26 @@
     // Render all content
     async function renderAllContent() {
       const allSection = document.getElementById('section-all');
-      const mixingSection = document.getElementById('mixingGrid');
+      const mixingFullGrid = document.getElementById('mixingFullGrid');
+      const mixingShortGrid = document.getElementById('mixingShortGrid');
+      const mixingFullWrap = document.getElementById('mixingFullSection');
+      const mixingShortWrap = document.getElementById('mixingShortSection');
       const animationSection = document.getElementById('animationGrid');
       const musicSection = document.getElementById('musicGrid');
       const planningSection = document.getElementById('planningGrid');
 
       const mixingWorks = await loadMixingWorks();
+      const mixingFull = mixingWorks.filter(v => !v.isShort);
+      const mixingShort = mixingWorks.filter(v => v.isShort === true);
       const animation3d = load3dVideos();
       const music = loadMusic();
       const planningWorks = loadPlanningWorks();
 
       // Render individual sections
-      mixingSection.innerHTML = mixingWorks.map(v => createVideoCard(v, 'mixing')).join('');
+      mixingFullGrid.innerHTML = mixingFull.map(v => createVideoCard(v, 'mixing')).join('');
+      mixingShortGrid.innerHTML = mixingShort.map(v => createVideoCard(v, 'mixing')).join('');
+      mixingFullWrap.style.display = mixingFull.length > 0 ? '' : 'none';
+      mixingShortWrap.style.display = mixingShort.length > 0 ? '' : 'none';
       animationSection.innerHTML = animation3d.map(v => createVideoCard(v, '3d')).join('');
       musicSection.innerHTML = music.map(t => createMusicCard(t)).join('');
       planningSection.innerHTML = planningWorks.map(v => createVideoCard(v, 'planning')).join('');
@@ -602,8 +617,9 @@
       // Render All section (combined)
       let allHtml = '<div class="video-grid">';
 
-      // Add mixing
-      mixingWorks.forEach(v => { allHtml += createVideoCard(v, 'mixing'); });
+      // Add mixing (FULL first, then Shorts)
+      mixingFull.forEach(v => { allHtml += createVideoCard(v, 'mixing'); });
+      mixingShort.forEach(v => { allHtml += createVideoCard(v, 'mixing'); });
       // Add 3D
       animation3d.forEach(v => { allHtml += createVideoCard(v, '3d'); });
       // Add planning
