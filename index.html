@@ -156,36 +156,32 @@
       });
     });
 
-    // Load mobile video grid
-    function loadMobileVideos() {
+    // Load mobile video grid (TOPスロットを mosaic.js と共有)
+    async function loadMobileVideos() {
       const grid = document.getElementById('mobileVideoGrid');
       if (!grid) return;
 
-      // Use the same video data from mosaic.js
-      const videos = typeof youtubeVideos !== 'undefined' ? youtubeVideos : [];
+      const slots = (typeof window.loadTopSlots === 'function') ? await window.loadTopSlots() : [];
 
       grid.innerHTML = '';
-      videos.forEach(video => {
-        let thumbnailId = video.id;
-        if (video.link) {
-          const match = video.link.match(/[?&]v=([^&]+)/);
-          if (match) thumbnailId = match[1];
-        }
-
-        const videoLink = video.link || `https://www.youtube.com/watch?v=${video.id}`;
-        const thumbnailUrl = video.customThumbnail || `https://img.youtube.com/vi/${thumbnailId}/maxresdefault.jpg`;
-        const fallbackUrl = `https://img.youtube.com/vi/${thumbnailId}/hqdefault.jpg`;
+      slots.forEach(slot => {
+        if (!slot || !slot.link) return;
+        const match = slot.link.match(/[?&]v=([^&]+)/);
+        const videoId = match ? match[1] : '';
+        const thumbnailUrl = slot.customThumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        const fallbackUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        const title = (slot.slotName || '').replace(/^スロット\d+:\s*/, '').replace(/（[^）]*）\s*$/, '');
 
         const card = document.createElement('div');
         card.className = 'mobile-video-card';
         card.innerHTML = `
-          <a href="${videoLink}" target="_blank" class="mobile-video-thumbnail">
-            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='${fallbackUrl}'">
+          <a href="${slot.link}" target="_blank" class="mobile-video-thumbnail">
+            <img src="${thumbnailUrl}" alt="${title}" onerror="this.src='${fallbackUrl}'">
             <div class="mobile-play-overlay">
               <div class="mobile-play-button"></div>
             </div>
           </a>
-          <div class="mobile-video-title">${video.title}</div>
+          <div class="mobile-video-title">${title}</div>
         `;
         grid.appendChild(card);
       });

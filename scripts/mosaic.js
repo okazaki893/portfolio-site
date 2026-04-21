@@ -26,35 +26,35 @@ const defaultTopSlots = [
 
 // 古いサムネイルパスを新しいパスに修正
 function migrateOldThumbnailPaths(slots) {
-  let updated = false;
   slots.forEach(slot => {
     if (slot.customThumbnail && slot.customThumbnail === 'onaga-saisho.jpg') {
       slot.customThumbnail = 'images/onaga-saisho.jpg';
-      updated = true;
     }
   });
-  if (updated) {
-    localStorage.setItem(TOP_STORAGE_KEY, JSON.stringify(slots));
-  }
   return slots;
 }
 
-// ローカルストレージからスロットデータを読み込み
-function loadTopSlots() {
-  const saved = localStorage.getItem(TOP_STORAGE_KEY);
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    // 新しいフォーマット（slotNameを持つ）かチェック
-    if (parsed.length > 0 && parsed[0].slotName) {
-      return migrateOldThumbnailPaths(parsed);
+// content/top_videos.json から読み込み、失敗時は defaultTopSlots にフォールバック
+async function loadTopSlots() {
+  try {
+    const r = await fetch('content/top_videos.json', { cache: 'no-store' });
+    if (r.ok) {
+      const parsed = await r.json();
+      if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].slotName) {
+        return migrateOldThumbnailPaths(parsed);
+      }
     }
-    // 古いフォーマットの場合はデフォルトを使用
+  } catch (e) {
+    console.warn('loadTopSlots fetch failed, using defaults', e);
   }
   return defaultTopSlots;
 }
 
+// index.html のモバイル表示から参照するため global に公開
+window.loadTopSlots = loadTopSlots;
+
 // Initialize mosaic gallery with slot-based layout
-function initMosaicGallery() {
+async function initMosaicGallery() {
   const gallery = document.getElementById('mosaicGallery');
   if (!gallery) return;
 
@@ -64,7 +64,7 @@ function initMosaicGallery() {
   const unit = containerHeight / 3; // 1ユニット = 1行の高さ
 
   // スロットデータを読み込み
-  const topSlots = loadTopSlots();
+  const topSlots = await loadTopSlots();
 
   // 固定レイアウト: スロットインデックス, x, y, w, h (単位はunit)
   // インデックスはtopSlotsの配列インデックスに対応

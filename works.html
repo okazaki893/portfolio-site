@@ -519,10 +519,18 @@
       { id: 'UAV_q6xKtu4', title: 'ドキシック/かわいいJKふぁん倶楽部', link: 'https://www.youtube.com/watch?v=UAV_q6xKtu4' }
     ];
 
-    // Load data from localStorage or use defaults
-    function loadMixingWorks() {
-      const saved = localStorage.getItem('portfolio_videos');
-      return saved ? JSON.parse(saved) : defaultMixingWorks;
+    // Load data from content/videos.json (正本)、失敗時は defaults へフォールバック
+    async function loadMixingWorks() {
+      try {
+        const r = await fetch('content/videos.json', { cache: 'no-store' });
+        if (r.ok) {
+          const parsed = await r.json();
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.warn('loadMixingWorks fetch failed, using defaults', e);
+      }
+      return defaultMixingWorks;
     }
 
     function load3dVideos() {
@@ -573,14 +581,14 @@
     }
 
     // Render all content
-    function renderAllContent() {
+    async function renderAllContent() {
       const allSection = document.getElementById('section-all');
       const mixingSection = document.getElementById('mixingGrid');
       const animationSection = document.getElementById('animationGrid');
       const musicSection = document.getElementById('musicGrid');
       const planningSection = document.getElementById('planningGrid');
 
-      const mixingWorks = loadMixingWorks();
+      const mixingWorks = await loadMixingWorks();
       const animation3d = load3dVideos();
       const music = loadMusic();
       const planningWorks = loadPlanningWorks();
