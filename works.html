@@ -448,7 +448,7 @@
       <!-- Mixing Content -->
       <div class="content-section" id="section-mixing">
         <div class="mixing-subtab-bar">
-          <button class="mixing-subtab-btn active" data-subtab="full" onclick="switchMixingSubtabPublic('full')">FULL</button>
+          <button class="mixing-subtab-btn active" data-subtab="full" onclick="switchMixingSubtabPublic('full')">Full</button>
           <button class="mixing-subtab-btn" data-subtab="short" onclick="switchMixingSubtabPublic('short')">short</button>
         </div>
         <div id="mixingFullSection">
@@ -641,7 +641,7 @@
       const emptyMsg = label => `<p style="color: #999; padding: 40px; text-align: center;">${label}動画はまだありません</p>`;
       mixingFullGrid.innerHTML = mixingFull.length > 0
         ? mixingFull.map(v => createVideoCard(v, 'mixing')).join('')
-        : emptyMsg('FULL');
+        : emptyMsg('Full');
       mixingShortGrid.innerHTML = mixingShort.length > 0
         ? mixingShort.map(v => createVideoCard(v, 'mixing')).join('')
         : emptyMsg('Short');

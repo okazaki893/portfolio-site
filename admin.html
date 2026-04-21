@@ -598,13 +598,13 @@
           <div class="admin-section">
             <h3>Mixing Portfolio 動画管理</h3>
             <div class="mixing-subtab-bar" id="mixingSubtabBar">
-              <button class="mixing-subtab-btn active" data-subtab="full" onclick="switchMixingSubtab('full')">FULL</button>
+              <button class="mixing-subtab-btn active" data-subtab="full" onclick="switchMixingSubtab('full')">Full</button>
               <button class="mixing-subtab-btn" data-subtab="short" onclick="switchMixingSubtab('short')">short</button>
             </div>
             <div class="video-list" id="mixingVideoList"></div>
 
             <div class="add-form">
-              <h4 id="newVideoFormHeading" style="color: #fff; margin-bottom: 10px;">新規追加 (FULL)</h4>
+              <h4 id="newVideoFormHeading" style="color: #fff; margin-bottom: 10px;">新規追加 (Full)</h4>
               <input type="text" id="newTitle" placeholder="タイトル">
               <input type="text" id="newYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
               <input type="text" id="newThumbnail" placeholder="カスタムサムネイル（任意）">
@@ -950,7 +950,7 @@
       const filtered = videos.filter(getCurrentSubtabFilter());
 
       if (filtered.length === 0) {
-        const label = activeMixingSubtab === 'short' ? 'short' : 'FULL';
+        const label = activeMixingSubtab === 'short' ? 'short' : 'Full';
         list.innerHTML = `<p style="color: #999; text-align: center; padding: 20px;">${label}動画がまだありません</p>`;
         return;
       }
@@ -2269,7 +2269,7 @@
 
       const newFormHeading = document.getElementById('newVideoFormHeading');
       if (newFormHeading) {
-        newFormHeading.textContent = name === 'short' ? '新規追加 (short)' : '新規追加 (FULL)';
+        newFormHeading.textContent = name === 'short' ? '新規追加 (short)' : '新規追加 (Full)';
       }
 
       if (typeof renderVideoList === 'function') {
