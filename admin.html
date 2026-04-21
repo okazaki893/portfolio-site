@@ -990,9 +990,9 @@
 
     // YouTubeのURLから動画IDを抽出
     function extractVideoId(url) {
-      // 様々なYouTube URLパターンに対応
+      // 様々なYouTube URLパターンに対応（Shorts URL 形式 youtube.com/shorts/VIDEOID も含む）
       const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([^&\n?#]+)/,
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([^&\n?#]+)/,
         /^([a-zA-Z0-9_-]{11})$/  // 動画IDのみの場合
       ];
 
