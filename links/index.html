@@ -215,53 +215,125 @@
       line-height: 1.5;
     }
 
-    /* Link Buttons */
+    /* Link Items (horizontal icon row) */
     .links {
       width: 100%;
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
     }
 
-    .link-button {
+    .link-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .link-icon-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      width: 100%;
-      padding: 16px 24px;
       background: transparent;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50px;
-      text-decoration: none;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      transition: all 0.2s ease;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
 
-    .link-button:hover {
+    .link-item:hover .link-icon-circle {
       background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-3px);
     }
 
-    .link-button:hover svg {
+    .link-icon-circle svg {
+      width: 22px;
+      height: 22px;
       fill: #fff;
-    }
-
-    .link-button svg {
-      width: 20px;
-      height: 20px;
-      fill: #fff;
-      flex-shrink: 0;
       transition: fill 0.2s ease;
     }
 
-    .link-button .link-icon {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
+    .link-icon-circle .link-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .link-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: rgba(255, 255, 255, 0.7);
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+
+    .link-item:hover .link-label {
+      color: #fff;
+    }
+
+    @media (max-width: 400px) {
+      .links {
+        gap: 10px;
+      }
+      .link-icon-circle {
+        width: 48px;
+        height: 48px;
+      }
+      .link-icon-circle svg {
+        width: 20px;
+        height: 20px;
+      }
+      .link-icon-circle .link-icon {
+        width: 22px;
+        height: 22px;
+      }
+      .link-label {
+        font-size: 10px;
+        letter-spacing: 0.3px;
+      }
+    }
+
+    /* Bio / Portfolio (left-aligned prose) */
+    .bio {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 13px;
+      line-height: 1.95;
+      color: rgba(255, 255, 255, 0.62);
+      text-align: left;
+      letter-spacing: 0.3px;
+      line-break: strict;
+    }
+
+    .bio p {
+      margin: 0;
+    }
+
+    .bio .nb {
+      white-space: nowrap;
+    }
+
+    .bio a {
+      color: rgba(255, 255, 255, 0.95);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .bio a:hover {
+      color: #fff;
+      border-color: #fff;
     }
 
     /* Portfolio Link */
@@ -403,49 +475,68 @@
       <div class="profile-icon">
         <img src="../images/links-page-icon.png" alt="岡崎有希">
       </div>
-      <h1 class="profile-name">岡崎有希</h1>
-      <p class="profile-bio">Mixing / 3D Animation / Music / Planning / Vibe Coding</p>
+      <h1 class="profile-name">岡崎有希/Yuki Okazaki</h1>
     </div>
 
     <!-- Links -->
     <div class="links">
       <!-- Portfolio -->
-      <a href="/" class="link-button">
-        <img src="../images/favicon.png" alt="" class="link-icon">
-        Portfolio
+      <a href="/" class="link-item">
+        <span class="link-icon-circle">
+          <img src="../images/favicon.png" alt="" class="link-icon">
+        </span>
+        <span class="link-label">Portfolio</span>
       </a>
 
       <!-- X (okazaki_yuki01) -->
-      <a href="https://x.com/okazaki_yuki01" target="_blank" class="link-button">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-        X (Dev)
+      <a href="https://x.com/okazaki_yuki01" target="_blank" class="link-item">
+        <span class="link-icon-circle">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </span>
+        <span class="link-label">X (Main)</span>
       </a>
 
       <!-- X (DOSUKOI_JK) -->
-      <a href="https://x.com/DOSUKOI_JK" target="_blank" class="link-button">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-        X (Mix)
+      <a href="https://x.com/DOSUKOI_JK" target="_blank" class="link-item">
+        <span class="link-icon-circle">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </span>
+        <span class="link-label">X (Sub)</span>
       </a>
 
       <!-- Discord -->
-      <a href="#" class="link-button" onclick="copyDiscordId(event)">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-        </svg>
-        Discord
+      <a href="#" class="link-item" onclick="copyDiscordId(event)">
+        <span class="link-icon-circle">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+        </span>
+        <span class="link-label">Discord</span>
       </a>
 
       <!-- BOOTH -->
-      <a href="https://okazakiyuki.booth.pm/" target="_blank" class="link-button">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 2h18a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm4 4v12h4c1.5 0 2.7-.4 3.4-1.1.7-.7 1.1-1.6 1.1-2.6 0-.8-.2-1.4-.6-2-.4-.5-.9-.9-1.6-1.1.5-.2 1-.6 1.3-1 .3-.5.5-1 .5-1.7 0-1-.4-1.8-1.1-2.4C13.3 6.4 12.2 6 10.8 6H7zm3 2.5h1.2c.5 0 .9.1 1.2.4.3.2.4.5.4.9s-.1.7-.4.9c-.3.2-.7.4-1.2.4H10V8.5zm0 5h1.5c.6 0 1 .1 1.3.4.3.3.5.6.5 1s-.2.8-.5 1c-.3.3-.8.4-1.3.4H10v-2.8z"/>
-        </svg>
-        BOOTH
+      <a href="https://okazakiyuki.booth.pm/" target="_blank" class="link-item">
+        <span class="link-icon-circle">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 2h18a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm4 4v12h4c1.5 0 2.7-.4 3.4-1.1.7-.7 1.1-1.6 1.1-2.6 0-.8-.2-1.4-.6-2-.4-.5-.9-.9-1.6-1.1.5-.2 1-.6 1.3-1 .3-.5.5-1 .5-1.7 0-1-.4-1.8-1.1-2.4C13.3 6.4 12.2 6 10.8 6H7zm3 2.5h1.2c.5 0 .9.1 1.2.4.3.2.4.5.4.9s-.1.7-.4.9c-.3.2-.7.4-1.2.4H10V8.5zm0 5h1.5c.6 0 1 .1 1.3.4.3.3.5.6.5 1s-.2.8-.5 1c-.3.3-.8.4-1.3.4H10v-2.8z"/>
+          </svg>
+        </span>
+        <span class="link-label">BOOTH</span>
       </a>
+    </div>
+
+    <!-- Bio / Portfolio -->
+    <div class="bio">
+      <p>ボーカルミックスを軸に、<a href="https://www.youtube.com/c/sixfonia" target="_blank">シクフォニ</a>、<a href="https://www.youtube.com/@dollreq_info" target="_blank">どるれく-Doll's Requiem-</a>、<a href="https://www.youtube.com/channel/UC8XFEcGcHz6jXcaWQqfZrlA" target="_blank">ちょこらび</a>、<a href="https://www.youtube.com/@minu_1024" target="_blank">みぬた</a>など多くのアーティストを手がける。</p>
+      <p>ボーカルミックス以外でも、歌い手である<a href="https://www.youtube.com/@613lb/videos" target="_blank">Sekai</a>や<a href="https://www.youtube.com/@tuggt_" target="_blank">つぐ</a>の活動立ち上げから、YouTuberの<a href="https://www.youtube.com/@KUN1234" target="_blank">KUN</a>主催の<a href="https://www.youtube.com/@%E3%81%AB%E3%81%A8%E3%81%8F%E3%82%89/shorts" target="_blank">ニート部クラフト</a>の3Dショートアニメーション制作まで幅広く携わる。</p>
+      <p>「人と人と人を繋げて、面白いものをつくりたい」をコンセプトに、<a href="https://www.youtube.com/channel/UC_P7NBqY_sWRjWcGeUWMVWA" target="_blank">椎乃味醂</a>が主宰する<a href="https://www.studiognu.org/ja" target="_blank">StudioGNU</a>に所属。DJイベント<a href="https://studiognu.zaiko.io/e/harmony2026" target="_blank">ハーモニー</a>、2025年8月の<a href="https://nighthike.net/" target="_blank">NIGHT HIKE</a>、<a href="https://www.youtube.com/watch?v=VDq39kxN8NQ&amp;t=1s" target="_blank">YouTube Music Weekend</a>では撮影スタッフを担当。</p>
+      <p>インターネットの音楽が現実空間へと拡張し、その場でしか聴けない一回性のある音楽と出会う、<a href="https://hiroshi-sakuma.com/" target="_blank">佐久間洋司</a>主催の体験型企画展、<a href="https://x.com/n_storytelling" target="_blank">共に在る音楽</a>。来場者も手を触れて創作に加わる空間で、展示をサポート。</p>
+      <p>MV制作・作曲・オケ制作を手がけるチーム<a href="https://ql.studio/" target="_blank">Studio Quantum Leap</a>を創設。同チーム主催の<span class="nb">歌い手ライブ</span><a href="https://x.com/TRANSITION_QL" target="_blank">TRANSITION</a>ではプロデュースと制作進行を担い、渋谷<span class="nb">Star lounge</span>での公演はチケット完売。</p>
+      <p>現在は動画編集チーム<a href="https://www.youtube.com/playlist?list=PLiq3jnUgRbUJBKMhqZZVcHMNgNCVFKXIa" target="_blank">Atelier Integral</a>の副代表を務める。</p>
     </div>
 
     <!-- Footer -->
