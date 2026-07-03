@@ -2,18 +2,18 @@
   {
     "cat": "produce",
     "role": "Produce",
-    "title": "TRANSITION / 歌い手ライブ",
-    "link": "https://ql.studio/transition",
-    "img": "images/transition-flyer.jpg",
-    "added": "2025-08-20"
-  },
-  {
-    "cat": "produce",
-    "role": "Produce",
     "title": "ドキシック/かわいいJKふぁん倶楽部",
     "link": "https://www.youtube.com/watch?v=UAV_q6xKtu4",
     "id": "UAV_q6xKtu4",
     "added": "2026-07-03"
+  },
+  {
+    "cat": "produce",
+    "role": "Produce",
+    "title": "TRANSITION / 歌い手ライブ",
+    "link": "https://ql.studio/transition",
+    "img": "images/transition-flyer.jpg",
+    "added": "2025-08-20"
   },
   {
     "cat": "live",
