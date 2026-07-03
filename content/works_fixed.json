@@ -1,5 +1,16 @@
 [
   {
+    "cats": [
+      "mix",
+      "produce"
+    ],
+    "role": "Produce",
+    "title": "相対的な幸せに飽きたから/月並みな青に纏われたい、ね。",
+    "link": "https://www.youtube.com/watch?v=2CQBHrpudio",
+    "id": "2CQBHrpudio",
+    "added": "2026-07-03"
+  },
+  {
     "cat": "live",
     "role": "Live",
     "title": "YouTube Music Weekend / 撮影",
