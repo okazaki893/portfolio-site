@@ -26,7 +26,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry1.outputs.page_url || steps.deployment_retry2.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,6 +38,24 @@ jobs:
         with:
           # Upload entire repository
           path: '.'
+      # deploy-pages は GitHub Pages 側の一時障害で間欠的に失敗するため、
+      # 失敗しても待機を挟んで最大3回まで自動で再試行する（最後の1回のみ失敗を致命扱い）。
       - name: Deploy to GitHub Pages
         id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - name: Wait before retry 1
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 20
+      - name: Deploy to GitHub Pages (retry 1)
+        id: deployment_retry1
+        if: steps.deployment.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - name: Wait before retry 2
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry1.outcome == 'failure'
+        run: sleep 40
+      - name: Deploy to GitHub Pages (retry 2)
+        id: deployment_retry2
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry1.outcome == 'failure'
         uses: actions/deploy-pages@v4
