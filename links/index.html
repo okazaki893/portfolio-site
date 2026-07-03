@@ -52,7 +52,9 @@
   .starlayer.far{animation:drift 150s linear infinite}
   .starlayer.near{animation:drift 95s linear infinite}
   .stars i{position:absolute;border-radius:50%;background:#F4F4F2;opacity:var(--o,.4)}
+  .stars i.tw{animation:tw var(--d,5s) ease-in-out var(--dl,0s) infinite}
   @keyframes drift{from{transform:translateY(0)}to{transform:translateY(-4%)}}
+  @keyframes tw{0%,100%{opacity:calc(var(--o,.4) * .3)}50%{opacity:calc(var(--o,.4) * 2.3)}}
   .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 
@@ -66,17 +68,14 @@
     padding:calc(env(safe-area-inset-top) + clamp(60px,16vw,100px)) clamp(26px,7vw,40px) clamp(8px,3vw,16px);
     overflow:visible}
   /* the single, very quiet four-point star breathing behind the wordmark */
+  /* 背後の四芒星は一度だけフェードインして静止(震え・呼吸なし) */
   .hero-star{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
     width:clamp(104px,30vw,126px);height:clamp(104px,30vw,126px);z-index:0;pointer-events:none;
-    animation:starIn 1.3s cubic-bezier(.2,.7,.2,1) both, starBreath 7.5s ease-in-out 1.3s infinite}
+    opacity:.46;animation:starIn 1.4s cubic-bezier(.2,.7,.2,1) both}
   .hero-star svg{width:100%;height:100%;display:block}
   @keyframes starIn{
     0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
-    100%{opacity:.30;transform:translate(-50%,-50%) scale(.94)}
-  }
-  @keyframes starBreath{
-    0%,100%{opacity:.30;transform:translate(-50%,-50%) scale(.94)}
-    50%{opacity:.72;transform:translate(-50%,-50%) scale(1.03)}
+    100%{opacity:.46;transform:translate(-50%,-50%) scale(1)}
   }
 
   .hero-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
@@ -216,6 +215,7 @@
     html{scroll-behavior:auto}
     .hero-star{animation:none;opacity:.55}
     .starlayer{animation:none!important}
+    .stars i.tw{animation:none!important}
     .rv,.hero-inner .he{transition:none!important}
     .rv{opacity:1;transform:none}
     .hero-inner .he{opacity:1;transform:none;filter:none}
@@ -328,19 +328,25 @@
         const y=(Math.random()*100).toFixed(3);
         const s=(cfg.min+Math.random()*(cfg.max-cfg.min)).toFixed(2);
         const o=(cfg.oMin+Math.random()*(cfg.oMax-cfg.oMin)).toFixed(2);
+        const twinkle=!STILL&&!RM&&Math.random()<cfg.tw;
         const star=document.createElement('i');
         star.style.left=x+'%';
         star.style.top=y+'%';
         star.style.width=s+'px';
         star.style.height=s+'px';
         star.style.setProperty('--o',o);
+        if(twinkle){
+          star.className='tw';
+          star.style.setProperty('--d',(2.8+Math.random()*4.5).toFixed(2)+'s');
+          star.style.setProperty('--dl',(Math.random()*5).toFixed(2)+'s');
+        }
         frag.appendChild(star);
       }
       layer.appendChild(frag);
       host.appendChild(layer);
     };
-    build('far',72,{min:.6,max:1.3,oMin:.14,oMax:.34});
-    build('near',34,{min:1.1,max:2.1,oMin:.22,oMax:.5});
+    build('far',72,{min:.6,max:1.3,oMin:.14,oMax:.34,tw:.5});
+    build('near',34,{min:1.1,max:2.1,oMin:.22,oMax:.5,tw:.72});
   })();
 
   // hero reveal on load
