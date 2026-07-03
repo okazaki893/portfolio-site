@@ -185,8 +185,6 @@
           <button class="btn ghost sm" data-reload="videos">再読込</button>
         </div>
       </div>
-      <div class="list" id="list-videos"></div>
-
       <div class="sheet">
         <div class="sheet-head">Add — Mix</div>
         <div class="sheet-body">
@@ -203,7 +201,6 @@
             <input type="text" id="vThumb" placeholder="https://...">
             <span class="hint">TikTokはサムネイル必須（未入力時はoEmbedで自動取得を試行）</span>
           </div>
-          <label class="check"><input type="checkbox" id="vShort">Short動画として扱う（shorts URLで自動ON）</label>
           <div class="field full">
             <label>追加タグ（Mixに加えて該当する場合・複数選択可）</label>
             <div class="tagset" id="vExtraCats">
@@ -217,7 +214,9 @@
           <button class="btn" id="vAddBtn">追加する</button>
         </div>
       </div>
-      <p class="note" style="margin-top:12px">追加時に本日の日付が added に自動記録され、Newsの「Works に追加しました」に反映されます。</p>
+      <p class="note" style="margin-top:12px">追加時に本日の日付が added に自動記録され、Newsの「Works に追加しました」に反映されます。Full / Short はURLから自動判定されます（/shorts/・TikTokはShort、それ以外はFull。修正は各行の編集から）。</p>
+
+      <div class="list" id="list-videos"></div>
     </section>
 
     <!-- ===== works ===== -->
@@ -231,8 +230,6 @@
           <button class="btn ghost sm" data-reload="works">再読込</button>
         </div>
       </div>
-      <div class="list" id="list-works"></div>
-
       <div class="sheet">
         <div class="sheet-head">Add — Fixed Work</div>
         <div class="sheet-body">
@@ -276,6 +273,8 @@
         </div>
       </div>
       <p class="note" style="margin-top:12px">画像パスと動画IDが両方空の場合はサムネイルなしで表示されます。added は追加時に自動記録されます。</p>
+
+      <div class="list" id="list-works"></div>
     </section>
 
     <!-- ===== news ===== -->
@@ -289,12 +288,6 @@
           <button class="btn ghost sm" data-reload="news">再読込</button>
         </div>
       </div>
-      <div class="list" id="list-news"></div>
-
-      <h3 class="sub-title">自動追加分 — 作品の added から自動生成<span class="count" id="count-autonews"></span></h3>
-      <p class="note" style="margin:0 0 10px">Mix作品 / Produce・Live作品を追加すると、その added 日付から公開Newsページに自動で「〜を Works に追加しました」として掲載されます（下は確認用・ここでは編集できません）。文面や日付を変えたい場合は各作品側の added・タイトルを編集してください。</p>
-      <div class="list" id="list-autonews"></div>
-
       <div class="sheet">
         <div class="sheet-head">Add — News</div>
         <div class="sheet-body">
@@ -324,6 +317,12 @@
         </div>
       </div>
       <p class="note" style="margin-top:12px">作品追加の自動News（added由来）はページ側で生成されるため、ここには手動のお知らせのみ登録します。</p>
+
+      <div class="list" id="list-news"></div>
+
+      <h3 class="sub-title">自動追加分 — 作品の added から自動生成<span class="count" id="count-autonews"></span></h3>
+      <p class="note" style="margin:0 0 10px">Mix作品 / Produce・Live作品を追加すると、その added 日付から公開Newsページに自動で「〜を Works に追加しました」として掲載されます（下は確認用・ここでは編集できません）。文面や日付を変えたい場合は各作品側の added・タイトルを編集してください。</p>
+      <div class="list" id="list-autonews"></div>
     </section>
 
     <!-- ===== settings ===== -->
@@ -987,7 +986,6 @@ async function addVideo() {
   const url = $('vUrl').value.trim();
   const title = $('vTitle').value.trim();
   let thumb = $('vThumb').value.trim();
-  const isShort = $('vShort').checked;
 
   const parsed = parseMediaUrl(url);
   if (!parsed) { alert('有効なYouTubeまたはTikTokのURLを入力してください'); return; }
@@ -1003,7 +1001,8 @@ async function addVideo() {
   }
 
   let rec;
-  try { rec = buildVideoRecord({ url: url, title: finalTitle, thumb: thumb, isShort: isShort, extraCats: getCats('vExtraCats') }); }
+  // isShort:null → buildVideoRecord内でURLから自動判定（/shorts/・TikTok=Short、他=Full）
+  try { rec = buildVideoRecord({ url: url, title: finalTitle, thumb: thumb, isShort: null, extraCats: getCats('vExtraCats') }); }
   catch (e) { alert(e.message); return; }
 
   FILES.videos.data.unshift(rec);
@@ -1011,7 +1010,7 @@ async function addVideo() {
   if (!ok) { FILES.videos.data.shift(); render('videos'); return; }
   render('videos');
   $('vUrl').value = ''; $('vTitle').value = ''; $('vThumb').value = '';
-  $('vShort').checked = false; $('vParse').textContent = '';
+  $('vParse').textContent = '';
   setCats('vExtraCats', []);
 }
 
@@ -1372,8 +1371,7 @@ $('vUrl').addEventListener('input', () => {
   const p = parseMediaUrl($('vUrl').value.trim());
   const note = $('vParse');
   if (!p) { note.textContent = $('vUrl').value.trim() ? '未対応のURL形式です' : ''; return; }
-  note.textContent = (p.platform === 'tiktok' ? 'TikTok' : 'YouTube') + ' / ID: ' + p.id + (p.isShort ? ' / Short' : '');
-  $('vShort').checked = p.isShort;
+  note.textContent = (p.platform === 'tiktok' ? 'TikTok' : 'YouTube') + ' / ID: ' + p.id + ' / ' + (p.isShort ? 'Short' : 'Full') + '（自動判定）';
 });
 /* works: YouTubeリンクからID自動抽出 */
 $('wLink').addEventListener('input', () => {
