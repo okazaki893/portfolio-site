@@ -264,7 +264,7 @@
     const a=document.createElement('a');
     a.className='card rv'+(STILL?' in':'');
     a.href=w.link;a.target='_blank';a.rel='noopener';
-    a.dataset.cat=w.cat;
+    a.dataset.cats=((w.cats&&w.cats.length)?w.cats:(w.cat?[w.cat]:[])).join(' ');
     if(w.sub)a.dataset.sub=w.sub;
     a.style.transitionDelay=(Math.min(i,11)*55)+'ms';
     const frame=document.createElement('div');
@@ -320,8 +320,10 @@
     document.querySelectorAll('#subtabs .subtab').forEach(b=>b.classList.toggle('on',b.dataset.sub===currentSub));
     let visible=0;
     document.querySelectorAll('#archive .card').forEach(c=>{
-      let show=(f==='all'||c.dataset.cat===f);
-      if(show&&f==='mix'&&currentSub!=='all')show=(c.dataset.sub===currentSub);
+      const cats=(c.dataset.cats||'').split(' ').filter(Boolean);
+      let show=(f==='all'||cats.includes(f));
+      // Full/Short区分はsubを持つ動画カードにのみ適用（横断タグの静止カードは常に表示）
+      if(show&&f==='mix'&&currentSub!=='all'&&c.dataset.sub)show=(c.dataset.sub===currentSub);
       c.style.display=show?'':'none';
       if(show)visible++;
     });
@@ -338,7 +340,8 @@
       loadJson('content/works_fixed.json')
     ]);
     const mixes=(Array.isArray(pool)?pool:[]).map(v=>({
-      cat:'mix',
+      // 動画は常にmix。produce/live等の追加タグがあれば両テーブルに出す
+      cats:(Array.isArray(v.cats)&&v.cats.length)?v.cats:['mix'],
       sub:v.isShort?'short':'full',
       role:v.isShort?'Mix / Short':'Mix / Full',
       title:v.title,
@@ -346,7 +349,11 @@
       id:ytId(v),
       thumb:v.customThumbnail||null
     }));
-    const works=[...(Array.isArray(fixedPool)?fixedPool:[]),...mixes];
+    // works_fixed側は 新cats配列 / 旧cat単一 の両対応で正規化
+    const fixed=(Array.isArray(fixedPool)?fixedPool:[]).map(w=>Object.assign({},w,{
+      cats:(Array.isArray(w.cats)&&w.cats.length)?w.cats:(w.cat?[w.cat]:[])
+    }));
+    const works=[...fixed,...mixes];
     if(works.length===0){
       const p=document.createElement('p');
       p.className='empty';p.textContent='No works yet.';

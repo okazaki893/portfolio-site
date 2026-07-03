@@ -115,6 +115,8 @@
   .field .hint{font-size:10.5px;color:var(--faint);letter-spacing:.03em;margin-top:4px;opacity:.85}
   .check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);letter-spacing:.04em;padding-top:16px}
   .check input{width:14px;height:14px;accent-color:#F4F4F2;cursor:pointer}
+  .tagset{display:flex;flex-wrap:wrap;gap:4px 18px;padding-top:4px}
+  .tagset .check{padding-top:6px}
   .sheet-foot{padding:0 20px 20px;display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
   .parse-note{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-right:auto;min-height:1.4em}
 
@@ -199,6 +201,13 @@
             <span class="hint">TikTokはサムネイル必須（未入力時はoEmbedで自動取得を試行）</span>
           </div>
           <label class="check"><input type="checkbox" id="vShort">Short動画として扱う（shorts URLで自動ON）</label>
+          <div class="field full">
+            <label>追加タグ（Mixに加えて該当する場合・複数選択可）</label>
+            <div class="tagset" id="vExtraCats">
+              <label class="check"><input type="checkbox" value="produce">Produce</label>
+              <label class="check"><input type="checkbox" value="live">Live</label>
+            </div>
+          </div>
         </div>
         <div class="sheet-foot">
           <span class="parse-note" id="vParse"></span>
@@ -224,12 +233,13 @@
       <div class="sheet">
         <div class="sheet-head">Add — Fixed Work</div>
         <div class="sheet-body">
-          <div class="field">
-            <label for="wCat">カテゴリ</label>
-            <select id="wCat">
-              <option value="produce">produce</option>
-              <option value="live">live</option>
-            </select>
+          <div class="field full">
+            <label>カテゴリ（複数選択可・付けた全テーブルに表示）</label>
+            <div class="tagset" id="wCats">
+              <label class="check"><input type="checkbox" value="mix">Mix</label>
+              <label class="check"><input type="checkbox" value="produce" checked>Produce</label>
+              <label class="check"><input type="checkbox" value="live">Live</label>
+            </div>
           </div>
           <div class="field">
             <label for="wRole">表示ロール</label>
@@ -356,6 +366,13 @@
         <input type="text" id="evAdded" placeholder="2026-07-03">
       </div>
       <label class="check"><input type="checkbox" id="evShort">Short動画として扱う</label>
+      <div class="field full">
+        <label>追加タグ（Mixに加えて該当する場合・複数選択可）</label>
+        <div class="tagset" id="evExtraCats">
+          <label class="check"><input type="checkbox" value="produce">Produce</label>
+          <label class="check"><input type="checkbox" value="live">Live</label>
+        </div>
+      </div>
     </div>
     <div class="dlg-foot">
       <button class="btn ghost" data-close="dlgVideo">キャンセル</button>
@@ -368,12 +385,13 @@
   <div class="dlg">
     <h3>Produce / Live 作品を編集</h3>
     <div class="grid">
-      <div class="field">
-        <label for="ewCat">カテゴリ</label>
-        <select id="ewCat">
-          <option value="produce">produce</option>
-          <option value="live">live</option>
-        </select>
+      <div class="field full">
+        <label>カテゴリ（複数選択可・付けた全テーブルに表示）</label>
+        <div class="tagset" id="ewCats">
+          <label class="check"><input type="checkbox" value="mix">Mix</label>
+          <label class="check"><input type="checkbox" value="produce">Produce</label>
+          <label class="check"><input type="checkbox" value="live">Live</label>
+        </div>
       </div>
       <div class="field">
         <label for="ewRole">表示ロール</label>
@@ -541,8 +559,30 @@ async function fetchTikTokOembed(url) {
   return { title: data.title || '', thumbnail_url: data.thumbnail_url || '' };
 }
 
+/* ================= タグ（複数カテゴリ）ユーティリティ ================= */
+const CAT_KEYS = ['mix', 'produce', 'live'];
+// チェックボックス群 → 選択中の値配列（CAT_KEYSの順序を保つ）
+function getCats(containerId) {
+  const set = new Set(Array.from(
+    document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked')
+  ).map(c => c.value));
+  return CAT_KEYS.filter(k => set.has(k));
+}
+// 値配列 → チェックボックス群の状態を反映
+function setCats(containerId, arr) {
+  const set = new Set(arr || []);
+  document.querySelectorAll('#' + containerId + ' input[type=checkbox]')
+    .forEach(c => { c.checked = set.has(c.value); });
+}
+// レコードから正規化した全カテゴリ配列を得る（旧cat単一 / 新cats配列 の両対応）
+function catsOf(item, fallback) {
+  if (Array.isArray(item.cats) && item.cats.length) return item.cats.slice();
+  if (item.cat) return [item.cat];
+  return fallback ? fallback.slice() : [];
+}
+
 /* ================= レコード生成（純粋関数・セルフテスト対象） ================= */
-function buildVideoRecord({ url, title, thumb, isShort }) {
+function buildVideoRecord({ url, title, thumb, isShort, extraCats }) {
   const parsed = parseMediaUrl(url);
   if (!parsed) throw new Error('有効なYouTube / TikTokのURLではありません');
   if (!title) throw new Error('タイトルは必須です');
@@ -551,15 +591,19 @@ function buildVideoRecord({ url, title, thumb, isShort }) {
   if (short) rec.isShort = true;
   if (parsed.platform === 'tiktok') rec.platform = 'tiktok';
   if (thumb) rec.customThumbnail = thumb;
+  // Mixは常時。produce / live を追加タグとして持てる（付けた場合のみ cats を保存）
+  const extras = (Array.isArray(extraCats) ? extraCats : []).filter(c => c === 'produce' || c === 'live');
+  if (extras.length) rec.cats = CAT_KEYS.filter(k => k === 'mix' || extras.includes(k));
   rec.added = todayStr(); // added自動スタンプ
   return rec;
 }
-function buildWorkRecord({ cat, role, title, link, img, id, added }) {
-  if (cat !== 'produce' && cat !== 'live') throw new Error('カテゴリはproduce / liveのいずれかです');
+function buildWorkRecord({ cats, role, title, link, img, id, added }) {
+  const list = (Array.isArray(cats) ? cats : []).filter(c => CAT_KEYS.includes(c));
+  if (list.length === 0) throw new Error('カテゴリを1つ以上選択してください（Mix / Produce / Live）');
   if (!role) throw new Error('表示ロールは必須です');
   if (!title) throw new Error('タイトルは必須です');
   if (!link) throw new Error('リンクURLは必須です');
-  const rec = { cat: cat, role: role, title: title, link: link };
+  const rec = { cats: CAT_KEYS.filter(k => list.includes(k)), role: role, title: title, link: link };
   if (img) rec.img = img;
   let vid = id;
   if (!vid) {
@@ -788,6 +832,8 @@ function renderVideos() {
     meta.appendChild(el('span', null, 'ID: ' + (v.id || '-')));
     if (isTikTok) meta.appendChild(badge('TikTok'));
     if (v.isShort) meta.appendChild(badge('Short'));
+    (Array.isArray(v.cats) ? v.cats : []).filter(c => c !== 'mix')
+      .forEach(c => meta.appendChild(badge('+' + c)));
     if (v.added) meta.appendChild(badge('added ' + v.added));
     info.appendChild(meta);
     row.appendChild(info);
@@ -823,7 +869,8 @@ function renderWorks() {
     const info = el('div', 'info');
     info.appendChild(el('h4', null, w.title || '(無題)'));
     const meta = el('div', 'meta');
-    meta.appendChild(badge(w.cat || '-'));
+    const wcats = catsOf(w);
+    (wcats.length ? wcats : ['-']).forEach(c => meta.appendChild(badge(c)));
     meta.appendChild(el('span', null, w.role || ''));
     if (w.img) meta.appendChild(el('span', null, w.img));
     if (w.id) meta.appendChild(el('span', null, 'ID: ' + w.id));
@@ -920,7 +967,7 @@ async function addVideo() {
   }
 
   let rec;
-  try { rec = buildVideoRecord({ url: url, title: finalTitle, thumb: thumb, isShort: isShort }); }
+  try { rec = buildVideoRecord({ url: url, title: finalTitle, thumb: thumb, isShort: isShort, extraCats: getCats('vExtraCats') }); }
   catch (e) { alert(e.message); return; }
 
   FILES.videos.data.unshift(rec);
@@ -929,13 +976,14 @@ async function addVideo() {
   render('videos');
   $('vUrl').value = ''; $('vTitle').value = ''; $('vThumb').value = '';
   $('vShort').checked = false; $('vParse').textContent = '';
+  setCats('vExtraCats', []);
 }
 
 async function addWork() {
   let rec;
   try {
     rec = buildWorkRecord({
-      cat: $('wCat').value,
+      cats: getCats('wCats'),
       role: $('wRole').value.trim(),
       title: $('wTitle').value.trim(),
       link: $('wLink').value.trim(),
@@ -982,9 +1030,10 @@ function openEdit(key, index) {
     $('evThumb').value = item.customThumbnail || '';
     $('evAdded').value = item.added || '';
     $('evShort').checked = item.isShort === true;
+    setCats('evExtraCats', (Array.isArray(item.cats) ? item.cats : []).filter(c => c !== 'mix'));
     $('dlgVideo').classList.add('active');
   } else if (key === 'works') {
-    $('ewCat').value = (item.cat === 'live') ? 'live' : 'produce';
+    setCats('ewCats', catsOf(item, ['produce']));
     $('ewRole').value = item.role || '';
     $('ewTitle').value = item.title || '';
     $('ewLink').value = item.link || '';
@@ -1036,6 +1085,8 @@ async function saveVideoEdit() {
   if ($('evShort').checked) rec.isShort = true;
   if (parsed.platform === 'tiktok') rec.platform = 'tiktok';
   if (thumb) rec.customThumbnail = thumb;
+  const evExtras = getCats('evExtraCats').filter(c => c === 'produce' || c === 'live');
+  if (evExtras.length) rec.cats = CAT_KEYS.filter(k => k === 'mix' || evExtras.includes(k));
   if (addedRaw) rec.added = addedRaw; // 空欄ならaddedを削除（News自動生成から外れる）
   await applyEdit('videos', rec);
 }
@@ -1046,7 +1097,7 @@ async function saveWorkEdit() {
   let rec;
   try {
     rec = buildWorkRecord({
-      cat: $('ewCat').value,
+      cats: getCats('ewCats'),
       role: $('ewRole').value.trim(),
       title: $('ewTitle').value.trim(),
       link: $('ewLink').value.trim(),
@@ -1198,8 +1249,25 @@ function runSelfTest() {
     ok('JSON書き出し→localStorage→再パース往復一致', JSON.stringify(back) === JSON.stringify(arr));
 
     // 7. works / newsレコード生成
-    const w = buildWorkRecord({ cat: 'live', role: 'Live', title: 'テストライブ', link: 'https://www.youtube.com/watch?v=VDq39kxN8NQ', img: '', id: '' });
-    ok('worksレコード(YouTubeリンクからID自動抽出+added)', w.id === 'VDq39kxN8NQ' && w.added === today && w.cat === 'live', JSON.stringify(w));
+    const w = buildWorkRecord({ cats: ['live'], role: 'Live', title: 'テストライブ', link: 'https://www.youtube.com/watch?v=VDq39kxN8NQ', img: '', id: '' });
+    ok('worksレコード(YouTubeリンクからID自動抽出+added+cats)', w.id === 'VDq39kxN8NQ' && w.added === today && Array.isArray(w.cats) && w.cats.length === 1 && w.cats[0] === 'live', JSON.stringify(w));
+
+    // 7b. 複数タグ works（順序はmix→produce→liveに正規化）
+    const wMulti = buildWorkRecord({ cats: ['produce', 'mix'], role: 'Produce', title: 'テスト複合', link: 'https://ql.studio/x', img: '', id: '' });
+    ok('複数タグworks(cats正規化 mix→produce)', JSON.stringify(wMulti.cats) === JSON.stringify(['mix', 'produce']), JSON.stringify(wMulti));
+    let threwCat = false;
+    try { buildWorkRecord({ cats: [], role: 'X', title: 'x', link: 'https://x', img: '', id: '' }); } catch (e) { threwCat = true; }
+    ok('worksカテゴリ空は拒否', threwCat);
+
+    // 7c. 動画の追加タグ（Mix+Produce）と、追加なし時はcats省略
+    const vP = buildVideoRecord({ url: 'https://youtu.be/BBBBBBBBBBB', title: 'テスト複合動画', thumb: '', isShort: null, extraCats: ['produce'] });
+    ok('動画+追加タグ(cats=mix,produce)', JSON.stringify(vP.cats) === JSON.stringify(['mix', 'produce']), JSON.stringify(vP));
+    const vN = buildVideoRecord({ url: 'https://youtu.be/CCCCCCCCCCC', title: 'テスト単Mix', thumb: '', isShort: null, extraCats: [] });
+    ok('動画・追加タグなしはcats省略', !('cats' in vN), JSON.stringify(vN));
+
+    // 7d. catsOf 後方互換（旧cat単一 / 新cats配列）
+    ok('catsOf 旧cat互換', JSON.stringify(catsOf({ cat: 'produce' })) === JSON.stringify(['produce']));
+    ok('catsOf 新cats優先', JSON.stringify(catsOf({ cat: 'produce', cats: ['mix', 'live'] })) === JSON.stringify(['mix', 'live']));
     const n = buildNewsRecord({ date: '2026-07-03', tag: 'Site', title: 'テスト告知', suffix: 'です', link: '' });
     ok('newsレコード(スキーマ準拠)', n.date === '2026-07-03' && n.tag === 'Site' && n.suffix === 'です' && !('link' in n), JSON.stringify(n));
     let threw = false;
