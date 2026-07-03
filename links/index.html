@@ -52,9 +52,7 @@
   .starlayer.far{animation:drift 150s linear infinite}
   .starlayer.near{animation:drift 95s linear infinite}
   .stars i{position:absolute;border-radius:50%;background:#F4F4F2;opacity:var(--o,.4)}
-  .stars i.tw{animation:tw var(--d,5s) ease-in-out var(--dl,0s) infinite}
   @keyframes drift{from{transform:translateY(0)}to{transform:translateY(-4%)}}
-  @keyframes tw{0%,100%{opacity:var(--o,.4)}50%{opacity:calc(var(--o,.4) * 2.1)}}
   .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 
@@ -218,7 +216,6 @@
     html{scroll-behavior:auto}
     .hero-star{animation:none;opacity:.55}
     .starlayer{animation:none!important}
-    .stars i.tw{animation:none!important}
     .rv,.hero-inner .he{transition:none!important}
     .rv{opacity:1;transform:none}
     .hero-inner .he{opacity:1;transform:none;filter:none}
@@ -331,25 +328,19 @@
         const y=(Math.random()*100).toFixed(3);
         const s=(cfg.min+Math.random()*(cfg.max-cfg.min)).toFixed(2);
         const o=(cfg.oMin+Math.random()*(cfg.oMax-cfg.oMin)).toFixed(2);
-        const twinkle=!STILL&&!RM&&Math.random()<cfg.tw;
         const star=document.createElement('i');
         star.style.left=x+'%';
         star.style.top=y+'%';
         star.style.width=s+'px';
         star.style.height=s+'px';
         star.style.setProperty('--o',o);
-        if(twinkle){
-          star.className='tw';
-          star.style.setProperty('--d',(3.6+Math.random()*5).toFixed(2)+'s');
-          star.style.setProperty('--dl',(Math.random()*6).toFixed(2)+'s');
-        }
         frag.appendChild(star);
       }
       layer.appendChild(frag);
       host.appendChild(layer);
     };
-    build('far',72,{min:.6,max:1.3,oMin:.12,oMax:.32,tw:.32});
-    build('near',34,{min:1.1,max:2.1,oMin:.20,oMax:.48,tw:.6});
+    build('far',72,{min:.6,max:1.3,oMin:.14,oMax:.34});
+    build('near',34,{min:1.1,max:2.1,oMin:.22,oMax:.5});
   })();
 
   // hero reveal on load
