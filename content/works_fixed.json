@@ -16,19 +16,19 @@
     "added": "2025-11-15"
   },
   {
-    "cat": "produce",
-    "role": "Produce",
-    "title": "ドキシック/かわいいJKふぁん倶楽部",
-    "link": "https://www.youtube.com/watch?v=UAV_q6xKtu4",
-    "id": "UAV_q6xKtu4",
-    "added": "2026-07-03"
-  },
-  {
     "cat": "live",
     "role": "Exhibition",
     "title": "共に在る音楽 / 展示協力",
     "link": "https://x.com/n_storytelling",
     "img": "images/coexisting-music.jpg",
     "added": "2024-12-10"
+  },
+  {
+    "cat": "produce",
+    "role": "Produce",
+    "title": "ドキシック/かわいいJKふぁん倶楽部",
+    "link": "https://www.youtube.com/watch?v=UAV_q6xKtu4",
+    "id": "UAV_q6xKtu4",
+    "added": "2026-07-03"
   }
 ]
