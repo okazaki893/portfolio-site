@@ -8,20 +8,20 @@
     "added": "2025-08-20"
   },
   {
-    "cat": "produce",
-    "role": "Produce",
-    "title": "ドキシック/かわいいJKふぁん倶楽部",
-    "link": "https://www.youtube.com/watch?v=UAV_q6xKtu4",
-    "id": "UAV_q6xKtu4",
-    "added": "2026-07-03"
-  },
-  {
     "cat": "live",
     "role": "Live",
     "title": "YouTube Music Weekend / 撮影",
     "link": "https://www.youtube.com/watch?v=VDq39kxN8NQ",
     "id": "VDq39kxN8NQ",
     "added": "2025-11-15"
+  },
+  {
+    "cat": "produce",
+    "role": "Produce",
+    "title": "ドキシック/かわいいJKふぁん倶楽部",
+    "link": "https://www.youtube.com/watch?v=UAV_q6xKtu4",
+    "id": "UAV_q6xKtu4",
+    "added": "2026-07-03"
   },
   {
     "cat": "live",
