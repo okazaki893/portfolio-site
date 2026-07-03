@@ -44,8 +44,17 @@
 
   /* ===== atmosphere ===== */
   .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:radial-gradient(120% 80% at 50% 6%, rgba(244,244,242,.05), transparent 46%),
-               radial-gradient(120% 120% at 12% 104%, rgba(244,244,242,.028), transparent 48%);}
+    background:radial-gradient(135% 95% at 50% -6%, rgba(244,244,242,.075), transparent 40%),
+               radial-gradient(120% 120% at 14% 104%, rgba(244,244,242,.03), transparent 48%),
+               radial-gradient(110% 70% at 50% 112%, rgba(0,0,0,.6), transparent 42%);}
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .starlayer{position:absolute;inset:-12% 0;will-change:transform}
+  .starlayer.far{animation:drift 150s linear infinite}
+  .starlayer.near{animation:drift 95s linear infinite}
+  .stars i{position:absolute;border-radius:50%;background:#F4F4F2;opacity:var(--o,.4)}
+  .stars i.tw{animation:tw var(--d,5s) ease-in-out var(--dl,0s) infinite}
+  @keyframes drift{from{transform:translateY(0)}to{transform:translateY(-4%)}}
+  @keyframes tw{0%,100%{opacity:var(--o,.4)}50%{opacity:calc(var(--o,.4) * 2.1)}}
   .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 
@@ -54,15 +63,19 @@
     padding:0 clamp(26px,7vw,40px)}
 
   /* ===== MOBILE HERO — Quiet Monolith ===== */
-  .hero{position:relative;z-index:2;min-height:100svh;min-height:100vh;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;padding:calc(env(safe-area-inset-top) + 30px) 26px calc(env(safe-area-inset-bottom) + 30px);
-    overflow:hidden}
+  .hero{position:relative;z-index:2;max-width:430px;margin:0 auto;
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+    padding:calc(env(safe-area-inset-top) + clamp(60px,16vw,100px)) clamp(26px,7vw,40px) clamp(8px,3vw,16px);
+    overflow:visible}
   /* the single, very quiet four-point star breathing behind the wordmark */
-  .hero-star{position:absolute;top:calc(50% - 78px);left:50%;transform:translate(-50%,-50%);
-    width:118px;height:118px;z-index:0;pointer-events:none;
-    opacity:.62;animation:starBreath 7.5s ease-in-out infinite}
+  .hero-star{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:clamp(104px,30vw,126px);height:clamp(104px,30vw,126px);z-index:0;pointer-events:none;
+    animation:starIn 1.3s cubic-bezier(.2,.7,.2,1) both, starBreath 7.5s ease-in-out 1.3s infinite}
   .hero-star svg{width:100%;height:100%;display:block}
+  @keyframes starIn{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+    100%{opacity:.30;transform:translate(-50%,-50%) scale(.94)}
+  }
   @keyframes starBreath{
     0%,100%{opacity:.30;transform:translate(-50%,-50%) scale(.94)}
     50%{opacity:.72;transform:translate(-50%,-50%) scale(1.03)}
@@ -95,7 +108,7 @@
     35%{opacity:1}70%{transform:translateY(44px);opacity:0}100%{opacity:0}}
 
   /* ===== profile ===== */
-  .profile{padding:clamp(56px,13vw,76px) 0 clamp(28px,7vw,40px);text-align:center}
+  .profile{padding:clamp(24px,6vw,36px) 0 clamp(22px,6vw,32px);text-align:center}
   .p-icon{width:clamp(94px,25vw,112px);height:clamp(94px,25vw,112px);border-radius:50%;overflow:hidden;
     border:1px solid var(--line);margin:0 auto 24px;position:relative;background:var(--bg-2)}
   .p-icon::after{content:'';position:absolute;inset:0;border-radius:50%;
@@ -114,18 +127,27 @@
     border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:6px}
   .label .num{font-style:normal;font-size:12px;color:var(--faint);letter-spacing:.2em;margin-right:14px}
 
-  /* ===== link rows ===== */
-  .lrow{display:flex;align-items:center;gap:18px;padding:24px 4px;border-bottom:1px solid var(--line);
-    transition:background .3s,padding-left .3s}
-  .lrow:active{background:var(--bg-2)}
-  @media(hover:hover){.lrow:hover{background:var(--bg-2);padding-left:10px}}
-  .lrow-num{font-family:var(--disp);font-style:italic;font-size:13px;color:var(--faint);letter-spacing:.1em;min-width:22px;
-    font-variant-numeric:lining-nums}
-  .lrow-body{flex:1;min-width:0}
-  .lrow-t{font-family:var(--disp);font-size:23px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);line-height:1.3}
-  .lrow-s{font-size:12.5px;color:var(--muted);letter-spacing:.05em;margin-top:4px}
-  .lrow-arrow{font-family:var(--disp);font-size:19px;color:var(--faint);transition:color .3s,transform .3s}
-  @media(hover:hover){.lrow:hover .lrow-arrow{color:var(--ink);transform:translateX(5px)}}
+  /* ===== link bar (horizontal: icon + short label) ===== */
+  .lbar{display:flex;align-items:flex-start;justify-content:space-between;gap:4px;padding:28px 0 14px}
+  .lcell{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:13px;
+    padding:8px 2px;text-align:center}
+  .lcell-ic{width:27px;height:27px;display:grid;place-items:center;color:var(--muted);
+    transition:color .35s,transform .45s cubic-bezier(.2,.7,.2,1)}
+  .lcell-ic svg{width:26px;height:26px;fill:currentColor;display:block}
+  .lcell-t{font-family:var(--gothic);font-size:10px;font-weight:400;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--faint);white-space:nowrap;transition:color .35s}
+  .lcell:active .lcell-ic{color:var(--ink);transform:translateY(-2px)}
+  .lcell:active .lcell-t{color:var(--muted)}
+  @media(hover:hover){
+    .lcell:hover .lcell-ic{color:var(--ink);transform:translateY(-4px)}
+    .lcell:hover .lcell-t{color:var(--muted)}
+  }
+  /* link cells cascade in on reveal */
+  .lbar .lcell:nth-child(1){transition-delay:.06s}
+  .lbar .lcell:nth-child(2){transition-delay:.14s}
+  .lbar .lcell:nth-child(3){transition-delay:.22s}
+  .lbar .lcell:nth-child(4){transition-delay:.30s}
+  .lbar .lcell:nth-child(5){transition-delay:.38s}
 
   /* ===== bio ===== */
   .bio{padding-top:22px;display:flex;flex-direction:column;gap:20px;
@@ -182,116 +204,88 @@
   .rv.in{opacity:1;transform:none}
   .d1{transition-delay:.15s}.d2{transition-delay:.28s}.d3{transition-delay:.41s}
 
-  /* hero own reveal */
-  .hero-inner .he{opacity:0;transform:translateY(18px);
-    transition:opacity 1.3s cubic-bezier(.2,.7,.2,1),transform 1.3s cubic-bezier(.2,.7,.2,1)}
-  .hero.in .he{opacity:1;transform:none}
-  .hero.in .h1{transition-delay:.15s}.hero.in .h2{transition-delay:.42s}
-  .hero.in .h3{transition-delay:.68s}.hero.in .h4{transition-delay:.9s}
-  .scroll-cue{opacity:0;transition:opacity 1.2s ease .3s}
-  .hero.in .scroll-cue{opacity:1}
+  /* hero wordmark reveal — blur-in while the letters draw together */
+  .hero-inner .he{opacity:0;transform:translateY(16px);filter:blur(11px);
+    transition:opacity 1.7s cubic-bezier(.2,.7,.2,1),transform 1.7s cubic-bezier(.2,.7,.2,1),
+               filter 1.7s cubic-bezier(.2,.7,.2,1),letter-spacing 1.7s cubic-bezier(.2,.7,.2,1)}
+  .hero.in .he{opacity:1;transform:none;filter:blur(0)}
+  .hero-mark.he{letter-spacing:.4em}
+  .hero.in .hero-mark.he{letter-spacing:.02em}
+  .hero.in .h2{transition-delay:.35s}
 
   /* ===== reduced motion / still ===== */
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
     .hero-star{animation:none;opacity:.55}
-    .scroll-cue .sc-line::after{animation:none;opacity:0}
-    .rv,.hero-inner .he,.scroll-cue{transition:none!important}
+    .starlayer{animation:none!important}
+    .stars i.tw{animation:none!important}
+    .rv,.hero-inner .he{transition:none!important}
     .rv{opacity:1;transform:none}
-    .hero-inner .he{opacity:1;transform:none}
-    .scroll-cue{opacity:1}
+    .hero-inner .he{opacity:1;transform:none;filter:none}
+    .hero-mark.he{letter-spacing:.02em}
   }
 </style>
 </head>
 <body>
 <div class="glow"></div>
+<div class="stars" id="stars" aria-hidden="true"></div>
 <div class="grain"></div>
 
-<!-- ===== MOBILE HERO: Quiet Monolith ===== -->
+<!-- ===== MOBILE MASTHEAD — wordmark with a breathing star behind ===== -->
 <header class="hero" id="hero">
-  <div class="hero-star" aria-hidden="true">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="sg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#F4F4F2" stop-opacity=".9"/>
-          <stop offset="45%" stop-color="#F4F4F2" stop-opacity=".2"/>
-          <stop offset="100%" stop-color="#F4F4F2" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="46" fill="url(#sg)"/>
-      <path d="M50 4 L54 46 L96 50 L54 54 L50 96 L46 54 L4 50 L46 46 Z"
-            fill="#F4F4F2" fill-opacity=".85"/>
-    </svg>
-  </div>
-
   <div class="hero-inner">
-    <div class="hero-eyebrow he h1">Links</div>
+    <div class="hero-star" aria-hidden="true">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="sg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#F4F4F2" stop-opacity=".9"/>
+            <stop offset="45%" stop-color="#F4F4F2" stop-opacity=".2"/>
+            <stop offset="100%" stop-color="#F4F4F2" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="46" fill="url(#sg)"/>
+        <path d="M50 4 L54 46 L96 50 L54 54 L50 96 L46 54 L4 50 L46 46 Z"
+              fill="#F4F4F2" fill-opacity=".85"/>
+      </svg>
+    </div>
     <div class="hero-mark he h2">NOUMENON</div>
-    <div class="hero-rule he h3"></div>
-    <div class="hero-sub he h3">岡崎有希</div>
-    <div class="hero-sub-en he h4">Mix &middot; Produce &middot; Live</div>
   </div>
-
-  <a class="scroll-cue" href="#links" aria-label="スクロールしてリンクへ">
-    <span class="sc-t">Scroll</span>
-    <span class="sc-line"></span>
-  </a>
 </header>
 
 <div class="col">
   <div class="profile">
     <div class="p-icon rv d1"><img src="../images/links-page-icon.png" alt="岡崎有希"></div>
-    <div class="p-eyebrow rv d2">Mix <span class="dot"></span> Produce <span class="dot"></span> Live</div>
     <h1 class="p-name rv d2">岡崎有希</h1>
     <div class="p-en rv d3">Yuki Okazaki</div>
   </div>
 
   <section id="links">
-    <div class="label rv"><span class="num">01</span>Links</div>
-    <a class="lrow rv" href="../index.html">
-      <span class="lrow-num">01</span>
-      <span class="lrow-body">
-        <span class="lrow-t">Portfolio</span>
-        <span class="lrow-s" style="display:block">noumenon.jp — 作品と経歴</span>
-      </span>
-      <span class="lrow-arrow">&rarr;</span>
-    </a>
-    <a class="lrow rv" href="https://x.com/okazaki_yuki01" target="_blank" rel="noopener">
-      <span class="lrow-num">02</span>
-      <span class="lrow-body">
-        <span class="lrow-t">X <span style="text-transform:none;font-style:italic;font-size:16px;color:var(--muted)">(Main)</span></span>
-        <span class="lrow-s" style="display:block">@okazaki_yuki01</span>
-      </span>
-      <span class="lrow-arrow">&#8599;</span>
-    </a>
-    <a class="lrow rv" href="https://x.com/DOSUKOI_JK" target="_blank" rel="noopener">
-      <span class="lrow-num">03</span>
-      <span class="lrow-body">
-        <span class="lrow-t">X <span style="text-transform:none;font-style:italic;font-size:16px;color:var(--muted)">(Sub)</span></span>
-        <span class="lrow-s" style="display:block">@DOSUKOI_JK</span>
-      </span>
-      <span class="lrow-arrow">&#8599;</span>
-    </a>
-    <a class="lrow rv" href="#" id="discordRow">
-      <span class="lrow-num">04</span>
-      <span class="lrow-body">
-        <span class="lrow-t">Discord</span>
-        <span class="lrow-s" style="display:block">タップでIDをコピー — .okazaki</span>
-      </span>
-      <span class="lrow-arrow">&rarr;</span>
-    </a>
-    <a class="lrow rv" href="https://okazakiyuki.booth.pm/" target="_blank" rel="noopener">
-      <span class="lrow-num">05</span>
-      <span class="lrow-body">
-        <span class="lrow-t">BOOTH</span>
-        <span class="lrow-s" style="display:block">okazakiyuki.booth.pm</span>
-      </span>
-      <span class="lrow-arrow">&#8599;</span>
-    </a>
+    <div class="lbar">
+      <a class="lcell rv" href="../index.html">
+        <span class="lcell-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.72 6.4 5.6 11.28 12 12-6.4.72-11.28 5.6-12 12-.72-6.4-5.6-11.28-12-12C6.4 11.28 11.28 6.4 12 0Z"/></svg></span>
+        <span class="lcell-t">Portfolio</span>
+      </a>
+      <a class="lcell rv" href="https://x.com/okazaki_yuki01" target="_blank" rel="noopener">
+        <span class="lcell-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+        <span class="lcell-t">X Main</span>
+      </a>
+      <a class="lcell rv" href="https://x.com/DOSUKOI_JK" target="_blank" rel="noopener">
+        <span class="lcell-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+        <span class="lcell-t">X Sub</span>
+      </a>
+      <a class="lcell rv" href="#" id="discordRow">
+        <span class="lcell-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></span>
+        <span class="lcell-t">Discord</span>
+      </a>
+      <a class="lcell rv" href="https://okazakiyuki.booth.pm/" target="_blank" rel="noopener">
+        <span class="lcell-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4V3a5 5 0 0 1 10 0v1h2.7a1 1 0 0 1 1 .92l1.06 15A1.9 1.9 0 0 1 19.86 22H4.14a1.9 1.9 0 0 1-1.9-2.08l1.06-15a1 1 0 0 1 1-.92zm2 0h6V3a3 3 0 0 0-6 0zm-1.5 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2m9 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/></svg></span>
+        <span class="lcell-t">BOOTH</span>
+      </a>
+    </div>
   </section>
 
   <section id="biography">
-    <div class="label rv"><span class="num">02</span>Biography</div>
+    <div class="label rv">Biography</div>
     <div class="bio">
       <p class="rv">ボーカルミックスを軸に、<a href="https://www.youtube.com/c/sixfonia" target="_blank" rel="noopener">シクフォニ</a>、<a href="https://www.youtube.com/@dollreq_info" target="_blank" rel="noopener">どるれく-Doll's Requiem-</a>、<a href="https://www.youtube.com/channel/UC8XFEcGcHz6jXcaWQqfZrlA" target="_blank" rel="noopener">ちょこらび</a>、<a href="https://www.youtube.com/@minu_1024" target="_blank" rel="noopener">みぬた</a>など多くのアーティストを手がける。</p>
       <p class="rv">ボーカルミックス以外でも、歌い手である<a href="https://www.youtube.com/@613lb/videos" target="_blank" rel="noopener">Sekai</a>の活動立ち上げから、YouTuberの<a href="https://www.youtube.com/@KUN1234" target="_blank" rel="noopener">KUN</a>主催の<a href="https://www.youtube.com/@%E3%81%AB%E3%81%A8%E3%81%8F%E3%82%89/shorts" target="_blank" rel="noopener">ニート部クラフト</a>の3Dショートアニメーション制作まで幅広く携わる。</p>
@@ -302,9 +296,6 @@
     </div>
   </section>
 
-  <div class="back rv">
-    <a href="../index.html">View portfolio <span>&rarr;</span></a>
-  </div>
 </div>
 
 <footer>NOUMENON</footer>
@@ -327,11 +318,46 @@
   const STILL=new URLSearchParams(location.search).has('still');
   const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // hero own reveal on load
+  // ===== starfield: two faint parallax layers drifting behind everything =====
+  (function(){
+    const host=document.getElementById('stars');
+    if(!host) return;
+    const build=(cls,count,cfg)=>{
+      const layer=document.createElement('div');
+      layer.className='starlayer '+cls;
+      const frag=document.createDocumentFragment();
+      for(let i=0;i<count;i++){
+        const x=(Math.random()*100).toFixed(3);
+        const y=(Math.random()*100).toFixed(3);
+        const s=(cfg.min+Math.random()*(cfg.max-cfg.min)).toFixed(2);
+        const o=(cfg.oMin+Math.random()*(cfg.oMax-cfg.oMin)).toFixed(2);
+        const twinkle=!STILL&&!RM&&Math.random()<cfg.tw;
+        const star=document.createElement('i');
+        star.style.left=x+'%';
+        star.style.top=y+'%';
+        star.style.width=s+'px';
+        star.style.height=s+'px';
+        star.style.setProperty('--o',o);
+        if(twinkle){
+          star.className='tw';
+          star.style.setProperty('--d',(3.6+Math.random()*5).toFixed(2)+'s');
+          star.style.setProperty('--dl',(Math.random()*6).toFixed(2)+'s');
+        }
+        frag.appendChild(star);
+      }
+      layer.appendChild(frag);
+      host.appendChild(layer);
+    };
+    build('far',72,{min:.6,max:1.3,oMin:.12,oMax:.32,tw:.32});
+    build('near',34,{min:1.1,max:2.1,oMin:.20,oMax:.48,tw:.6});
+  })();
+
+  // hero reveal on load
   const hero=document.getElementById('hero');
   if(STILL||RM){
     const ns=document.createElement('style');
-    ns.textContent='.rv{transition:none!important}.hero-inner .he{transition:none!important}.scroll-cue{transition:none!important}';
+    ns.textContent='.rv{transition:none!important}.hero-inner .he{transition:none!important}'
+      +'.starlayer{animation:none!important}.hero-star{animation:none!important;opacity:.5!important}';
     document.head.appendChild(ns);
     document.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
     hero.classList.add('in');
