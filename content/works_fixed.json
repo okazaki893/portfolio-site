@@ -1,19 +1,19 @@
 [
   {
-    "cat": "produce",
-    "role": "Produce",
-    "title": "TRANSITION / 歌い手ライブ",
-    "link": "https://ql.studio/transition",
-    "img": "images/transition-flyer.jpg",
-    "added": "2025-08-20"
-  },
-  {
     "cat": "live",
     "role": "Live",
     "title": "YouTube Music Weekend / 撮影",
     "link": "https://www.youtube.com/watch?v=VDq39kxN8NQ",
     "id": "VDq39kxN8NQ",
     "added": "2025-11-15"
+  },
+  {
+    "cat": "produce",
+    "role": "Produce",
+    "title": "TRANSITION / 歌い手ライブ",
+    "link": "https://ql.studio/transition",
+    "img": "images/transition-flyer.jpg",
+    "added": "2025-08-20"
   },
   {
     "cat": "live",
