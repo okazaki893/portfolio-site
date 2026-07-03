@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News — NOUMENON / 岡崎有希</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/StarShinesStill.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+  @font-face{
+    font-family:'Star Shines Still';
+    src:url('fonts/StarShinesStill.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal;
+  }
+  :root{
+    --bg:#0D0D0D;
+    --bg-2:#141414;
+    --ink:#F4F4F2;
+    --muted:#9C9C98;
+    --faint:#6C6C68;
+    --line:rgba(244,244,242,.14);
+    --gold:#F4F4F2;
+    --serif:'Shippori Mincho', serif;
+    --disp:'Cormorant Garamond', serif;
+    --gothic:'Zen Kaku Gothic New', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--gothic);
+    font-weight:300;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--ink);color:#0D0D0D}
+
+  /* 音の波紋(クリック) */
+  .ripple{position:fixed;border:1px solid rgba(244,244,242,.55);border-radius:50%;pointer-events:none;z-index:90;
+    transform:translate(-50%,-50%);animation:rip .9s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes rip{from{width:6px;height:6px;opacity:.75}to{width:130px;height:130px;opacity:0}}
+
+  /* atmospheric layers */
+  .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 78% 22%, rgba(244,244,242,.055), transparent 45%),
+               radial-gradient(120% 120% at 10% 100%, rgba(244,244,242,.03), transparent 46%);}
+  .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* custom cursor */
+  .cursor{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid rgba(242,236,226,.5);border-radius:50%;
+    transform:translate(-50%,-50%);z-index:100;pointer-events:none;transition:width .25s,height .25s,background .25s,border-color .25s;mix-blend-mode:difference}
+  .cursor.big{width:64px;height:64px;background:rgba(242,236,226,.12);border-color:transparent}
+  @media (hover:none){.cursor{display:none} body{cursor:auto}}
+
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 clamp(22px,5vw,64px)}
+
+  /* header */
+  header{position:fixed;top:0;left:0;right:0;z-index:40;padding:22px clamp(22px,5vw,64px);
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(180deg,rgba(16,12,10,.82),transparent)}
+  .brand{font-family:'Star Shines Still','Times New Roman',Times,serif;font-size:22px;letter-spacing:4px}
+  nav{display:flex;gap:30px;font-family:var(--disp);font-size:15px;letter-spacing:.18em;text-transform:uppercase}
+  nav a{position:relative;color:var(--muted);transition:color .35s}
+  nav a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold);transition:width .35s}
+  nav a:hover{color:var(--ink)}nav a:hover::after{width:100%}
+  nav a.on{color:var(--ink)}
+  @media(max-width:720px){
+    nav{gap:18px;font-size:12px;letter-spacing:.12em}
+  }
+  @media(max-width:560px){
+    header{flex-direction:column;align-items:flex-start;gap:8px;padding:16px 22px 12px}
+    .brand{font-size:19px;letter-spacing:3px}
+    nav{width:100%;justify-content:space-between;gap:0;font-size:11px;letter-spacing:.08em}
+  }
+
+  /* page head */
+  .page-head{padding:clamp(140px,20vh,190px) 0 clamp(30px,4.5vw,50px);border-bottom:1px solid var(--line)}
+  .page-head .label{font-family:var(--disp);font-style:italic;font-size:20px;color:var(--muted);letter-spacing:.08em;margin-bottom:8px}
+  .page-head .label .num{font-style:normal;font-size:13px;color:var(--faint);letter-spacing:.2em;margin-right:14px}
+  .page-head h1{font-family:var(--disp);font-weight:500;font-size:clamp(46px,8vw,92px);color:var(--ink);
+    letter-spacing:.16em;text-transform:uppercase;line-height:1.05}
+  .page-head .foot{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-top:18px}
+  .page-head .desc{font-family:var(--serif);font-size:clamp(13px,1.5vw,15px);color:var(--muted);letter-spacing:.05em}
+  .page-head .count{font-family:var(--disp);font-style:italic;font-size:15px;color:var(--faint);letter-spacing:.12em;white-space:nowrap}
+
+  /* year groups */
+  .archive{padding:clamp(20px,3vw,36px) 0 clamp(50px,7vw,90px)}
+  .year-group{display:grid;grid-template-columns:200px 1fr;gap:clamp(18px,3.5vw,48px);
+    padding:clamp(30px,4.5vw,48px) 0 clamp(14px,2vw,22px)}
+  .year-group + .year-group{border-top:1px solid var(--line)}
+  .year-col{position:relative}
+  .year-col .y{position:sticky;top:110px;font-family:var(--disp);font-weight:400;font-size:clamp(42px,5.4vw,64px);
+    color:var(--ink);opacity:.34;letter-spacing:.08em;line-height:1;
+    font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+  .year-col .yc{display:block;margin-top:10px;font-family:var(--disp);font-style:italic;font-size:13px;
+    color:var(--faint);letter-spacing:.16em;position:sticky;top:180px}
+  @media(max-width:820px){
+    .year-group{grid-template-columns:1fr;gap:6px;padding:26px 0 10px}
+    .year-col{display:flex;align-items:baseline;gap:14px}
+    .year-col .y{position:static;font-size:34px;opacity:.5}
+    .year-col .yc{position:static;margin-top:0}
+  }
+
+  /* 年インデックス(デスクトップ): 左の年号にホバーで右のリストがその年に入れ替わる */
+  .tabbed{display:grid;grid-template-columns:200px 1fr;gap:clamp(18px,3.5vw,48px);
+    padding:clamp(30px,4.5vw,48px) 0 clamp(14px,2vw,22px)}
+  .year-nav{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(20px,3vw,32px)}
+  .ynav{text-align:left;padding:0;background:none;border:0;font:inherit;color:inherit;cursor:none;appearance:none}
+  @media (hover:none){.ynav{cursor:pointer}}
+  .ynav .y{display:block;font-family:var(--disp);font-weight:400;font-size:clamp(42px,5.4vw,64px);
+    color:var(--ink);opacity:.14;letter-spacing:.08em;line-height:1;transition:opacity .45s ease;
+    font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+  .ynav .yc{display:block;margin-top:8px;font-family:var(--disp);font-style:italic;font-size:13px;
+    color:var(--faint);letter-spacing:.16em;opacity:.5;transition:opacity .45s ease}
+  .ynav:hover .y{opacity:.3}
+  .ynav.on .y{opacity:.5}
+  .ynav.on .yc{opacity:1}
+  .year-panel{overflow:hidden;transition:height .5s cubic-bezier(.2,.7,.2,1),opacity .28s ease}
+  .year-panel.sw{opacity:0}
+
+  /* news rows (indexのNEWSリストの全件版) */
+  .news-row{display:flex;align-items:baseline;gap:28px;padding:22px 6px;border-bottom:1px solid var(--line);
+    transition:background .3s;position:relative}
+  .news-row:last-child{border-bottom:none}
+  a.news-row:hover{background:var(--bg-2)}
+  .news-date{font-family:var(--disp);font-size:13px;letter-spacing:.18em;color:var(--faint);white-space:nowrap;
+    min-width:58px;font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+  .news-tag{font-family:var(--disp);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);white-space:nowrap;min-width:88px}
+  .news-text{flex:1;font-size:14px;line-height:1.8}
+  .news-text .nt{font-family:var(--serif);color:var(--ink);letter-spacing:.02em}
+  .news-text .ns{color:var(--muted)}
+  .news-arrow{font-family:var(--disp);color:var(--faint);transition:color .3s,transform .3s}
+  a.news-row:hover .news-arrow{color:var(--ink);transform:translateX(4px)}
+  @media(max-width:820px){
+    .news-row{flex-wrap:wrap;gap:8px 20px;padding:18px 2px}
+    .news-date{min-width:0}
+    .news-text{flex:none;width:100%;order:3}
+    .news-arrow{display:none}
+  }
+
+  /* back link */
+  .back{margin:10px 0 clamp(60px,8vw,100px);display:inline-flex;align-items:center;gap:12px;
+    font-family:var(--disp);font-style:italic;font-size:19px;color:var(--muted);letter-spacing:.06em;
+    transition:color .35s,gap .35s}
+  .back:hover{color:var(--ink);gap:20px}
+
+  footer{text-align:center;padding:8px 0 30px;color:var(--faint);font-family:'Star Shines Still','Times New Roman',Times,serif;letter-spacing:3px;font-size:15px}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
+
+<header>
+  <a class="brand" href="index.html">NOUMENON</a>
+  <nav>
+    <a href="index.html">Index</a>
+    <a href="works.html">Works</a>
+    <a href="news.html" class="on">News</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="page-head">
+    <div class="label rv"><span class="num">Archive</span>All Updates</div>
+    <h1 class="rv">News</h1>
+    <div class="foot rv">
+      <p class="desc">更新履歴。作品の追加とお知らせを、すべてここに記しています。</p>
+      <span class="count" id="entryCount"></span>
+    </div>
+  </div>
+
+  <div class="archive" id="archive"></div>
+
+  <a class="back rv" href="index.html">&larr; Back to Index</a>
+</div>
+
+<footer>NOUMENON</footer>
+
+<script>
+  // コンテンツJSON読み込み(cache無効・失敗時はconsole.warn+空配列で無害に劣化)
+  // 手動ニュースの正本=content/news_extra.json / 固定作品の正本=content/works_fixed.json
+  function loadJson(path){
+    return fetch(path,{cache:'no-store'})
+      .then(r=>r.ok?r.json():[])
+      .catch(e=>{console.warn(path+' load failed',e);return[];});
+  }
+
+  const cur=document.getElementById('cursor');
+  window.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+
+  // 音の波紋(indexと同じ静かなギミックのみ移植)
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    addEventListener('pointerdown',e=>{
+      for(let i=0;i<2;i++){
+        const r=document.createElement('div');
+        r.className='ripple';
+        r.style.left=e.clientX+'px';
+        r.style.top=e.clientY+'px';
+        r.style.animationDelay=(i*130)+'ms';
+        document.body.appendChild(r);
+        setTimeout(()=>r.remove(),1100+i*130);
+      }
+    });
+  }
+
+  const STILL=new URLSearchParams(location.search).has('still');
+  const io=new IntersectionObserver((es)=>{es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.1});
+  const observeAll=()=>document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));
+  if(STILL){
+    const ns=document.createElement('style');
+    ns.textContent='.rv{transition:none!important}';
+    document.head.appendChild(ns);
+    document.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
+  }else{
+    observeAll();
+  }
+
+  function fmtMD(d){return d.slice(5).replace('-','.');}
+  function buildNewsRow(n,i){
+    const el=document.createElement(n.link?'a':'div');
+    el.className='news-row rv'+(STILL?' in':'');
+    if(n.link){el.href=n.link;el.target='_blank';el.rel='noopener';}
+    el.style.transitionDelay=(Math.min(i,8)*60)+'ms';
+    const date=document.createElement('span');
+    date.className='news-date';date.textContent=fmtMD(n.date);
+    const tag=document.createElement('span');
+    tag.className='news-tag';tag.textContent=n.tag;
+    const text=document.createElement('span');
+    text.className='news-text';
+    const nt=document.createElement('span');
+    nt.className='nt';nt.textContent='「'+n.title+'」';
+    const ns=document.createElement('span');
+    ns.className='ns';ns.textContent=n.suffix;
+    text.append(nt,ns);
+    el.append(date,tag,text);
+    if(n.link){
+      const arrow=document.createElement('span');
+      arrow.className='news-arrow';arrow.textContent='→';
+      el.appendChild(arrow);
+    }
+    return el;
+  }
+  function buildYearGroup(year,items,offset){
+    const g=document.createElement('div');
+    g.className='year-group';
+    const yc=document.createElement('div');
+    yc.className='year-col';
+    const y=document.createElement('div');
+    y.className='y rv'+(STILL?' in':'');y.textContent=year;
+    const c=document.createElement('span');
+    c.className='yc rv'+(STILL?' in':'');
+    c.textContent=items.length+(items.length===1?' entry':' entries');
+    yc.append(y,c);
+    const list=document.createElement('div');
+    list.className='year-list';
+    items.forEach((n,i)=>list.appendChild(buildNewsRow(n,offset+i)));
+    g.append(yc,list);
+    return g;
+  }
+  async function renderArchive(){
+    const root=document.getElementById('archive');
+    // 正本JSONを並列取得: videos.json(Mix) / works_fixed.json(固定作品) / news_extra.json(手動ニュース)
+    const [pool,fixedWorks,newsExtra]=await Promise.all([
+      loadJson('content/videos.json'),
+      loadJson('content/works_fixed.json'),
+      loadJson('content/news_extra.json')
+    ]);
+    const fromWorks=(Array.isArray(pool)?pool:[]).filter(v=>v.added).map(v=>({
+      tag:'Mix',title:v.title,date:v.added,suffix:' を Works に追加しました',
+      link:/^https?:/.test(v.link||'')?v.link:'https://'+(v.link||'')
+    }));
+    const fromFixed=(Array.isArray(fixedWorks)?fixedWorks:[]).filter(w=>w.added).map(w=>({
+      tag:w.role,title:w.title,date:w.added,suffix:' を Works に追加しました',link:w.link
+    }));
+    const fromExtra=(Array.isArray(newsExtra)?newsExtra:[]).map(n=>({
+      tag:n.tag,title:n.title,date:n.date,suffix:n.suffix||'',link:n.link||null
+    }));
+    const items=[...fromExtra,...fromWorks,...fromFixed]
+      .sort((a,b)=>b.date.localeCompare(a.date));
+    document.getElementById('entryCount').textContent=items.length+' Entries';
+    const byYear=new Map();
+    items.forEach(n=>{
+      const y=n.date.slice(0,4);
+      if(!byYear.has(y)) byYear.set(y,[]);
+      byYear.get(y).push(n);
+    });
+    const TABBED=matchMedia('(hover: hover)').matches&&innerWidth>820;
+    if(TABBED){
+      renderTabbed(root,byYear);
+    }else{
+      let offset=0;
+      const groups=[...byYear.entries()].map(([y,list])=>{
+        const g=buildYearGroup(y,list,offset);
+        offset+=list.length;
+        return g;
+      });
+      root.replaceChildren(...groups);
+    }
+    if(!STILL) observeAll();
+  }
+  // 年インデックス(デスクトップ): 左の年号をホバーすると右のリストがその年に入れ替わる。
+  // 年号の位置が一切動かないため、開閉による行ずれや誤ホバーが構造的に起きない
+  function renderTabbed(root,byYear){
+    const wrap=document.createElement('div');wrap.className='tabbed';
+    const nav=document.createElement('div');nav.className='year-nav';
+    const panel=document.createElement('div');panel.className='year-panel';
+    const years=[...byYear.keys()];
+    const btns=new Map();
+    let active=null;
+    const reveal=()=>requestAnimationFrame(()=>panel.querySelectorAll('.rv').forEach(el=>el.classList.add('in')));
+    const buildRows=y=>byYear.get(y).map((n,i)=>buildNewsRow(n,i));
+    function switchYear(y){
+      if(y===active)return;
+      active=y;
+      btns.forEach((b,yy)=>b.classList.toggle('on',yy===y));
+      if(!panel.childElementCount||STILL){
+        panel.replaceChildren(...buildRows(y));
+        reveal();
+        return;
+      }
+      panel.style.height=panel.offsetHeight+'px';
+      panel.classList.add('sw');
+      setTimeout(()=>{
+        panel.replaceChildren(...buildRows(y));
+        panel.style.height=panel.scrollHeight+'px';
+        panel.classList.remove('sw');
+        reveal();
+        setTimeout(()=>{if(active===y)panel.style.height='auto';},520);
+      },240);
+    }
+    years.forEach(y=>{
+      const list=byYear.get(y);
+      const b=document.createElement('button');b.type='button';b.className='ynav';
+      const yy=document.createElement('span');yy.className='y';yy.textContent=y;
+      const c=document.createElement('span');c.className='yc';
+      c.textContent=list.length+(list.length===1?' entry':' entries');
+      b.append(yy,c);
+      b.addEventListener('mouseenter',()=>switchYear(y));
+      b.addEventListener('click',()=>switchYear(y));
+      btns.set(y,b);
+      nav.appendChild(b);
+    });
+    addEventListener('resize',()=>{panel.style.height='auto';});
+    wrap.append(nav,panel);
+    root.replaceChildren(wrap);
+    switchYear(years[0]);
+  }
+  renderArchive();
+
+  document.querySelectorAll('a').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+</script>
+</body>
+</html>

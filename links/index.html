@@ -1,620 +1,379 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Links - Noumenon</title>
-  <link rel="icon" type="image/png" href="../images/favicon.png">
-  <!-- OGP -->
-  <meta property="og:title" content="Links - Noumenon">
-  <meta property="og:description" content="Noumenon's Link Collection">
-  <meta property="og:image" content="https://noumenon.jp/OGP.png">
-  <meta property="og:url" content="https://noumenon.jp/links">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <style>
-    /* Custom Font */
-    @font-face {
-      font-family: 'Star Shines Still';
-      src: url('../fonts/StarShinesStill.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Links — NOUMENON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="../fonts/StarShinesStill.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+  @font-face{
+    font-family:'Star Shines Still';
+    src:url('../fonts/StarShinesStill.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal;
+    font-display:swap;
+  }
+  :root{
+    --bg:#0D0D0D;
+    --bg-2:#141414;
+    --ink:#F4F4F2;
+    --muted:#9C9C98;
+    --faint:#6C6C68;
+    --line:rgba(244,244,242,.14);
+    --gold:#F4F4F2;
+    --serif:'Shippori Mincho', serif;
+    --disp:'Cormorant Garamond', serif;
+    --gothic:'Zen Kaku Gothic New', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--gothic);
+    font-weight:300;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--ink);color:#0D0D0D}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  /* ===== atmosphere ===== */
+  .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 6%, rgba(244,244,242,.05), transparent 46%),
+               radial-gradient(120% 120% at 12% 104%, rgba(244,244,242,.028), transparent 48%);}
+  .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 
-    /* Splash Screen */
-    .splash-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #101016;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      overflow: hidden;
-    }
+  /* ===== the single mobile column ===== */
+  .col{position:relative;z-index:2;max-width:430px;margin:0 auto;
+    padding:0 clamp(26px,7vw,40px)}
 
-    .splash-screen.hide {
-      animation: splashFadeOut 0.4s ease-out forwards;
-    }
+  /* ===== MOBILE HERO — Quiet Monolith ===== */
+  .hero{position:relative;z-index:2;min-height:100svh;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:calc(env(safe-area-inset-top) + 30px) 26px calc(env(safe-area-inset-bottom) + 30px);
+    overflow:hidden}
+  /* the single, very quiet four-point star breathing behind the wordmark */
+  .hero-star{position:absolute;top:calc(50% - 78px);left:50%;transform:translate(-50%,-50%);
+    width:118px;height:118px;z-index:0;pointer-events:none;
+    opacity:.62;animation:starBreath 7.5s ease-in-out infinite}
+  .hero-star svg{width:100%;height:100%;display:block}
+  @keyframes starBreath{
+    0%,100%{opacity:.30;transform:translate(-50%,-50%) scale(.94)}
+    50%{opacity:.72;transform:translate(-50%,-50%) scale(1.03)}
+  }
 
-    .splash-content {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+  .hero-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+  .hero-eyebrow{font-family:var(--disp);font-style:italic;font-size:15px;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:30px;padding-left:.42em}
+  .hero-mark{font-family:'Star Shines Still','Times New Roman',Times,serif;
+    font-size:clamp(27px,7.6vw,38px);letter-spacing:.02em;line-height:1;color:var(--ink);
+    max-width:100%;white-space:nowrap;text-shadow:0 0 34px rgba(244,244,242,.14)}
+  .hero-rule{width:34px;height:1px;background:var(--line);margin:34px 0 22px}
+  .hero-sub{font-family:var(--serif);font-weight:400;font-size:13px;letter-spacing:.34em;
+    color:var(--muted);text-indent:.34em}
+  .hero-sub-en{font-family:var(--disp);font-style:italic;font-size:14px;letter-spacing:.16em;
+    color:var(--faint);margin-top:9px}
 
-    .splash-text {
-      font-family: 'Star Shines Still', 'Times New Roman', Times, serif;
-      font-size: 72px;
-      font-weight: normal;
-      color: #fff;
-      letter-spacing: 8px;
-      animation: splashFadeIn 1s ease-out forwards;
-      opacity: 0;
-      position: relative;
-      z-index: 2;
-    }
+  /* scroll cue */
+  .scroll-cue{position:absolute;left:50%;transform:translateX(-50%);
+    bottom:calc(env(safe-area-inset-bottom) + 26px);z-index:2;
+    display:flex;flex-direction:column;align-items:center;gap:11px}
+  .scroll-cue .sc-t{font-family:var(--disp);font-style:italic;font-size:12px;letter-spacing:.36em;
+    text-transform:uppercase;color:var(--faint);padding-left:.36em}
+  .scroll-cue .sc-line{width:1px;height:44px;position:relative;overflow:hidden;
+    background:var(--line)}
+  .scroll-cue .sc-line::after{content:'';position:absolute;left:0;top:0;width:100%;height:16px;
+    background:linear-gradient(180deg,var(--ink),transparent);
+    animation:scDrop 2.2s cubic-bezier(.4,0,.3,1) infinite}
+  @keyframes scDrop{0%{transform:translateY(-18px);opacity:0}
+    35%{opacity:1}70%{transform:translateY(44px);opacity:0}100%{opacity:0}}
 
-    .splash-line {
-      width: 300px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #fff, transparent);
-      margin-top: 20px;
-      animation: lineExpand 1s ease-out 0.5s forwards;
-      transform: scaleX(0);
-    }
+  /* ===== profile ===== */
+  .profile{padding:clamp(56px,13vw,76px) 0 clamp(28px,7vw,40px);text-align:center}
+  .p-icon{width:clamp(94px,25vw,112px);height:clamp(94px,25vw,112px);border-radius:50%;overflow:hidden;
+    border:1px solid var(--line);margin:0 auto 24px;position:relative;background:var(--bg-2)}
+  .p-icon::after{content:'';position:absolute;inset:0;border-radius:50%;
+    box-shadow:inset 0 0 26px rgba(13,13,13,.5)}
+  .p-icon img{width:100%;height:100%;object-fit:cover;display:block;
+    filter:grayscale(1) contrast(1.04);transition:filter .7s ease}
+  .p-icon:hover img{filter:grayscale(0)}
+  .p-eyebrow{font-family:var(--disp);font-style:italic;font-size:16px;letter-spacing:.12em;color:var(--muted);margin-bottom:14px}
+  .p-eyebrow .dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--muted);vertical-align:middle;margin:0 10px 3px}
+  .p-name{font-family:var(--serif);font-weight:600;font-size:clamp(28px,8vw,34px);letter-spacing:.06em;line-height:1.4}
+  .p-en{font-family:var(--disp);font-style:italic;font-size:17px;color:var(--faint);letter-spacing:.14em;margin-top:8px}
 
-    .shooting-star {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 6px rgba(255,255,255,0.3);
-      offset-path: path('M -380,30 C -200,-150 200,-150 380,30');
-      offset-rotate: auto;
-      animation: starMove 1.8s linear forwards;
-      opacity: 0;
-      z-index: 1;
-    }
+  /* ===== sections ===== */
+  section{padding:clamp(18px,4vw,30px) 0}
+  .label{font-family:var(--disp);font-style:italic;font-size:19px;color:var(--muted);letter-spacing:.08em;
+    border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:6px}
+  .label .num{font-style:normal;font-size:12px;color:var(--faint);letter-spacing:.2em;margin-right:14px}
 
-    .shooting-star::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      right: 8px;
-      transform: translateY(-50%);
-      width: 50px;
-      height: 2px;
-      background: linear-gradient(to left, rgba(255,255,255,0.6), transparent);
-      border-radius: 2px;
-    }
+  /* ===== link rows ===== */
+  .lrow{display:flex;align-items:center;gap:18px;padding:24px 4px;border-bottom:1px solid var(--line);
+    transition:background .3s,padding-left .3s}
+  .lrow:active{background:var(--bg-2)}
+  @media(hover:hover){.lrow:hover{background:var(--bg-2);padding-left:10px}}
+  .lrow-num{font-family:var(--disp);font-style:italic;font-size:13px;color:var(--faint);letter-spacing:.1em;min-width:22px;
+    font-variant-numeric:lining-nums}
+  .lrow-body{flex:1;min-width:0}
+  .lrow-t{font-family:var(--disp);font-size:23px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);line-height:1.3}
+  .lrow-s{font-size:12.5px;color:var(--muted);letter-spacing:.05em;margin-top:4px}
+  .lrow-arrow{font-family:var(--disp);font-size:19px;color:var(--faint);transition:color .3s,transform .3s}
+  @media(hover:hover){.lrow:hover .lrow-arrow{color:var(--ink);transform:translateX(5px)}}
 
-    @keyframes splashFadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
+  /* ===== bio ===== */
+  .bio{padding-top:22px;display:flex;flex-direction:column;gap:20px;
+    font-size:14px;line-height:2.15;color:var(--muted);letter-spacing:.03em;line-break:strict}
+  .bio a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;
+    transition:color .3s,border-color .3s}
+  .bio a:active{border-color:var(--gold)}
+  @media(hover:hover){.bio a:hover{border-color:var(--gold)}}
+  .bio .nb{white-space:nowrap}
 
-    @keyframes splashFadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; visibility: hidden; }
-    }
+  /* ===== back ===== */
+  .back{text-align:center;padding:clamp(30px,7vw,44px) 0 clamp(18px,4vw,26px)}
+  .back a{display:inline-flex;align-items:center;gap:12px;font-family:var(--disp);font-style:italic;
+    font-size:18px;color:var(--muted);letter-spacing:.08em;transition:color .35s,gap .35s}
+  .back a:active{color:var(--ink)}
+  @media(hover:hover){.back a:hover{color:var(--ink);gap:20px}}
 
-    @keyframes lineExpand {
-      0% { transform: scaleX(0); }
-      100% { transform: scaleX(1); }
-    }
+  footer{text-align:center;padding:8px 0 calc(env(safe-area-inset-bottom) + 34px);color:var(--faint);
+    font-family:'Star Shines Still','Times New Roman',Times,serif;letter-spacing:3px;font-size:15px}
 
-    @keyframes starMove {
-      0% { offset-distance: 0%; opacity: 0; }
-      5% { offset-distance: 5%; opacity: 1; }
-      25% { offset-distance: 25%; opacity: 1; }
-      50% { offset-distance: 50%; opacity: 1; }
-      75% { offset-distance: 75%; opacity: 1; }
-      95% { offset-distance: 95%; opacity: 1; }
-      100% { offset-distance: 100%; opacity: 0; }
-    }
+  /* ===== Discord popup ===== */
+  .dpop-ov{position:fixed;inset:0;z-index:150;background:rgba(13,13,13,.78);
+    display:flex;align-items:center;justify-content:center;padding:22px;
+    opacity:0;transition:opacity .3s;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+  .dpop-ov.active{opacity:1}
+  .dpop{background:var(--bg-2);border:1px solid var(--line);border-radius:2px;
+    padding:clamp(32px,8vw,42px) clamp(26px,6vw,38px) clamp(26px,6vw,32px);
+    max-width:360px;width:100%;text-align:center;
+    transform:translateY(22px);opacity:0;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .35s}
+  .dpop-ov.active .dpop{transform:none;opacity:1}
+  .dpop-k{font-family:var(--disp);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+  .dpop-id{font-family:var(--disp);font-size:34px;letter-spacing:.06em;color:var(--ink);line-height:1.2;
+    padding-bottom:14px;margin-bottom:14px;position:relative}
+  .dpop-id::after{content:'';position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+    width:120px;height:1px;background:linear-gradient(90deg,transparent,rgba(244,244,242,.5),transparent)}
+  .dpop-t{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.05em;margin-bottom:6px}
+  .dpop-m{font-size:12px;color:var(--muted);letter-spacing:.04em;margin-bottom:24px}
+  .dpop-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 24px;
+    border:1px solid rgba(244,244,242,.45);border-radius:2px;background:transparent;
+    font-family:var(--gothic);font-size:12.5px;font-weight:300;letter-spacing:.12em;color:var(--ink);cursor:pointer;
+    transition:background .35s,color .35s,border-color .35s}
+  .btn .btn-arrow{font-family:var(--disp);transition:transform .35s}
+  .btn:active{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  @media(hover:hover){.btn:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+    .btn:hover .btn-arrow{transform:translateX(4px)}}
+  .btn.ghost{border-color:var(--line);color:var(--muted)}
+  .btn.ghost:active{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  @media(hover:hover){.btn.ghost:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}}
 
-    @media (max-width: 900px) {
-      .splash-text {
-        font-size: 48px;
-        letter-spacing: 4px;
-      }
-      .shooting-star {
-        width: 8px;
-        height: 8px;
-        offset-path: path('M -280,25 C -150,-120 150,-120 280,25');
-      }
-      .shooting-star::after {
-        width: 35px;
-      }
-    }
+  /* ===== reveal ===== */
+  .rv{opacity:0;transform:translateY(24px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .d1{transition-delay:.15s}.d2{transition-delay:.28s}.d3{transition-delay:.41s}
 
-    @media (max-width: 600px) {
-      .splash-text {
-        font-size: 36px;
-        letter-spacing: 2px;
-      }
-      .shooting-star {
-        width: 6px;
-        height: 6px;
-        offset-path: path('M -200,20 C -100,-100 100,-100 200,20');
-      }
-      .shooting-star::after {
-        width: 25px;
-        right: 5px;
-      }
-    }
+  /* hero own reveal */
+  .hero-inner .he{opacity:0;transform:translateY(18px);
+    transition:opacity 1.3s cubic-bezier(.2,.7,.2,1),transform 1.3s cubic-bezier(.2,.7,.2,1)}
+  .hero.in .he{opacity:1;transform:none}
+  .hero.in .h1{transition-delay:.15s}.hero.in .h2{transition-delay:.42s}
+  .hero.in .h3{transition-delay:.68s}.hero.in .h4{transition-delay:.9s}
+  .scroll-cue{opacity:0;transition:opacity 1.2s ease .3s}
+  .hero.in .scroll-cue{opacity:1}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: #101016;
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 60px 20px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-    }
-
-    /* Profile Section */
-    .profile {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .profile-icon {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: #222;
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      overflow: hidden;
-    }
-
-    .profile-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .profile-name {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    .profile-bio {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.6);
-      line-height: 1.5;
-    }
-
-    /* Link Items (horizontal icon row) */
-    .links {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .link-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: #fff;
-    }
-
-    .link-icon-circle {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    }
-
-    .link-item:hover .link-icon-circle {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(-3px);
-    }
-
-    .link-icon-circle svg {
-      width: 22px;
-      height: 22px;
-      fill: #fff;
-      transition: fill 0.2s ease;
-    }
-
-    .link-icon-circle .link-icon {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-    }
-
-    .link-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      color: rgba(255, 255, 255, 0.7);
-      white-space: nowrap;
-      transition: color 0.2s ease;
-    }
-
-    .link-item:hover .link-label {
-      color: #fff;
-    }
-
-    @media (max-width: 400px) {
-      .links {
-        gap: 10px;
-      }
-      .link-icon-circle {
-        width: 48px;
-        height: 48px;
-      }
-      .link-icon-circle svg {
-        width: 20px;
-        height: 20px;
-      }
-      .link-icon-circle .link-icon {
-        width: 22px;
-        height: 22px;
-      }
-      .link-label {
-        font-size: 10px;
-        letter-spacing: 0.3px;
-      }
-    }
-
-    /* Bio / Portfolio (left-aligned prose) */
-    .bio {
-      width: 100%;
-      max-width: 360px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      font-size: 13px;
-      line-height: 1.95;
-      color: rgba(255, 255, 255, 0.62);
-      text-align: left;
-      letter-spacing: 0.3px;
-      line-break: strict;
-    }
-
-    .bio p {
-      margin: 0;
-    }
-
-    .bio .nb {
-      white-space: nowrap;
-    }
-
-    .bio a {
-      color: rgba(255, 255, 255, 0.95);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-
-    .bio a:hover {
-      color: #fff;
-      border-color: #fff;
-    }
-
-    /* Portfolio Link */
-    .portfolio-link {
-      margin-top: 24px;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .portfolio-link:hover {
-      color: #fff;
-    }
-
-    /* Footer */
-    .footer {
-      margin-top: 40px;
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.4);
-      letter-spacing: 1px;
-    }
-
-    /* Discord Copy Popup */
-    .discord-popup-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.55);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-    .discord-popup-overlay.active {
-      opacity: 1;
-    }
-    .discord-popup {
-      background: #23272a;
-      border-radius: 18px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.45);
-      padding: 36px 32px 28px;
-      max-width: 340px;
-      width: 90vw;
-      text-align: center;
-      position: relative;
-      transform: translateY(30px) scale(0.97);
-      opacity: 0;
-      transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.3s;
-    }
-    .discord-popup-overlay.active .discord-popup {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
-    .discord-popup-icon {
-      width: 48px; height: 48px;
-      margin: 0 auto 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .discord-popup-icon svg {
-      width: 40px; height: 40px;
-      fill: #5865F2;
-    }
-    .discord-popup-check {
-      color: #43b581;
-      font-size: 28px;
-      margin-bottom: 4px;
-    }
-    .discord-popup-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-    .discord-popup-id {
-      font-size: 22px;
-      font-weight: 700;
-      color: #5865F2;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-      font-family: 'Consolas', 'Monaco', monospace;
-    }
-    .discord-popup-message {
-      color: rgba(255,255,255,0.55);
-      font-size: 13px;
-      margin-bottom: 18px;
-    }
-    .discord-popup-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-    .discord-popup-btn {
-      padding: 9px 22px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      outline: none;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .discord-popup-btn.open-discord {
-      background: #5865F2;
-      color: #fff;
-    }
-    .discord-popup-btn.open-discord:hover {
-      background: #4752c4;
-    }
-    .discord-popup-btn.close-popup {
-      background: rgba(255,255,255,0.10);
-      color: #fff;
-    }
-    .discord-popup-btn.close-popup:hover {
-      background: rgba(255,255,255,0.18);
-    }
-  </style>
+  /* ===== reduced motion / still ===== */
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .hero-star{animation:none;opacity:.55}
+    .scroll-cue .sc-line::after{animation:none;opacity:0}
+    .rv,.hero-inner .he,.scroll-cue{transition:none!important}
+    .rv{opacity:1;transform:none}
+    .hero-inner .he{opacity:1;transform:none}
+    .scroll-cue{opacity:1}
+  }
+</style>
 </head>
 <body>
-  <!-- Splash Screen -->
-  <div class="splash-screen" id="splashScreen">
-    <div class="splash-content">
-      <div class="shooting-star"></div>
-      <div class="splash-text">NOUMENON</div>
-      <div class="splash-line"></div>
-    </div>
+<div class="glow"></div>
+<div class="grain"></div>
+
+<!-- ===== MOBILE HERO: Quiet Monolith ===== -->
+<header class="hero" id="hero">
+  <div class="hero-star" aria-hidden="true">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#F4F4F2" stop-opacity=".9"/>
+          <stop offset="45%" stop-color="#F4F4F2" stop-opacity=".2"/>
+          <stop offset="100%" stop-color="#F4F4F2" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="url(#sg)"/>
+      <path d="M50 4 L54 46 L96 50 L54 54 L50 96 L46 54 L4 50 L46 46 Z"
+            fill="#F4F4F2" fill-opacity=".85"/>
+    </svg>
   </div>
 
-  <div class="container">
-    <!-- Profile -->
-    <div class="profile">
-      <div class="profile-icon">
-        <img src="../images/links-page-icon.png" alt="岡崎有希">
-      </div>
-      <h1 class="profile-name">岡崎有希/Yuki Okazaki</h1>
-    </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow he h1">Links</div>
+    <div class="hero-mark he h2">NOUMENON</div>
+    <div class="hero-rule he h3"></div>
+    <div class="hero-sub he h3">岡崎有希</div>
+    <div class="hero-sub-en he h4">Mix &middot; Produce &middot; Live</div>
+  </div>
 
-    <!-- Links -->
-    <div class="links">
-      <!-- Portfolio -->
-      <a href="/" class="link-item">
-        <span class="link-icon-circle">
-          <img src="../images/favicon.png" alt="" class="link-icon">
-        </span>
-        <span class="link-label">Portfolio</span>
-      </a>
+  <a class="scroll-cue" href="#links" aria-label="スクロールしてリンクへ">
+    <span class="sc-t">Scroll</span>
+    <span class="sc-line"></span>
+  </a>
+</header>
 
-      <!-- X (okazaki_yuki01) -->
-      <a href="https://x.com/okazaki_yuki01" target="_blank" class="link-item">
-        <span class="link-icon-circle">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-        </span>
-        <span class="link-label">X (Main)</span>
-      </a>
+<div class="col">
+  <div class="profile">
+    <div class="p-icon rv d1"><img src="../images/links-page-icon.png" alt="岡崎有希"></div>
+    <div class="p-eyebrow rv d2">Mix <span class="dot"></span> Produce <span class="dot"></span> Live</div>
+    <h1 class="p-name rv d2">岡崎有希</h1>
+    <div class="p-en rv d3">Yuki Okazaki</div>
+  </div>
 
-      <!-- X (DOSUKOI_JK) -->
-      <a href="https://x.com/DOSUKOI_JK" target="_blank" class="link-item">
-        <span class="link-icon-circle">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-        </span>
-        <span class="link-label">X (Sub)</span>
-      </a>
+  <section id="links">
+    <div class="label rv"><span class="num">01</span>Links</div>
+    <a class="lrow rv" href="../index.html">
+      <span class="lrow-num">01</span>
+      <span class="lrow-body">
+        <span class="lrow-t">Portfolio</span>
+        <span class="lrow-s" style="display:block">noumenon.jp — 作品と経歴</span>
+      </span>
+      <span class="lrow-arrow">&rarr;</span>
+    </a>
+    <a class="lrow rv" href="https://x.com/okazaki_yuki01" target="_blank" rel="noopener">
+      <span class="lrow-num">02</span>
+      <span class="lrow-body">
+        <span class="lrow-t">X <span style="text-transform:none;font-style:italic;font-size:16px;color:var(--muted)">(Main)</span></span>
+        <span class="lrow-s" style="display:block">@okazaki_yuki01</span>
+      </span>
+      <span class="lrow-arrow">&#8599;</span>
+    </a>
+    <a class="lrow rv" href="https://x.com/DOSUKOI_JK" target="_blank" rel="noopener">
+      <span class="lrow-num">03</span>
+      <span class="lrow-body">
+        <span class="lrow-t">X <span style="text-transform:none;font-style:italic;font-size:16px;color:var(--muted)">(Sub)</span></span>
+        <span class="lrow-s" style="display:block">@DOSUKOI_JK</span>
+      </span>
+      <span class="lrow-arrow">&#8599;</span>
+    </a>
+    <a class="lrow rv" href="#" id="discordRow">
+      <span class="lrow-num">04</span>
+      <span class="lrow-body">
+        <span class="lrow-t">Discord</span>
+        <span class="lrow-s" style="display:block">タップでIDをコピー — .okazaki</span>
+      </span>
+      <span class="lrow-arrow">&rarr;</span>
+    </a>
+    <a class="lrow rv" href="https://okazakiyuki.booth.pm/" target="_blank" rel="noopener">
+      <span class="lrow-num">05</span>
+      <span class="lrow-body">
+        <span class="lrow-t">BOOTH</span>
+        <span class="lrow-s" style="display:block">okazakiyuki.booth.pm</span>
+      </span>
+      <span class="lrow-arrow">&#8599;</span>
+    </a>
+  </section>
 
-      <!-- Discord -->
-      <a href="#" class="link-item" onclick="copyDiscordId(event)">
-        <span class="link-icon-circle">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-          </svg>
-        </span>
-        <span class="link-label">Discord</span>
-      </a>
-
-      <!-- BOOTH -->
-      <a href="https://okazakiyuki.booth.pm/" target="_blank" class="link-item">
-        <span class="link-icon-circle">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 2h18a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm4 4v12h4c1.5 0 2.7-.4 3.4-1.1.7-.7 1.1-1.6 1.1-2.6 0-.8-.2-1.4-.6-2-.4-.5-.9-.9-1.6-1.1.5-.2 1-.6 1.3-1 .3-.5.5-1 .5-1.7 0-1-.4-1.8-1.1-2.4C13.3 6.4 12.2 6 10.8 6H7zm3 2.5h1.2c.5 0 .9.1 1.2.4.3.2.4.5.4.9s-.1.7-.4.9c-.3.2-.7.4-1.2.4H10V8.5zm0 5h1.5c.6 0 1 .1 1.3.4.3.3.5.6.5 1s-.2.8-.5 1c-.3.3-.8.4-1.3.4H10v-2.8z"/>
-          </svg>
-        </span>
-        <span class="link-label">BOOTH</span>
-      </a>
-    </div>
-
-    <!-- Bio / Portfolio -->
+  <section id="biography">
+    <div class="label rv"><span class="num">02</span>Biography</div>
     <div class="bio">
-      <p>ボーカルミックスを軸に、<a href="https://www.youtube.com/c/sixfonia" target="_blank">シクフォニ</a>、<a href="https://www.youtube.com/@dollreq_info" target="_blank">どるれく-Doll's Requiem-</a>、<a href="https://www.youtube.com/channel/UC8XFEcGcHz6jXcaWQqfZrlA" target="_blank">ちょこらび</a>、<a href="https://www.youtube.com/@minu_1024" target="_blank">みぬた</a>など多くのアーティストを手がける。</p>
-      <p>ボーカルミックス以外でも、歌い手である<a href="https://www.youtube.com/@613lb/videos" target="_blank">Sekai</a>や<a href="https://www.youtube.com/@tuggt_" target="_blank">つぐ</a>の活動立ち上げから、YouTuberの<a href="https://www.youtube.com/@KUN1234" target="_blank">KUN</a>主催の<a href="https://www.youtube.com/@%E3%81%AB%E3%81%A8%E3%81%8F%E3%82%89/shorts" target="_blank">ニート部クラフト</a>の3Dショートアニメーション制作まで幅広く携わる。</p>
-      <p>「人と人と人を繋げて、面白いものをつくりたい」をコンセプトに、<a href="https://www.youtube.com/channel/UC_P7NBqY_sWRjWcGeUWMVWA" target="_blank">椎乃味醂</a>が主宰する<a href="https://www.studiognu.org/ja" target="_blank">StudioGNU</a>に所属。DJイベント<a href="https://studiognu.zaiko.io/e/harmony2026" target="_blank">ハーモニー</a>、2025年8月の<a href="https://nighthike.net/" target="_blank">NIGHT HIKE</a>、<a href="https://www.youtube.com/watch?v=VDq39kxN8NQ&amp;t=1s" target="_blank">YouTube Music Weekend</a>では撮影スタッフを担当。</p>
-      <p>インターネットの音楽が現実空間へと拡張し、その場でしか聴けない一回性のある音楽と出会う、<a href="https://hiroshi-sakuma.com/" target="_blank">佐久間洋司</a>主催の体験型企画展、<a href="https://x.com/n_storytelling" target="_blank">共に在る音楽</a>。来場者も手を触れて創作に加わる空間で、展示をサポート。</p>
-      <p>MV制作・作曲・オケ制作を手がけるチーム<a href="https://ql.studio/" target="_blank">Studio Quantum Leap</a>を創設。同チーム主催の<span class="nb">歌い手ライブ</span><a href="https://x.com/TRANSITION_QL" target="_blank">TRANSITION</a>ではプロデュースと制作進行を担い、渋谷<span class="nb">Star lounge</span>での公演はチケット完売。</p>
-      <p>現在は動画編集チーム<a href="https://www.youtube.com/playlist?list=PLiq3jnUgRbUJBKMhqZZVcHMNgNCVFKXIa" target="_blank">Atelier Integral</a>の副代表を務める。</p>
+      <p class="rv">ボーカルミックスを軸に、<a href="https://www.youtube.com/c/sixfonia" target="_blank" rel="noopener">シクフォニ</a>、<a href="https://www.youtube.com/@dollreq_info" target="_blank" rel="noopener">どるれく-Doll's Requiem-</a>、<a href="https://www.youtube.com/channel/UC8XFEcGcHz6jXcaWQqfZrlA" target="_blank" rel="noopener">ちょこらび</a>、<a href="https://www.youtube.com/@minu_1024" target="_blank" rel="noopener">みぬた</a>など多くのアーティストを手がける。</p>
+      <p class="rv">ボーカルミックス以外でも、歌い手である<a href="https://www.youtube.com/@613lb/videos" target="_blank" rel="noopener">Sekai</a>の活動立ち上げから、YouTuberの<a href="https://www.youtube.com/@KUN1234" target="_blank" rel="noopener">KUN</a>主催の<a href="https://www.youtube.com/@%E3%81%AB%E3%81%A8%E3%81%8F%E3%82%89/shorts" target="_blank" rel="noopener">ニート部クラフト</a>の3Dショートアニメーション制作まで幅広く携わる。</p>
+      <p class="rv">「人と人と人を繋げて、面白いものをつくりたい」をコンセプトに、<a href="https://www.youtube.com/channel/UC_P7NBqY_sWRjWcGeUWMVWA" target="_blank" rel="noopener">椎乃味醂</a>が主宰する<a href="https://www.studiognu.org/ja" target="_blank" rel="noopener">StudioGNU</a>に所属。DJイベント<a href="https://studiognu.zaiko.io/e/harmony2026" target="_blank" rel="noopener">ハーモニー</a>や<a href="https://www.youtube.com/watch?v=VDq39kxN8NQ&amp;t=1s" target="_blank" rel="noopener">YouTube Music Weekend</a>では撮影スタッフを担当。</p>
+      <p class="rv">インターネットの音楽が現実空間へと拡張し、その場でしか聴けない一回性のある音楽と出会う体験型企画展、<a href="https://x.com/n_storytelling" target="_blank" rel="noopener">共に在る音楽</a>。来場者も手を触れて創作に加わる空間で、展示をサポート。</p>
+      <p class="rv">MV制作・作曲・オケ制作を手がけるチーム<a href="https://ql.studio/" target="_blank" rel="noopener">Studio Quantum Leap</a>を創設。同チーム主催の<span class="nb">歌い手ライブ</span><a href="https://x.com/TRANSITION_QL" target="_blank" rel="noopener">TRANSITION</a>ではプロデュースと制作進行を担い、渋谷<span class="nb">Star lounge</span>での公演はチケット完売。</p>
+      <p class="rv">現在は動画編集チーム<a href="https://www.youtube.com/playlist?list=PLiq3jnUgRbUJBKMhqZZVcHMNgNCVFKXIa" target="_blank" rel="noopener">Atelier Integral</a>の副代表を務める。</p>
     </div>
+  </section>
 
-    <!-- Footer -->
-    <div class="footer">NOUMENON</div>
+  <div class="back rv">
+    <a href="../index.html">View portfolio <span>&rarr;</span></a>
   </div>
+</div>
 
-  <!-- Discord Copy Popup -->
-  <div class="discord-popup-overlay" id="discordPopup" style="display:none;">
-    <div class="discord-popup">
-      <div class="discord-popup-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-      </div>
-      <div class="discord-popup-check">&#10003;</div>
-      <div class="discord-popup-title">Discord IDをコピーしました</div>
-      <div class="discord-popup-id">.okazaki</div>
-      <p class="discord-popup-message">フレンド申請やDMを送る際にお使いください</p>
-      <div class="discord-popup-actions">
-        <a href="https://discord.com/users/528093170484117518" target="_blank" class="discord-popup-btn open-discord">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-          Discordを開く
-        </a>
-        <button class="discord-popup-btn close-popup" onclick="closeDiscordPopup()">閉じる</button>
-      </div>
+<footer>NOUMENON</footer>
+
+<!-- Discord Copy Popup -->
+<div class="dpop-ov" id="dpop" style="display:none" role="dialog" aria-modal="true" aria-label="Discord ID">
+  <div class="dpop">
+    <div class="dpop-k">Discord</div>
+    <div class="dpop-id">.okazaki</div>
+    <div class="dpop-t">IDをコピーしました</div>
+    <p class="dpop-m">フレンド申請やDMを送る際にお使いください</p>
+    <div class="dpop-btns">
+      <a class="btn" href="https://discord.com/users/528093170484117518" target="_blank" rel="noopener">Discordを開く<span class="btn-arrow">&rarr;</span></a>
+      <button class="btn ghost" id="dpopClose" type="button">閉じる</button>
     </div>
   </div>
+</div>
 
-  <script>
-    function copyDiscordId(e) {
-      e.preventDefault();
-      var popup = document.getElementById('discordPopup');
-      navigator.clipboard.writeText('.okazaki').then(function() {
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
-      }).catch(function() {
-        var tmp = document.createElement('textarea');
-        tmp.value = '.okazaki';
-        document.body.appendChild(tmp);
-        tmp.select();
-        document.execCommand('copy');
-        document.body.removeChild(tmp);
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
-      });
+<script>
+  const STILL=new URLSearchParams(location.search).has('still');
+  const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // hero own reveal on load
+  const hero=document.getElementById('hero');
+  if(STILL||RM){
+    const ns=document.createElement('style');
+    ns.textContent='.rv{transition:none!important}.hero-inner .he{transition:none!important}.scroll-cue{transition:none!important}';
+    document.head.appendChild(ns);
+    document.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
+    hero.classList.add('in');
+  }else{
+    requestAnimationFrame(()=>requestAnimationFrame(()=>hero.classList.add('in')));
+    const io=new IntersectionObserver((es)=>{es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.14});
+    document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));
+  }
+
+  // Discord: IDコピー + ポップアップ
+  const dpop=document.getElementById('dpop');
+  function openDpop(){
+    dpop.style.display='flex';
+    dpop.getBoundingClientRect();
+    dpop.classList.add('active');
+  }
+  function closeDpop(){
+    dpop.classList.remove('active');
+    setTimeout(()=>{dpop.style.display='none';},300);
+  }
+  document.getElementById('discordRow').addEventListener('click',e=>{
+    e.preventDefault();
+    const id='.okazaki';
+    openDpop();
+    const fallback=()=>{
+      const tmp=document.createElement('textarea');
+      tmp.value=id;
+      document.body.appendChild(tmp);
+      tmp.select();
+      try{document.execCommand('copy');}catch(_){/* noop */}
+      document.body.removeChild(tmp);
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(id).catch(fallback);
+    }else{
+      fallback();
     }
-
-    function closeDiscordPopup() {
-      var popup = document.getElementById('discordPopup');
-      popup.classList.remove('active');
-      setTimeout(function() { popup.style.display = 'none'; }, 300);
-    }
-
-    document.getElementById('discordPopup').addEventListener('click', function(e) {
-      if (e.target === this) closeDiscordPopup();
-    });
-  </script>
-
-  <script>
-    // Splash screen animation
-    function initSplashScreen() {
-      const splashScreen = document.getElementById('splashScreen');
-      if (!splashScreen) return;
-
-      // Hide splash screen after 2.5 seconds
-      setTimeout(() => {
-        splashScreen.classList.add('hide');
-        // Remove from DOM after fade completes
-        setTimeout(() => {
-          splashScreen.remove();
-        }, 400);
-      }, 2500);
-    }
-
-    // Initialize splash screen when page loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSplashScreen);
-    } else {
-      initSplashScreen();
-    }
-  </script>
+  });
+  document.getElementById('dpopClose').addEventListener('click',closeDpop);
+  dpop.addEventListener('click',e=>{if(e.target===dpop)closeDpop();});
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&dpop.classList.contains('active'))closeDpop();});
+  if(new URLSearchParams(location.search).has('dpop')) openDpop();
+</script>
 </body>
 </html>

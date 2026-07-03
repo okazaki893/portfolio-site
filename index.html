@@ -1,270 +1,2034 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio</title>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VSVT7TT4R"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-0VSVT7TT4R');
-  </script>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <link rel="preload" href="fonts/StarShinesStill.ttf" as="font" type="font/ttf" crossorigin>
-  <!-- OGP -->
-  <meta property="og:title" content="Portfolio - Noumenon">
-  <meta property="og:description" content="Mixing / 3D Animation / Music / Planning">
-  <meta property="og:image" content="https://noumenon.jp/OGP.png">
-  <meta property="og:url" content="https://noumenon.jp/">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Portfolio - Noumenon">
-  <meta name="twitter:description" content="Mixing / 3D Animation / Music / Planning">
-  <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
-  <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/style2.css">
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOUMENON — 岡崎有希 / Portfolio (Concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/StarShinesStill.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+  @font-face{
+    font-family:'Star Shines Still';
+    src:url('fonts/StarShinesStill.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal;
+  }
+  :root{
+    --bg:#0D0D0D;
+    --bg-2:#141414;
+    --ink:#F4F4F2;
+    --muted:#9C9C98;
+    --faint:#6C6C68;
+    --line:rgba(244,244,242,.14);
+    --gold:#F4F4F2;
+    --serif:'Shippori Mincho', serif;
+    --disp:'Cormorant Garamond', serif;
+    --gothic:'Zen Kaku Gothic New', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--gothic);
+    font-weight:300;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--ink);color:#0D0D0D}
+
+  /* hero stage — spotlight monolith */
+  #heroStage{position:absolute;top:0;left:0;width:100%;height:100vh;z-index:1;pointer-events:none}
+
+  /* 音の波紋(クリック) */
+  .ripple{position:fixed;border:1px solid rgba(244,244,242,.55);border-radius:50%;pointer-events:none;z-index:90;
+    transform:translate(-50%,-50%);animation:rip .9s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes rip{from{width:6px;height:6px;opacity:.75}to{width:130px;height:130px;opacity:0}}
+
+  /* 流れ星カメオ */
+  .star-cameo{position:fixed;top:0;left:0;width:5px;height:5px;border-radius:50%;background:var(--ink);
+    box-shadow:0 0 5px rgba(244,244,242,.4);pointer-events:none;z-index:1;opacity:0}
+  .star-cameo::after{content:'';position:absolute;top:50%;right:6px;transform:translateY(-50%);
+    width:46px;height:1.5px;background:linear-gradient(to left,rgba(244,244,242,.55),transparent);border-radius:2px}
+
+  /* atmospheric layers */
+  .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 78% 22%, rgba(244,244,242,.055), transparent 45%),
+               radial-gradient(120% 120% at 10% 100%, rgba(244,244,242,.03), transparent 46%);}
+  .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* custom cursor */
+  .cursor{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid rgba(244,244,242,.5);border-radius:50%;
+    transform:translate(-50%,-50%);z-index:100;pointer-events:none;opacity:0;transition:width .25s,height .25s,background .25s,border-color .25s;mix-blend-mode:difference}
+  .cursor.live{opacity:1}
+  .cursor.big{width:64px;height:64px;background:rgba(244,244,242,.12);border-color:transparent}
+  @media (hover:none){.cursor{display:none} body{cursor:auto}}
+
+  /* intro (既存サイトのスプラッシュを流用) */
+  .intro{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;
+    transition:opacity .4s ease,visibility .4s}
+  .intro.done{opacity:0;visibility:hidden}
+  .intro-content{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .intro-text{font-family:'Star Shines Still','Times New Roman',Times,serif;font-size:72px;font-weight:normal;color:var(--ink);
+    letter-spacing:8px;line-height:1;animation:fadeUp 1s ease-out forwards;opacity:0;position:relative;z-index:2}
+  .intro-line{width:300px;height:2px;background:linear-gradient(90deg,transparent,var(--ink),transparent);
+    margin-top:8px;animation:lineExpand 1s ease-out .5s forwards;transform:scaleX(0)}
+  .shooting-star{position:absolute;width:10px;height:10px;background:var(--ink);border-radius:50%;
+    box-shadow:0 0 6px rgba(244,244,242,.3);
+    offset-path:path('M -380,30 C -200,-150 200,-150 380,30');offset-rotate:auto;
+    animation:starMove 1.8s linear forwards;opacity:0;z-index:1}
+  .shooting-star::after{content:'';position:absolute;top:50%;right:8px;transform:translateY(-50%);
+    width:50px;height:2px;background:linear-gradient(to left,rgba(244,244,242,.6),transparent);border-radius:2px}
+  @keyframes lineExpand{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+  @keyframes starMove{
+    0%{offset-distance:0%;opacity:0}
+    5%{offset-distance:5%;opacity:1}
+    95%{offset-distance:95%;opacity:1}
+    100%{offset-distance:100%;opacity:0}
+  }
+  @media(max-width:900px){
+    .intro-text{font-size:48px;letter-spacing:4px}
+    .shooting-star{width:8px;height:8px;offset-path:path('M -280,25 C -150,-120 150,-120 280,25')}
+    .shooting-star::after{width:35px}
+  }
+  @media(max-width:600px){
+    .intro-text{font-size:36px;letter-spacing:2px}
+    .shooting-star{width:6px;height:6px;offset-path:path('M -200,20 C -100,-100 100,-100 200,20')}
+    .shooting-star::after{width:25px;right:5px}
+  }
+
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 clamp(22px,5vw,64px)}
+
+  /* header */
+  header{position:fixed;top:0;left:0;right:0;z-index:40;padding:22px clamp(22px,5vw,64px);
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(180deg,rgba(16,12,10,.82),transparent)}
+  .brand{font-family:'Star Shines Still','Times New Roman',Times,serif;font-size:22px;letter-spacing:4px}
+  nav{display:flex;gap:30px;font-family:var(--disp);font-size:15px;letter-spacing:.18em;text-transform:uppercase}
+  nav a{position:relative;color:var(--muted);transition:color .35s}
+  nav a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold);transition:width .35s}
+  nav a:hover{color:var(--ink)}nav a:hover::after{width:100%}
+  nav a.on{color:var(--ink)}
+  @media(max-width:720px){nav{display:none}}
+
+  /* hero — 文言なし。ステージ(canvas)がすべてを語る */
+  .hero{height:100vh}
+
+  .scroll{position:absolute;left:clamp(22px,5vw,64px);bottom:26px;z-index:3;display:flex;align-items:center;gap:12px;color:var(--faint);
+    font-family:var(--disp);letter-spacing:.22em;text-transform:uppercase;font-size:12px}
+  .scroll .bar{width:44px;height:1px;background:var(--faint);position:relative;overflow:hidden}
+  .scroll .bar::after{content:'';position:absolute;left:-44px;top:0;width:44px;height:1px;background:var(--ink);animation:slide 2.4s infinite}
+
+  /* sections */
+  section{padding:clamp(22px,3vw,38px) 0}
+  .label{font-family:var(--disp);font-style:italic;font-size:20px;color:var(--muted);letter-spacing:.08em;margin-bottom:8px}
+  .label .num{font-style:normal;font-size:13px;color:var(--faint);letter-spacing:.2em;margin-right:14px}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:38px;flex-wrap:wrap;gap:16px}
+  .sec-head h2{font-family:var(--disp);font-weight:500;font-size:clamp(30px,4.6vw,52px);color:var(--ink);letter-spacing:.16em;text-transform:uppercase;line-height:1.1}
+
+  /* what I do */
+  .do{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+  @media(max-width:820px){.do{grid-template-columns:1fr}}
+  .do .cell{background:var(--bg);padding:38px 34px;display:flex;flex-direction:column;gap:14px;transition:background .4s}
+  .do .cell:hover{background:var(--bg-2)}
+  .do .cell .k{font-family:var(--disp);font-style:italic;font-size:14px;color:var(--faint);letter-spacing:.12em}
+  .do .cell h3{font-family:var(--serif);font-weight:600;letter-spacing:.04em;color:var(--ink)}
+  .do .lead-cell h3{font-size:34px}
+  .do .cell:not(.lead-cell) h3{font-size:24px}
+  .do .cell .role{font-size:13px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase;font-family:var(--disp)}
+  .do .cell p{font-size:14px;color:var(--muted);line-height:1.95;font-weight:300}
+  .do .lead-cell{position:relative}
+  .do .lead-cell::before{content:'01';position:absolute;top:26px;right:30px;font-family:var(--disp);font-size:64px;color:rgba(244,244,242,.1);font-style:italic;line-height:1}
+
+  /* works — ql.studio風コラージュグリッド(フィーチャー1枚+小カード) */
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+  .card{display:block}
+  .frame{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:2px;aspect-ratio:16/9;
+    background:linear-gradient(150deg,#191919,#0B0B0B);transition:border-color .5s}
+  .card:hover .frame{border-color:rgba(244,244,242,.45)}
+  .frame .thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    filter:grayscale(1) contrast(1.04);transition:filter .6s ease,transform .7s ease}
+  .card:hover .frame .thumb{filter:grayscale(0);transform:scale(1.04)}
+  .frame .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(242,236,226,.07)}
+  .card--feat .frame{height:100%;aspect-ratio:auto;min-height:320px}
+  .card--wide .frame{aspect-ratio:21/9}
+  .card--half .frame{aspect-ratio:16/10}
+  .card--ov .frame::after{content:'';position:absolute;left:0;right:0;bottom:0;height:45%;
+    background:linear-gradient(180deg,transparent,rgba(5,5,5,.85));pointer-events:none}
+  .card--ov .ovl{position:absolute;left:22px;right:22px;bottom:20px;z-index:2}
+  .card--ov .ovl .t{font-family:var(--serif);font-size:clamp(17px,2.1vw,24px);color:var(--ink);letter-spacing:.03em;line-height:1.55;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card--half .ovl .t{font-size:clamp(15px,1.6vw,19px)}
+  .card--ov .ovl .r{margin-top:7px;font-family:var(--disp);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:rgba(244,244,242,.55)}
+  .meta{margin-top:12px}
+  .meta .t{font-family:var(--serif);font-size:14px;color:var(--ink);letter-spacing:.02em;line-height:1.6;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .meta .r{margin-top:5px;font-family:var(--disp);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint)}
+  .meta .u{margin-top:11px;height:1px;background:rgba(244,244,242,.85);transform:scaleX(0);transform-origin:left;
+    transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+  .card:hover .u{transform:scaleX(1)}
+
+  /* news — Works追加を自動記録する罫線リスト */
+  .news-row{display:flex;align-items:baseline;gap:28px;padding:22px 6px;border-bottom:1px solid var(--line);transition:background .3s}
+  .news-row:hover{background:var(--bg-2)}
+  .news-date{font-family:var(--disp);font-size:13px;letter-spacing:.18em;color:var(--faint);white-space:nowrap;
+    font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+  .news-tag{font-family:var(--disp);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);white-space:nowrap;min-width:88px}
+  .news-text{flex:1;font-size:14px;line-height:1.8}
+  .news-text .nt{font-family:var(--serif);color:var(--ink);letter-spacing:.02em}
+  .news-text .ns{color:var(--muted)}
+  .news-arrow{font-family:var(--disp);color:var(--faint);transition:color .3s,transform .3s}
+  .news-row:hover .news-arrow{color:var(--ink);transform:translateX(4px)}
+  @media(max-width:820px){
+    .news-row{flex-wrap:wrap;gap:8px 20px;padding:18px 2px}
+    .news-text{flex:none;width:100%;order:3}
+    .news-arrow{display:none}
+  }
+  @media(max-width:820px){
+    .grid{grid-template-columns:repeat(2,1fr);gap:14px}
+    .grid .card{grid-column:span 1 !important;grid-row:auto !important}
+    .grid .card--ov{grid-column:1/-1 !important}
+    .card--feat .frame,.card--wide .frame,.card--half .frame{aspect-ratio:16/9;height:auto;min-height:0}
+  }
+  .more{margin-top:44px;font-family:var(--disp);font-style:italic;font-size:19px;color:var(--muted);letter-spacing:.06em;display:inline-flex;align-items:center;gap:12px;transition:color .35s,gap .35s}
+  .more:hover{color:var(--ink);gap:20px}
+
+  /* request CTA — ql.studio「Start a Project」の移植 */
+  .cta{border:1px solid var(--line);border-radius:2px;padding:clamp(32px,4.5vw,52px);
+    display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;
+    transition:border-color .5s}
+  .cta:hover{border-color:rgba(244,244,242,.3)}
+  .cta-k{font-family:var(--disp);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+  .cta-h{font-family:var(--serif);font-weight:500;font-size:clamp(20px,2.6vw,30px);color:var(--ink);letter-spacing:.04em;margin-bottom:12px}
+  .cta-p{font-size:13px;color:var(--muted);letter-spacing:.04em}
+  .cta-btns{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:12px;padding:15px 26px;border:1px solid rgba(244,244,242,.45);border-radius:2px;
+    font-family:var(--gothic);font-size:13px;letter-spacing:.12em;color:var(--ink);
+    transition:background .35s,color .35s,border-color .35s,transform .35s cubic-bezier(.2,.7,.3,1)}
+  .btn .btn-arrow{font-family:var(--disp);transition:transform .35s}
+  .btn:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  .btn:hover .btn-arrow{transform:translateX(4px)}
+  .btn.ghost{border-color:var(--line);color:var(--muted)}
+  .btn.ghost:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  @media(max-width:820px){
+    .cta{flex-direction:column;align-items:flex-start}
+    .cta-btns{width:100%}
+    .btn{flex:1;justify-content:center}
+  }
+
+  /* connect */
+  .connect{text-align:center;border-top:1px solid var(--line);padding:clamp(34px,4.5vw,52px) 0 clamp(26px,3.5vw,38px)}
+  .connect h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4.4vw,52px);color:var(--ink);letter-spacing:.05em;line-height:1.4;margin-bottom:18px}
+  .connect .sub{color:var(--muted);font-size:14px;letter-spacing:.04em;margin-bottom:26px}
+  .socials{display:flex;justify-content:center;flex-wrap:wrap;gap:34px;font-family:var(--disp);font-size:17px;letter-spacing:.14em;text-transform:uppercase}
+  .socials a{color:var(--muted);position:relative;transition:color .35s}
+  .socials a:hover{color:var(--gold)}
+  .req{margin-top:50px;font-size:13px;color:var(--faint);letter-spacing:.05em}
+  .req a{color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:2px;transition:color .35s,border-color .35s}
+  .req a:hover{color:var(--ink);border-color:var(--gold)}
+  footer{text-align:center;padding:8px 0 30px;color:var(--faint);font-family:'Star Shines Still','Times New Roman',Times,serif;letter-spacing:3px;font-size:15px}
+  #toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(8px);background:var(--bg-2);border:1px solid var(--line);color:var(--muted);font-size:13px;letter-spacing:.08em;padding:10px 22px;opacity:0;pointer-events:none;transition:opacity .35s,transform .35s;z-index:60}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes slide{0%{left:-44px}60%,100%{left:44px}}
+</style>
 </head>
 <body>
-  <!-- Splash Screen -->
-  <div class="splash-screen" id="splashScreen">
-    <div class="splash-content">
-      <div class="shooting-star"></div>
-      <div class="splash-text">NOUMENON</div>
-      <div class="splash-line"></div>
+<div class="glow"></div>
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
+<div class="intro" id="intro">
+  <div class="intro-content">
+    <div class="shooting-star"></div>
+    <div class="intro-text">NOUMENON</div>
+    <div class="intro-line"></div>
+  </div>
+</div>
+
+<header>
+  <div class="brand">NOUMENON</div>
+  <nav>
+    <a href="index.html" class="on">Index</a>
+    <a href="works.html">Works</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<canvas id="heroStage"></canvas>
+
+<div class="wrap">
+  <div class="hero" aria-label="NOUMENON"></div>
+</div>
+<div class="scroll"><span class="bar"></span>Scroll</div>
+
+<div class="wrap">
+  <section id="about">
+    <div class="sec-head">
+      <div>
+        <div class="label"><span class="num">01</span></div>
+        <h2>What I do</h2>
+      </div>
+    </div>
+    <div class="do">
+      <div class="cell lead-cell rv">
+        <span class="k">Core</span>
+        <h3>Mixing</h3>
+        <span class="role">歌ってみた / 歌唱ミックス</span>
+        <p>シクフォニ、どるれく、ちょこらび、みぬた——多くの歌い手さんの声を仕上げてきました。</p>
+      </div>
+      <div class="cell rv">
+        <span class="k">Also</span>
+        <h3>Produce</h3>
+        <span class="role">立ち上げ / プロデュース</span>
+        <p>歌い手・Vtuberの活動立ち上げ。制作チーム Studio Quantum Leap を創設し、歌い手ライブ TRANSITION をプロデュース。</p>
+      </div>
+      <div class="cell rv">
+        <span class="k">Also</span>
+        <h3>Live &amp; Event</h3>
+        <span class="role">撮影 / 展示協力</span>
+        <p>YouTube Music Weekend の撮影、体験型企画展「共に在る音楽」への展示協力など、スタッフとして現場に立つ。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="works">
+    <div class="sec-head">
+      <div>
+        <div class="label"><span class="num">02</span></div>
+        <h2>Selected Works</h2>
+      </div>
+      <a href="works.html" class="more" style="margin:0">View all <span>&rarr;</span></a>
+    </div>
+    <div class="grid" id="worksGrid"></div>
+  </section>
+
+  <section id="news">
+    <div class="sec-head">
+      <div>
+        <div class="label"><span class="num">03</span></div>
+        <h2>News</h2>
+      </div>
+    </div>
+    <div class="news-list" id="newsList"></div>
+  </section>
+
+  <section id="request">
+    <div class="cta rv">
+      <div class="cta-left">
+        <div class="cta-k">Request</div>
+        <h2 class="cta-h">MIXのご依頼、承っています。</h2>
+        <p class="cta-p">ご依頼・ご相談はお問い合わせフォームからお気軽にどうぞ。</p>
+      </div>
+      <div class="cta-btns">
+        <a class="btn" href="contact.html">お問い合わせ<span class="btn-arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="connect" id="connect">
+  <div class="wrap">
+    <p class="sub rv">気軽に声をかけてください。まずはSNSかDiscordで。</p>
+    <div class="socials rv">
+      <a href="https://x.com/okazaki_yuki01" target="_blank" rel="noopener">X (main)</a>
+      <a href="https://x.com/DOSUKOI_JK" target="_blank" rel="noopener">X (sub)</a>
+      <a href="#" id="discordCopy">Discord</a>
+      <a href="https://okazakiyuki.booth.pm/" target="_blank" rel="noopener">BOOTH</a>
     </div>
   </div>
+</div>
+<footer>NOUMENON</footer>
 
-  <div class="portfolio-cover">
-    <!-- Hamburger Menu Button -->
-    <div class="hamburger-menu" onclick="toggleMobileMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
+<script>
+  const cur=document.getElementById('cursor');
+  window.addEventListener('mousemove',e=>{cur.classList.add('live');cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-      <ul class="mobile-menu-list">
-        <li><a href="/" class="active">Top</a></li>
-        <li><a href="works">Works</a></li>
-        <li><a href="price">Price</a></li>
-        <li><a href="subscribe">Subscribe</a></li>
-        <li><a href="contact">Contact</a></li>
-      </ul>
-    </div>
-
-    <!-- Side menu -->
-    <nav class="side-menu">
-      <ul class="menu-list">
-        <li class="menu-item">
-          <span class="menu-bullet active"></span>
-          <span class="menu-line"></span>
-          <a href="/" class="menu-link active">Top</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="works" class="menu-link">Works</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="price" class="menu-link">Price</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="subscribe" class="menu-link">Subscribe</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <a href="contact" class="menu-link">Contact</a>
-        </li>
-      </ul>
-      <!-- Social Links -->
-      <div class="social-icons">
-        <a href="https://x.com/okazaki_yuki01" target="_blank" class="social-link">X (main)</a>
-        <a href="https://x.com/DOSUKOI_JK" target="_blank" class="social-link">X (mix)</a>
-        <a href="#" class="social-link" onclick="copyDiscordId(event)">Discord</a>
-        <a href="https://okazakiyuki.booth.pm/" target="_blank" class="social-link">BOOTH</a>
-      </div>
-    </nav>
-
-    <!-- Animated gradient background -->
-    <div class="gradient-bg"></div>
-
-    <!-- Grid pattern overlay -->
-    <div class="grid-pattern"></div>
-
-    <!-- Floating orbs -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-
-    <!-- Video thumbnail gallery - Mosaic Layout (PC) -->
-    <div class="mosaic-gallery-container">
-      <div class="mosaic-gallery-wrapper">
-        <div class="mosaic-gallery" id="mosaicGallery">
-          <!-- Items will be generated dynamically by JavaScript -->
-        </div>
-      </div>
-      <div class="color-underlay"></div>
-    </div>
-
-    <!-- Mobile Video Grid (Smartphone) -->
-    <div class="mobile-mixing-grid">
-      <div class="mobile-top-icon">
-        <img src="images/33f11a62ab08fd19.png" alt="Top Icon">
-      </div>
-      <div class="mobile-video-grid" id="mobileVideoGrid">
-        <!-- Videos will be loaded by JavaScript -->
-      </div>
-    </div>
-  </div>
-
-  <script src="scripts/mosaic.js"></script>
-  <script>
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-      const hamburger = document.querySelector('.hamburger-menu');
-      const overlay = document.getElementById('mobileMenuOverlay');
-      hamburger.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-
-    // Close menu when clicking a link
-    document.querySelectorAll('.mobile-menu-list a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.querySelector('.hamburger-menu').classList.remove('active');
-        document.getElementById('mobileMenuOverlay').classList.remove('active');
-      });
-    });
-
-    // Load mobile video grid (TOPスロットを mosaic.js と共有)
-    async function loadMobileVideos() {
-      const grid = document.getElementById('mobileVideoGrid');
-      if (!grid) return;
-
-      const slots = (typeof window.loadTopSlots === 'function') ? await window.loadTopSlots() : [];
-
-      grid.innerHTML = '';
-      slots.forEach(slot => {
-        if (!slot || !slot.link) return;
-        const match = slot.link.match(/[?&]v=([^&]+)/);
-        const videoId = match ? match[1] : '';
-        const thumbnailUrl = slot.customThumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-        const fallbackUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-        const title = (slot.slotName || '').replace(/^スロット\d+:\s*/, '').replace(/（[^）]*）\s*$/, '');
-
-        const card = document.createElement('div');
-        card.className = 'mobile-video-card';
-        card.innerHTML = `
-          <a href="${slot.link}" target="_blank" class="mobile-video-thumbnail">
-            <img src="${thumbnailUrl}" alt="${title}" onerror="this.src='${fallbackUrl}'">
-            <div class="mobile-play-overlay">
-              <div class="mobile-play-button"></div>
-            </div>
-          </a>
-          <div class="mobile-video-title">${title}</div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    // Initialize mobile grid after mosaic.js loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadMobileVideos);
-    } else {
-      setTimeout(loadMobileVideos, 100);
-    }
-
-    // Splash screen animation
-    function initSplashScreen() {
-      const splashScreen = document.getElementById('splashScreen');
-      if (!splashScreen) return;
-
-      // Hide splash screen after 2.5 seconds
-      setTimeout(() => {
-        splashScreen.classList.add('hide');
-        // Remove from DOM after fade completes
-        setTimeout(() => {
-          splashScreen.remove();
-        }, 400);
-      }, 2500);
-    }
-
-    // Initialize splash screen when page loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSplashScreen);
-    } else {
-      initSplashScreen();
-    }
-  </script>
-
-  <!-- Discord Copy Popup -->
-  <div class="discord-popup-overlay" id="discordPopup" style="display:none;">
-    <div class="discord-popup">
-      <div class="discord-popup-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-      </div>
-      <div class="discord-popup-check">&#10003;</div>
-      <div class="discord-popup-title">Discord IDをコピーしました</div>
-      <div class="discord-popup-id">.okazaki</div>
-      <p class="discord-popup-message">フレンド申請やDMを送る際にお使いください</p>
-      <div class="discord-popup-actions">
-        <a href="https://discord.com/users/528093170484117518" target="_blank" class="discord-popup-btn open-discord">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-          Discordを開く
-        </a>
-        <button class="discord-popup-btn close-popup" onclick="closeDiscordPopup()">閉じる</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    function copyDiscordId(e) {
+  // Discord IDコピー(本番linksページと同じID)
+  (function(){
+    const a=document.getElementById('discordCopy');
+    if(!a) return;
+    let tm;
+    a.addEventListener('click',e=>{
       e.preventDefault();
-      var popup = document.getElementById('discordPopup');
-      navigator.clipboard.writeText('.okazaki').then(function() {
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
-      }).catch(function() {
-        var tmp = document.createElement('textarea');
-        tmp.value = '.okazaki';
-        document.body.appendChild(tmp);
-        tmp.select();
-        document.execCommand('copy');
-        document.body.removeChild(tmp);
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
+      const done=()=>{
+        let t=document.getElementById('toast');
+        if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}
+        t.textContent='Discord ID「.okazaki」をコピーしました';
+        requestAnimationFrame(()=>t.classList.add('show'));
+        clearTimeout(tm);
+        tm=setTimeout(()=>t.classList.remove('show'),2600);
+      };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText('.okazaki').then(done).catch(done);
+      }else{done();}
+    });
+  })();
+
+  // ========================================================================
+  // letters-into-constellations — 文字が実在の星座に還る観測装置(s3×s2統合)。
+  // 本体はs3のアーミラリー観測装置: 石碑NOUMENONの周囲を目盛付き楕円環が
+  // 非整数比の歳差で巡り、アリダードが照準し、方位環に打刻を残す。
+  // そこへs2の組版ギミックを統合: 5〜9秒ごとにO以外のどれかの文字が
+  // 逆流れ星で空へ昇り、その文字に割り当てられた実在の星座
+  // (N=はくちょう座 / U=北斗七星 / M=カシオペヤ座 / E=オリオン座 /
+  //  N=こと座 / N=さそり座。座標は実際の星の位置から採録)として
+  // 1辺ずつ結ばれる。完成するとアリダードが主星へスナップして観測打刻。
+  // やがて流星カスケードで文字に帰還し、squash+床波紋で再組版される。
+  // Oの中の四芒星2つだけは決して動かない('Star Shines Still')。
+  // シジジー(全環整列→水平線→床へ沈降→静寂→再展開)は維持。その直前に
+  // 「冬の夜空」= 最大3星座の同時掲揚が起き、空が畳まれてから環が倒れる。
+  // 観測光スポーク(回転ビーム)は撤去し、グラティキュールの流速・星野・
+  // 文字イベントで密度を担う。
+  // ?t0=<秒> で内部時計を1/120固定ステップで決定的に早回し+凍結(検証用)。
+  // ========================================================================
+  const STAGE=true;
+  (function(){
+    if(!STAGE) return;
+    const cv=document.getElementById('heroStage');
+    if(!cv) return;
+    const ctx=cv.getContext('2d');
+    const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const q=new URLSearchParams(location.search);
+    const stillFlag=q.has('still');
+    const staticMode=reduced||stillFlag;   // 代表フレーム1枚を静的描画
+    const T0=Math.max(0,parseFloat(q.get('t0'))||0);   // デバッグ: 時刻ジャンプ
+    const dpr=Math.min(2,devicePixelRatio||1);
+    const TXT='NOUMENON';
+    const TAU=Math.PI*2;
+
+    let W=0,H=0,cx=0,floorY=0,ready=false;
+
+    // --- 実在星座カタログ(正規化座標・y下向き。実際の星の位置=RA/Decを
+    //     正距円筒で平面化して採録。縦横比は実物のまま) ---
+    // 文字→星座の割当: N(0)=はくちょう座(北十字) U(2)=北斗七星(柄杓)
+    // M(3)=カシオペヤ座(W) E(4)=オリオン座(三ツ星+砂時計) N(5)=こと座(ベガ+平行四辺形)
+    // N(7)=さそり座(S字+毒針)。各星は[x,y,等級]、mainは主星。
+    const CONSTS={
+      0:{name:'CYGNUS',main:0,stars:[
+          [.237,.318,1.2],[.382,.516,2.2],[.577,.720,3.9],[.770,1.00,3.1],
+          [.663,.324,2.9],[.778,.065,3.8],[.873,.000,3.8],[.201,.763,2.5],[.000,.911,3.2]],
+        edges:[[0,1],[1,2],[2,3],[1,4],[4,5],[5,6],[1,7],[7,8]]},
+      2:{name:'URSA MAJOR',main:0,stars:[
+          [.989,.000,1.8],[1.00,.232,2.4],[.686,.348,2.4],[.556,.204,3.3],
+          [.323,.250,1.8],[.142,.294,2.2],[.000,.537,1.9]],
+        edges:[[0,1],[1,2],[2,3],[3,0],[3,4],[4,5],[5,6]]},
+      3:{name:'CASSIOPEIA',main:1,stars:[
+          [1.00,.343,2.3],[.702,.542,2.2],[.548,.224,2.2],[.272,.261,2.7],[.000,.000,3.4]],
+        edges:[[0,1],[1,2],[2,3],[3,4]]},
+      4:{name:'ORION',main:0,stars:[
+          [.000,.000,0.5],[.440,.062,1.6],[.339,.451,2.2],[.278,.504,1.7],
+          [.211,.547,1.8],[.108,1.00,2.1],[.595,.914,0.2]],
+        edges:[[0,1],[1,2],[0,4],[2,3],[3,4],[2,6],[4,5],[6,5]]},
+      5:{name:'LYRA',main:0,stars:[
+          [.639,.128,0.0],[.424,.000,3.9],[.411,.297,4.3],[.129,.397,4.3],
+          [.258,.904,3.5],[.000,1.00,3.2]],
+        edges:[[0,1],[0,2],[2,3],[3,5],[5,4],[4,2]]},
+      7:{name:'SCORPIUS',main:4,stars:[
+          [.916,.000,2.6],[.962,.120,2.3],[.975,.269,2.9],[.774,.247,2.9],
+          [.701,.283,1.0],[.643,.359,2.8],[.515,.618,2.3],[.499,.778,3.0],
+          [.481,.962,3.6],[.292,1.00,3.3],[.092,.990,1.9],[.046,.820,2.4],[.125,.738,1.6]],
+        edges:[[0,1],[1,2],[1,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12]]}
+    };
+    // 前計算: bbox/中心・星の点灯順(intro=導入する辺)・帰還カスケード順(rank)
+    Object.keys(CONSTS).forEach(k=>{
+      const c=CONSTS[k];
+      let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+      c.stars.forEach(s=>{
+        x0=Math.min(x0,s[0]);x1=Math.max(x1,s[0]);
+        y0=Math.min(y0,s[1]);y1=Math.max(y1,s[1]);
+      });
+      c.w=Math.max(0.05,x1-x0);c.h=Math.max(0.05,y1-y0);
+      c.cx=(x0+x1)/2;c.cy=(y0+y1)/2;
+      const nS=c.stars.length;
+      c.intro=new Array(nS).fill(0);
+      c.rank=new Array(nS).fill(0);
+      const seen=new Set([c.edges[0][0]]);
+      c.intro[c.edges[0][0]]=-0.75;   // 種火の星=逆流れ星の到着点は即点灯
+      c.rank[c.edges[0][0]]=0;
+      let rk=0;
+      c.edges.forEach((e,j)=>e.forEach(v=>{
+        if(!seen.has(v)){seen.add(v);c.intro[v]=j;c.rank[v]=++rk;}
+      }));
+    });
+
+    // --- ワードマーク(文字ごとにオフスクリーンへ焼き、生きた組版を毎フレーム合成) ---
+    const padL=6;
+    let ascG=0;
+    let wmW=0,wmH=0,wmX=0,wmTop=0;
+    let oStars=[];          // Oの中の四芒星の画面座標(不動の照準対象)
+    const C={x:0,y:0};      // 装置中心=石碑の光学中心
+    let outerR=0;           // 外周方位環の半径
+    let skySlots=[];        // 星座の持ち場(空の3席)
+    const wmLive=document.createElement('canvas');
+    const lctx=wmLive.getContext('2d');
+    const letters=[...TXT].map((ch,i)=>({
+      ch,i,st:'ground',tSt:-99,skyT:-99,landT:-99,slot:-1,dly:0,annA:0,
+      cv:document.createElement('canvas'),cw:0,dx:0,
+      gcx:0,gcy:0,scx:0,scy:0,scl:1,con:CONSTS[i]||null
+    }));
+
+    function buildWordmark(){
+      const family='"Star Shines Still","Times New Roman",serif';
+      const meas2=document.createElement('canvas').getContext('2d');
+      let size=Math.min(W*0.088,118);
+      meas2.font=size+'px '+family;
+      const gapR=0.34;
+      let widths=[...TXT].map(ch=>meas2.measureText(ch).width);
+      let total=widths.reduce((a,b)=>a+b,0)+size*gapR*(TXT.length-1);
+      const fit=Math.min(1,(W*0.80)/total);
+      if(fit<1){
+        size*=fit;meas2.font=size+'px '+family;
+        widths=[...TXT].map(ch=>meas2.measureText(ch).width);
+        total=widths.reduce((a,b)=>a+b,0)+size*gapR*(TXT.length-1);
+      }
+      const m=meas2.measureText(TXT);
+      ascG=m.actualBoundingBoxAscent||size*0.8;
+      const desc=m.actualBoundingBoxDescent||size*0.25;
+      wmW=Math.ceil(total)+padL*2;
+      wmH=Math.ceil(ascG+desc)+padL*2;
+      wmX=Math.round(cx-wmW/2);
+      wmTop=floorY-wmH;                      // 石碑は床に立つ
+      wmLive.width=Math.ceil(wmW*dpr);
+      wmLive.height=Math.ceil(wmH*dpr);
+      let x=padL;
+      const gap=size*gapR;
+      oStars=[];
+      letters.forEach((L,i)=>{
+        const w=widths[i];
+        L.cw=Math.ceil(w)+padL*2;
+        L.dx=Math.round(x)-padL;
+        L.cv.width=Math.ceil(L.cw*dpr);
+        L.cv.height=Math.ceil(wmH*dpr);
+        const g=L.cv.getContext('2d',{willReadFrequently:true});
+        g.setTransform(dpr,0,0,dpr,0,0);
+        g.clearRect(0,0,L.cw,wmH);
+        g.font=size+'px '+family;
+        g.textBaseline='alphabetic';
+        g.fillStyle='#F4F4F2';
+        g.fillText(L.ch,padL+(x-Math.round(x)),padL+ascG);
+        // 接地感: 足元をわずかに沈ませる
+        g.globalCompositeOperation='source-atop';
+        const gr=g.createLinearGradient(0,0,0,wmH);
+        gr.addColorStop(0,'rgba(13,13,13,0)');
+        gr.addColorStop(.62,'rgba(13,13,13,.05)');
+        gr.addColorStop(1,'rgba(13,13,13,.30)');
+        g.fillStyle=gr;g.fillRect(0,0,L.cw,wmH);
+        g.globalCompositeOperation='source-over';
+        x+=w+gap;
+        const cc=letterCenter(L);
+        L.gcx=wmX+L.dx+(cc?cc.x:L.cw/2);
+        L.gcy=wmTop+(cc?cc.y:wmH*0.5);
+        if(L.ch==='O') oStars.push({x:L.gcx,y:L.gcy});   // 四芒星=不動
       });
     }
 
-    function closeDiscordPopup() {
-      var popup = document.getElementById('discordPopup');
-      popup.classList.remove('active');
-      setTimeout(function() { popup.style.display = 'none'; }, 300);
+    // 文字ビットマップのbbox中心(O=四芒星の座、他=流星の発着点)
+    function letterCenter(L){
+      try{
+        const g=L.cv.getContext('2d',{willReadFrequently:true});
+        const iw=L.cv.width,ih=L.cv.height;
+        const img=g.getImageData(0,0,iw,ih).data;
+        let miX=1e9,maX=-1,miY=1e9,maY=-1;
+        for(let y=0;y<ih;y+=2){
+          for(let x=0;x<iw;x+=2){
+            if(img[(y*iw+x)*4+3]>30){
+              if(x<miX)miX=x;if(x>maX)maX=x;
+              if(y<miY)miY=y;if(y>maY)maY=y;
+            }
+          }
+        }
+        if(maX<0) return null;
+        return{x:(miX+maX)/2/dpr,y:(miY+maY)/2/dpr};
+      }catch(err){return null;}
     }
 
-    document.getElementById('discordPopup').addEventListener('click', function(e) {
-      if (e.target === this) closeDiscordPopup();
+    function buildLayout(){
+      C.x=cx;C.y=wmTop+wmH*0.44;
+      outerR=Math.min(cx*0.94,floorY-40);
+      skySlots=[
+        {x:W*0.21,y:H*0.28},
+        {x:W*0.50,y:H*0.175},
+        {x:W*0.79,y:H*0.28}
+      ];
+      buildStarfield();
+    }
+
+    // --- 星野(seed固定の微光星。星座の背景をなす静かな地) ---
+    let skyStars=[];
+    function buildStarfield(){
+      const rnd=mulberry32(777001);
+      skyStars=[];
+      const n=Math.round(W*floorY/8200);
+      for(let i=0;i<n;i++){
+        skyStars.push({
+          x:rnd()*W,y:rnd()*floorY*0.96,
+          b:0.07+rnd()*0.21,tw:0.5+rnd()*1.7,
+          ph:rnd()*TAU,s:rnd()<0.85?1:1.6
+        });
+      }
+    }
+    function drawStarfield(time){
+      for(let i=0;i<skyStars.length;i++){
+        const s=skyStars[i];
+        const al=s.b*(0.55+0.45*Math.sin(time*s.tw+s.ph));
+        if(al<0.02) continue;
+        sctx.fillStyle='rgba(244,244,242,'+al.toFixed(3)+')';
+        sctx.fillRect(s.x-s.s/2,s.y-s.s/2,s.s,s.s);
+      }
+    }
+
+    // --- 上界シーン(観測装置)の合成先。床反射はここから走査線サンプル ---
+    const sceneCv=document.createElement('canvas');
+    const sctx=sceneCv.getContext('2d');
+
+    // --- 四隅のコンパス作図線の残滓(seed固定・一度だけ焼く) ---
+    const cornerCv=document.createElement('canvas');
+    function buildCorners(){
+      cornerCv.width=Math.ceil(W*dpr);
+      cornerCv.height=Math.ceil(floorY*dpr);
+      const g=cornerCv.getContext('2d');
+      g.setTransform(dpr,0,0,dpr,0,0);
+      const rnd=mulberry32(7741);
+      g.lineWidth=1;
+      [[0,0],[W,0],[0,floorY],[W,floorY]].forEach(([px,py])=>{
+        const n=2+((rnd()*2)|0);
+        for(let i=0;i<n;i++){
+          const r=W*0.06+rnd()*W*0.13;
+          g.strokeStyle='rgba(244,244,242,'+(0.04+rnd()*0.03).toFixed(3)+')';
+          g.beginPath();
+          g.arc(px+(rnd()-0.5)*70,py+(rnd()-0.5)*70,r,0,TAU);
+          g.stroke();
+        }
+        const qx=px+(px===0?1:-1)*(W*0.05+rnd()*44);
+        const qy=py+(py===0?1:-1)*(44+rnd()*44);
+        g.strokeStyle='rgba(244,244,242,.09)';
+        g.beginPath();
+        g.moveTo(qx-5,qy);g.lineTo(qx+5,qy);
+        g.moveTo(qx,qy-5);g.lineTo(qx,qy+5);
+        g.stroke();
+      });
+    }
+
+    // --- 乱数・補助 ---
+    function mulberry32(seed){
+      return function(){
+        seed|=0;seed=(seed+0x6D2B79F5)|0;
+        let z=Math.imul(seed^(seed>>>15),1|seed);
+        z=(z+Math.imul(z^(z>>>7),61|z))^z;
+        return((z^(z>>>14))>>>0)/4294967296;
+      };
+    }
+    const srnd=mulberry32(41207);     // スケジューラ(=?t0の決定的早回しが効く)
+    const R0=mulberry32(90210);       // 環の配置(再展開ごとに新しい姿勢を引く)
+    const clamp01=x=>x<0?0:x>1?1:x;
+    const ease=x=>{x=clamp01(x);return x*x*(3-2*x);};
+    const easeIn=x=>{x=clamp01(x);return x*x;};
+    const easeOut=x=>{x=clamp01(x);return 1-(1-x)*(1-x);};
+    const angDiff=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
+
+    // --- アーミラリー環(擬似3D: 楕円の短径比kと回転角rotをアニメーション) ---
+    function ringConfig(i,n){
+      return{
+        R:0.30+(i/Math.max(1,n-1))*0.24+(R0()-0.5)*0.025,  // ×wmW
+        k:0.16+R0()*0.40,               // 短径比の基準(=見かけの傾き)
+        kAmp:0.04+R0()*0.09,
+        kSpd:0.05+R0()*0.07,
+        rot0:(R0()-0.5)*0.9,            // 姿勢角(mod πで管理)
+        rotSpd:(R0()<0.5?-1:1)*(0.11+R0()*0.13),   // 非整数比の歳差
+        phi:R0()*TAU,                    // 目盛の位相
+        spin:(R0()<0.5?-1:1)*(0.16+R0()*0.42),      // 目盛の流れ(非整数比)
+        nTick:36+12*((R0()*4)|0),
+        alpha:0.30+R0()*0.16,
+        ph:R0()*TAU,
+        band:i===1                       // 黄道帯だけ二重線
+      };
+    }
+    let rings=[];
+    function buildRings(){
+      rings=[];
+      for(let i=0;i<4;i++) rings.push({cfg:ringConfig(i,4),f:0,d:0,v:1,
+        kDraw:0.3,rotDraw:0,yDraw:0,tickV:1,aMul:1});
+    }
+
+    function deriveRing(rg,i){
+      const c=rg.cfg;
+      let f=0,d=0,v=1;
+      if(mode==='align') f=clamp01((stateT-i*0.12)/2.3);
+      else if(mode==='collapse'){f=1;d=clamp01(stateT/0.95);}
+      else if(mode==='quiet'){f=1;d=1;v=0;}
+      else if(mode==='reopen'){
+        const u=stateT-i*0.15;
+        v=clamp01(u/0.4);
+        d=1-easeOut(clamp01(u/0.85));
+        f=1-clamp01((u-0.5)/1.5);
+      }
+      const fe=ease(f),de=easeIn(d);
+      rg.v=v;rg.d=de;
+      const kNat=c.k+c.kAmp*Math.sin(t*c.kSpd+c.ph);
+      rg.kDraw=Math.max(0.012,kNat*(1-fe));
+      rg.rotDraw=c.rot0*(1-fe);
+      rg.yDraw=C.y+(floorY+1-C.y)*de;
+      rg.tickV=v*(1-fe);
+      let land=1;
+      if(mode==='collapse') land=1-ease((stateT-1.0)/0.4);   // 床に着地して走査線へ溶ける
+      rg.aMul=v*land*(1+de*0.9);   // 畳まれるほど線は凝縮して濃くなる
+    }
+
+    // 弧の前後2分割: ローカルパラメータ角 sin(a)>0 の半分が手前(石碑より前)
+    function strokeRingHalf(rg,front){
+      const c=rg.cfg;
+      const Rx=c.R*wmW,Ry=Math.max(1.2,Rx*rg.kDraw);
+      const a=c.alpha*(front?1.25:0.6)*rg.aMul;
+      if(a<0.01) return;
+      sctx.lineWidth=front?1.6:1;
+      sctx.strokeStyle='rgba(244,244,242,'+Math.min(0.9,a).toFixed(4)+')';
+      sctx.beginPath();
+      sctx.ellipse(C.x,rg.yDraw,Rx,Ry,rg.rotDraw,front?0:Math.PI,front?Math.PI:TAU);
+      sctx.stroke();
+      if(c.band){   // 黄道帯: 平行する内側の弧
+        sctx.strokeStyle='rgba(244,244,242,'+(a*0.45).toFixed(4)+')';
+        sctx.beginPath();
+        sctx.ellipse(C.x,rg.yDraw,Rx*0.985,Ry*0.9,rg.rotDraw,front?0:Math.PI,front?Math.PI:TAU);
+        sctx.stroke();
+      }
+    }
+
+    // 度目盛ティック(環に固定されて流れ続ける)
+    function drawTicks(rg,front){
+      if(rg.tickV<0.03) return;
+      const c=rg.cfg;
+      const Rx=c.R*wmW,Ry=Math.max(1.2,Rx*rg.kDraw);
+      const cs=Math.cos(rg.rotDraw),sn=Math.sin(rg.rotDraw);
+      const minor=[],major=[];
+      for(let j=0;j<c.nTick;j++){
+        const a=c.phi+j*TAU/c.nTick;
+        const sa=Math.sin(a);
+        if((sa>0)!==front) continue;
+        const lx=Rx*Math.cos(a),ly=Ry*sa;
+        const px=C.x+lx*cs-ly*sn,py=rg.yDraw+lx*sn+ly*cs;
+        if(py<-8||py>floorY+8) continue;
+        const dl=Math.hypot(px-C.x,py-rg.yDraw)||1;
+        const ux=(px-C.x)/dl,uy=(py-rg.yDraw)/dl;
+        const L=(j%6===0?9:4.5);
+        (j%6===0?major:minor).push([px,py,px-ux*L,py-uy*L]);
+      }
+      const st=(set,al)=>{
+        if(!set.length) return;
+        sctx.strokeStyle='rgba(244,244,242,'+al.toFixed(4)+')';
+        sctx.beginPath();
+        set.forEach(s=>{sctx.moveTo(s[0],s[1]);sctx.lineTo(s[2],s[3]);});
+        sctx.stroke();
+      };
+      const base=rg.tickV*(front?1:0.45);
+      st(minor,0.22*base);
+      st(major,0.45*base);
+    }
+
+    // --- 測距野グラティキュール: 石碑を中心に「呼吸するうねり」(滑らかな
+    //     同心の明度波)が外へ流れ続け、その上に細い等距離環が重なる。
+    //     うねりは3秒でちょうど半波長ずれる速度(8.1667px/s×3s=24.5=λ/2)に
+    //     固定してあり、どの3秒窓でも野の明度分布が入れ替わる=光条撤去後の
+    //     密度をテクスチャではなく水面のような場で担う。シジジー中も眠らない ---
+    function drawGraticule(time){
+      const gv=(0.85+0.15*obsV);
+      if(gv<0.05) return;
+      const gx=C.x+9*Math.sin(time*0.031*10),gy=C.y+6*Math.sin(time*0.017*10+2);
+      const rMax=outerR*1.22;
+      // 1) 呼吸するうねり(λ=64px の滑らかな放射波・低輝度)
+      const lam=64,vSp=64/6,step=8;
+      sctx.lineWidth=step+1.5;
+      for(let r=step*2;r<rMax;r+=step){
+        const fadeIn=clamp01((r-wmH*0.55)/150);
+        const fadeOut=clamp01((rMax-r)/(rMax*0.15));
+        const w=0.5+0.5*Math.sin(TAU*(r-time*vSp)/lam);
+        const a=0.15*w*fadeIn*fadeOut*gv;
+        if(a<0.01) continue;
+        sctx.strokeStyle='rgba(244,244,242,'+a.toFixed(4)+')';
+        sctx.beginPath();
+        sctx.arc(gx,gy,r,0,TAU);
+        sctx.stroke();
+      }
+      // 2) 細い等距離環(技術図面の目盛。密度ではなく品を担う控えめな線)
+      const sp=9;
+      const rOff=(time*4.5)%sp;
+      sctx.lineWidth=1.2;
+      for(let r=rOff+sp*3;r<rMax;r+=sp){
+        const fadeIn=clamp01((r-wmH*0.62)/130);
+        const fadeOut=clamp01((rMax-r)/(rMax*0.13));
+        const a=0.10*fadeIn*fadeOut*gv;
+        if(a<0.008) continue;
+        sctx.strokeStyle='rgba(244,244,242,'+a.toFixed(4)+')';
+        sctx.beginPath();
+        sctx.arc(gx,gy,r,0,TAU);
+        sctx.stroke();
+      }
+      sctx.lineWidth=1;
+    }
+
+    // --- 外周の方位環(全周目盛)と打刻 ---
+    let punches=[];
+    function pushPunch(ang){
+      punches.push({ang,born:t,dropT:null});
+      if(punches.length>26) punches.shift();
+    }
+    function drawOuter(time){
+      const ov=0.45+0.55*obsV;
+      sctx.lineWidth=1;
+      sctx.strokeStyle='rgba(244,244,242,'+(0.055*ov).toFixed(4)+')';
+      sctx.beginPath();sctx.arc(C.x,C.y,outerR,0,TAU);sctx.stroke();
+      const minor=[],major=[];
+      for(let i=0;i<180;i++){
+        const a=outerPhi+i*TAU/180;
+        const ca=Math.cos(a),sa=Math.sin(a);
+        const x1=C.x+ca*outerR,y1=C.y+sa*outerR;
+        if(y1>floorY+16) continue;
+        const l=i%5===0?11:5;
+        (i%5===0?major:minor).push([x1,y1,x1-ca*l,y1-sa*l]);
+      }
+      const st=(set,al)=>{
+        sctx.strokeStyle='rgba(244,244,242,'+al.toFixed(4)+')';
+        sctx.beginPath();
+        set.forEach(s=>{sctx.moveTo(s[0],s[1]);sctx.lineTo(s[2],s[3]);});
+        sctx.stroke();
+      };
+      st(minor,0.10*ov);
+      st(major,0.22*ov);
+      // 打刻(小円+ティック)。シジジーで一括して水平線へ流れ落ちる
+      for(let i=punches.length-1;i>=0;i--){
+        const p=punches[i];
+        const age=time-p.born;
+        if(age>26||age<0){punches.splice(i,1);continue;}
+        let x=C.x+Math.cos(p.ang)*outerR;
+        let y=C.y+Math.sin(p.ang)*outerR;
+        let al=Math.min(1,age*3)*(1-age/26)*0.8;
+        if(p.dropT!=null){
+          const dAge=time-p.dropT;
+          if(dAge>0){
+            y=Math.min(floorY-3,y+dAge*dAge*900);
+            al*=Math.max(0,1-dAge/0.7);
+            if(al<=0.005){punches.splice(i,1);continue;}
+          }
+        }
+        if(y>floorY-2) continue;
+        sctx.strokeStyle='rgba(244,244,242,'+al.toFixed(4)+')';
+        sctx.beginPath();
+        sctx.arc(x,y,3.5,0,TAU);
+        sctx.moveTo(x+Math.cos(p.ang)*5,y+Math.sin(p.ang)*5);
+        sctx.lineTo(x+Math.cos(p.ang)*12,y+Math.sin(p.ang)*12);
+        sctx.stroke();
+      }
+    }
+
+    // --- 測定(アリダードのスナップ→十字作図線→打刻) ---
+    let meas=null,nextMeasure=1.7;
+    const al={a:-2.2,va:0,target:-2.2};
+    let alV=1,hitchT=-9;
+
+    function ringIntersection(){
+      const vis=rings.filter(rg=>rg.v>0.8&&rg.d<0.1);
+      if(vis.length<2) return null;
+      const A=vis[(srnd()*vis.length)|0];
+      let B=vis[(srnd()*vis.length)|0];
+      if(B===A) B=vis[(vis.indexOf(A)+1)%vis.length];
+      const cA2=A.cfg,RxA=cA2.R*wmW,RyA=Math.max(2,RxA*A.kDraw);
+      const csA=Math.cos(A.rotDraw),snA=Math.sin(A.rotDraw);
+      const cB=B.cfg,RxB=cB.R*wmW,RyB=Math.max(2,RxB*B.kDraw);
+      const csB=Math.cos(-B.rotDraw),snB=Math.sin(-B.rotDraw);
+      let best=null,bv=1e9;
+      for(let j=0;j<72;j++){
+        const a=j*TAU/72;
+        const lx=RxA*Math.cos(a),ly=RyA*Math.sin(a);
+        const px=C.x+lx*csA-ly*snA,py=A.yDraw+lx*snA+ly*csA;
+        if(py<H*0.06||py>floorY-26||px<W*0.06||px>W*0.94) continue;
+        const rx=px-C.x,ry=py-B.yDraw;
+        const bx=rx*csB-ry*snB,by=rx*snB+ry*csB;
+        const ev=Math.abs(Math.hypot(bx/RxB,by/RyB)-1);
+        if(ev<bv){bv=ev;best={x:px,y:py};}
+      }
+      return bv<0.05?best:null;
+    }
+    function startMeasure(){
+      // 優先: 結ばれたばかりの星座の主星(装置が星座を観測する物語の核)
+      let tg=null,kind='ring';
+      while(obsQ.length&&!tg){
+        const L=obsQ.shift();
+        if(L.st!=='sky') continue;
+        const p=conStarPos(L,L.con.main,t);
+        tg={x:p[0],y:p[1]};kind='con';
+      }
+      if(!tg){
+        const skyLs=letters.filter(l=>l.con&&l.st==='sky');
+        const r=srnd();
+        if(skyLs.length&&r<0.40){       // 掲揚中の星座を再照準(追尾)
+          const L=skyLs[(srnd()*skyLs.length)|0];
+          const p=conStarPos(L,L.con.main,t);
+          tg={x:p[0],y:p[1]};kind='con';
+        }else if(r<0.72){tg=ringIntersection();kind='ring';}
+        if(!tg&&oStars.length){tg=oStars[(srnd()*oStars.length)|0];kind='o';}
+      }
+      if(!tg){nextMeasure=t+2.5;return;}
+      meas={x:tg.x,y:tg.y,t0:t,punched:false,kind};
+      al.target=Math.atan2(tg.y-C.y,tg.x-C.x);
+      hitchT=t;   // 機械が一瞬引っかかる
+      nextMeasure=t+2.6+srnd()*4.2;
+    }
+
+    function drawAlidade(time){
+      if(alV<0.02) return;
+      const dx=Math.cos(al.a),dy=Math.sin(al.a);
+      const L1=outerR*0.92,L2=outerR*0.5;
+      sctx.lineWidth=1;
+      sctx.strokeStyle='rgba(244,244,242,'+(0.30*alV).toFixed(4)+')';
+      sctx.beginPath();
+      sctx.moveTo(C.x-dx*L2,C.y-dy*L2);
+      sctx.lineTo(C.x+dx*L1,C.y+dy*L1);
+      sctx.stroke();
+      // 照星(両端の小円)とピボット
+      sctx.strokeStyle='rgba(244,244,242,'+(0.45*alV).toFixed(4)+')';
+      sctx.beginPath();sctx.arc(C.x+dx*L1,C.y+dy*L1,3,0,TAU);sctx.stroke();
+      sctx.beginPath();sctx.arc(C.x-dx*L2,C.y-dy*L2,2.2,0,TAU);sctx.stroke();
+      sctx.beginPath();sctx.arc(C.x,C.y,2.2,0,TAU);sctx.stroke();
+      if(meas){
+        const age=time-meas.t0;
+        const lock=ease((age-0.42)/0.30);
+        const fade=1-ease((age-1.25)/0.55);
+        if(lock>0&&fade>0){
+          const a=alV*fade;
+          sctx.strokeStyle='rgba(244,244,242,'+(0.72*lock*a).toFixed(4)+')';
+          sctx.beginPath();sctx.arc(meas.x,meas.y,5.5,0,TAU);sctx.stroke();
+          // 十字の作図線(交点から画面軸に伸びる)
+          const Lc=wmW*0.13*easeOut(lock),gap=8;
+          sctx.strokeStyle='rgba(244,244,242,'+(0.46*a).toFixed(4)+')';
+          sctx.beginPath();
+          sctx.moveTo(meas.x-Lc,meas.y);sctx.lineTo(meas.x-gap,meas.y);
+          sctx.moveTo(meas.x+gap,meas.y);sctx.lineTo(meas.x+Lc,meas.y);
+          sctx.moveTo(meas.x,meas.y-Lc);sctx.lineTo(meas.x,meas.y-gap);
+          sctx.moveTo(meas.x,meas.y+gap);sctx.lineTo(meas.x,meas.y+Lc);
+          sctx.stroke();
+          // アリダード上の距離目盛
+          sctx.strokeStyle='rgba(244,244,242,'+(0.28*a).toFixed(4)+')';
+          sctx.beginPath();
+          const md=Math.hypot(meas.x-C.x,meas.y-C.y);
+          for(let s=0.35;s<0.95;s+=0.18){
+            const px=C.x+dx*md*s,py=C.y+dy*md*s;
+            sctx.moveTo(px-dy*4,py+dx*4);
+            sctx.lineTo(px+dy*4,py-dx*4);
+          }
+          sctx.stroke();
+        }
+      }
+    }
+
+    // --- カーソル=観測者の第2アリダード ---
+    const ca={a:-1.2,va:0};
+    let cA=0;
+    function raySight(ang,mdist){
+      let best=null,bd=1e9;
+      const dx=Math.cos(ang),dy=Math.sin(ang);
+      rings.forEach(rg=>{
+        if(rg.v<0.5||rg.d>0.2) return;
+        const c=rg.cfg,Rx=c.R*wmW,Ry=Math.max(2,Rx*rg.kDraw);
+        const cs=Math.cos(-rg.rotDraw),sn=Math.sin(-rg.rotDraw);
+        const ldx=(dx*cs-dy*sn)/Rx,ldy=(dx*sn+dy*cs)/Ry;
+        const s=1/Math.hypot(ldx,ldy);
+        const d=Math.abs(s-mdist);
+        if(d<bd){bd=d;best=[C.x+dx*s,C.y+dy*s];}
+      });
+      return best;
+    }
+    function drawCursorLayer(){
+      if(cA<0.02) return;
+      const dx=Math.cos(ca.a),dy=Math.sin(ca.a);
+      const mdist=Math.hypot(mouse.x-C.x,mouse.y-C.y);
+      const L=Math.min(outerR,mdist+50);
+      sctx.lineWidth=1;
+      sctx.strokeStyle='rgba(244,244,242,'+(0.13*cA).toFixed(4)+')';
+      sctx.beginPath();sctx.moveTo(C.x,C.y);sctx.lineTo(C.x+dx*L,C.y+dy*L);sctx.stroke();
+      // 照準線上の度目盛
+      sctx.strokeStyle='rgba(244,244,242,'+(0.22*cA).toFixed(4)+')';
+      sctx.beginPath();
+      for(let o=-16;o<=16;o+=16){
+        const px=C.x+dx*(mdist+o),py=C.y+dy*(mdist+o);
+        const l=o===0?7:4;
+        sctx.moveTo(px-dy*l,py+dx*l);sctx.lineTo(px+dy*l,py-dx*l);
+      }
+      sctx.stroke();
+      // 最寄り環との交点に照星が灯る
+      const sg=raySight(ca.a,mdist);
+      if(sg&&sg[1]<floorY-6){
+        sctx.strokeStyle='rgba(244,244,242,'+(0.34*cA).toFixed(4)+')';
+        sctx.beginPath();sctx.arc(sg[0],sg[1],4,0,TAU);sctx.stroke();
+      }
+      // Oの四芒星へのリード線と距離ティック(近接時)
+      if(oStars.length){
+        let st=oStars[0],bd=1e9;
+        oStars.forEach(o=>{
+          const d=Math.hypot(mouse.x-o.x,mouse.y-o.y);
+          if(d<bd){bd=d;st=o;}
+        });
+        const rr=wmW*0.20;
+        if(bd<rr&&bd>6){
+          const la=(1-bd/rr)*cA;
+          const ux=(st.x-mouse.x)/bd,uy=(st.y-mouse.y)/bd;
+          sctx.strokeStyle='rgba(244,244,242,'+(0.30*la).toFixed(4)+')';
+          sctx.setLineDash([3,5]);
+          sctx.beginPath();sctx.moveTo(mouse.x,mouse.y);sctx.lineTo(st.x,st.y);sctx.stroke();
+          sctx.setLineDash([]);
+          sctx.beginPath();
+          const nT=Math.min(6,(bd/26)|0);
+          for(let i2=1;i2<=nT;i2++){
+            const px=mouse.x+ux*26*i2,py=mouse.y+uy*26*i2;
+            sctx.moveTo(px-uy*3.5,py+ux*3.5);
+            sctx.lineTo(px+uy*3.5,py-ux*3.5);
+          }
+          sctx.stroke();
+          // 星のマーカー(菱形=四芒星の外形)
+          sctx.beginPath();
+          sctx.moveTo(st.x,st.y-6);sctx.lineTo(st.x+6,st.y);
+          sctx.lineTo(st.x,st.y+6);sctx.lineTo(st.x-6,st.y);
+          sctx.closePath();sctx.stroke();
+        }
+      }
+    }
+
+    // ==================== 文字⇄実在星座(s2の組版ギミック統合) ====================
+    const PRE_T=0.7;        // 離床の予兆(震え+輝度上昇)
+    const DEP_T=1.35;       // 逆流れ星の上昇
+    const EDGE_T=0.26;      // 星座線1辺の作図
+    const UND_T=0.06;       // 解け(1辺)
+    const RET_STEP=0.09;    // 帰還カスケードの星間隔
+    const RET_DUR=1.25;     // 帰還流星1つの飛行
+    let letEv=3.0,winterAt=11,winterDone=false;
+    const obsQ=[];          // 完成した星座→アリダードの観測待ち行列
+    const ripples=[];       // 床の楕円波紋(帰還の着地)
+
+    function slotTarget(L){
+      const sl=skySlots[L.slot]||skySlots[1];
+      const c=L.con;
+      return{x:sl.x,y:sl.y,s:Math.min((H*0.21)/c.h,(W*0.17)/c.w)};
+    }
+    function conStarPos(L,k,time){   // 星座の星kの画面座標(ゆっくり呼吸)
+      const c=L.con,s=c.stars[k];
+      return[
+        L.scx+(s[0]-c.cx)*L.scl+1.6*Math.sin(time*0.23+L.i*2.1),
+        L.scy+(s[1]-c.cy)*L.scl+1.2*Math.sin(time*0.19+L.i*1.3)
+      ];
+    }
+    function departLetter(L,dly){
+      const used=letters.filter(l=>l.con&&l.st!=='ground').map(l=>l.slot);
+      const free=[1,0,2].filter(s=>used.indexOf(s)<0);
+      if(!free.length||L.st!=='ground') return;
+      L.st='pre';L.tSt=t;L.dly=dly||0;L.slot=free[0];
+      const tg=slotTarget(L);
+      L.scx=tg.x;L.scy=tg.y;L.scl=tg.s;
+    }
+    function startUndraw(L){
+      if(L.st!=='sky') return;
+      L.st='undraw';L.tSt=t;
+    }
+    // 離床できる文字: O(1,6)以外+両端のNを同時に空へ還さない(名前の可読性)
+    const deppables=()=>letters.filter(l=>l.con&&l.st==='ground'&&
+      !(l.i===0&&letters[7].st!=='ground')&&!(l.i===7&&letters[0].st!=='ground'));
+    function deppablesW(){   // 冬の夜空: 最大3文字(決定的シャッフル)
+      const arr=letters.filter(l=>l.con&&l.st==='ground');
+      for(let i=arr.length-1;i>0;i--){
+        const j=(srnd()*(i+1))|0;
+        const tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;
+      }
+      const out=[];
+      for(const l of arr){
+        if(out.length>=3) break;
+        if(l.i===0&&(letters[7].st!=='ground'||out.some(o=>o.i===7))) continue;
+        if(l.i===7&&(letters[0].st!=='ground'||out.some(o=>o.i===0))) continue;
+        out.push(l);
+      }
+      return out;
+    }
+    function preSeed(){   // 開幕からオリオン座が空に結ばれている(初見1秒目の密度)
+      const L=letters[4];
+      L.st='sky';L.tSt=-20;L.skyT=-20;L.slot=1;L.annA=1;
+      const tg=slotTarget(L);
+      L.scx=tg.x;L.scy=tg.y;L.scl=tg.s;
+      obsQ.push(L);
+    }
+
+    // 現在の地上組版をwmLiveへ合成(予兆の震え/出発フェード/ゴースト/着地squash)
+    function composeWm(time){
+      lctx.setTransform(dpr,0,0,dpr,0,0);
+      lctx.clearRect(0,0,wmW,wmH);
+      letters.forEach(L=>{
+        let al=1,sxx=1,syy=1,jx=0;
+        if(L.st==='ground'){
+          const k=(time-L.landT)/0.34;
+          if(k>=0&&k<1){   // squash+微オーバーシュート(s2)
+            syy=1-0.075*(1-k)*Math.sin(k*Math.PI*2.2);
+            sxx=1+(1-syy)*0.8;
+            al=Math.max(0.18,Math.min(1,k*5));
+          }
+        }else if(L.st==='pre'){
+          const k=clamp01((time-L.tSt-L.dly)/PRE_T);
+          jx=(Math.sin(time*47+L.i*9)+0.6*Math.sin(time*31+L.i*3))*1.4*k;
+          if(k>0.1){   // 輝度上昇=ずれ二重露光
+            lctx.globalAlpha=0.28*k;
+            lctx.drawImage(L.cv,L.dx+jx*2.2,0,L.cw,wmH);
+          }
+        }else if(L.st==='depart'){
+          al=Math.max(0.18,1-clamp01((time-L.tSt)/0.30)*0.82);
+        }else al=0.18;   // 不在中も暗部で字形が追えるゴースト
+        lctx.globalAlpha=al;
+        if(sxx!==1||syy!==1){
+          lctx.save();
+          lctx.translate(L.dx+L.cw/2,padL+ascG);
+          lctx.scale(sxx,syy);
+          lctx.drawImage(L.cv,-L.cw/2,-(padL+ascG),L.cw,wmH);
+          lctx.restore();
+        }else lctx.drawImage(L.cv,L.dx+jx,0,L.cw,wmH);
+      });
+      lctx.globalAlpha=1;
+    }
+
+    // --- 星座の描画(星の等級・点灯順・作図ペン先・主星スパイク・名前注記) ---
+    const rStar=m=>Math.max(1.1,3.2-m*0.55);
+    function drawCons(time){
+      letters.forEach(L=>{
+        if(!L.con) return;
+        if(L.st==='draw'||L.st==='sky'||L.st==='undraw') drawCon(L,time);
+      });
+    }
+    function drawCon(L,time){
+      const c=L.con,nE=c.edges.length;
+      const P=c.stars.map((s,k)=>conStarPos(L,k,time));
+      const age=time-L.tSt;
+      let eP,sA;
+      if(L.st==='draw'){
+        const p=age/EDGE_T;
+        eP=j=>clamp01(p-j);
+        sA=v=>clamp01((p-(c.intro[v]+0.75))/0.5);
+      }else if(L.st==='undraw'){
+        const q=age/UND_T;
+        eP=j=>clamp01(1-(q-(nE-1-j)));
+        sA=()=>1;
+      }else{eP=()=>1;sA=()=>1;}
+      // 完成済みの辺
+      sctx.lineWidth=1;
+      sctx.strokeStyle='rgba(244,244,242,0.32)';
+      sctx.beginPath();
+      for(let j=0;j<nE;j++){
+        if(eP(j)>=1){
+          const A=P[c.edges[j][0]],B=P[c.edges[j][1]];
+          sctx.moveTo(A[0],A[1]);sctx.lineTo(B[0],B[1]);
+        }
+      }
+      sctx.stroke();
+      // 作図中/解け途中の辺(ペン先の光点つき)
+      for(let j=0;j<nE;j++){
+        const f=eP(j);
+        if(f<=0||f>=1) continue;
+        const A=P[c.edges[j][0]],B=P[c.edges[j][1]];
+        const ex=A[0]+(B[0]-A[0])*easeOut(f),ey=A[1]+(B[1]-A[1])*easeOut(f);
+        sctx.strokeStyle='rgba(244,244,242,0.42)';
+        sctx.beginPath();sctx.moveTo(A[0],A[1]);sctx.lineTo(ex,ey);sctx.stroke();
+        if(L.st==='draw'){
+          sctx.fillStyle='rgba(244,244,242,0.85)';
+          sctx.beginPath();sctx.arc(ex,ey,1.4,0,TAU);sctx.fill();
+        }
+      }
+      // 星(実際の等級に応じた大きさで、ゆっくり瞬く)
+      for(let k=0;k<c.stars.length;k++){
+        const a0=sA(k);
+        if(a0<=0) continue;
+        const tw=0.80+0.20*Math.sin(time*(0.9+(k*37%13)/11)+k*2.13+L.i*1.7);
+        const al=(0.55+0.35*a0)*tw;
+        let r=rStar(c.stars[k][2])*(0.5+0.5*a0);
+        if(k===c.main) r*=1.3;
+        sctx.fillStyle='rgba(244,244,242,'+Math.min(0.95,al).toFixed(3)+')';
+        sctx.beginPath();sctx.arc(P[k][0],P[k][1],r,0,TAU);sctx.fill();
+        if(a0>0&&a0<1){   // 点火の閃き(広がるリング)
+          sctx.strokeStyle='rgba(244,244,242,'+(0.5*(1-a0)).toFixed(3)+')';
+          sctx.beginPath();sctx.arc(P[k][0],P[k][1],r+6*a0,0,TAU);sctx.stroke();
+        }
+        if(k===c.main){   // 主星: 十字スパイク+淡い環
+          sctx.strokeStyle='rgba(244,244,242,'+(0.5*al).toFixed(3)+')';
+          const sp=r+3.5;
+          sctx.beginPath();
+          sctx.moveTo(P[k][0]-sp,P[k][1]);sctx.lineTo(P[k][0]+sp,P[k][1]);
+          sctx.moveTo(P[k][0],P[k][1]-sp);sctx.lineTo(P[k][0],P[k][1]+sp);
+          sctx.stroke();
+          sctx.strokeStyle='rgba(244,244,242,'+(0.20*al).toFixed(3)+')';
+          sctx.beginPath();
+          sctx.arc(P[k][0],P[k][1],r+6+0.7*Math.sin(time*1.1+L.i),0,TAU);
+          sctx.stroke();
+        }
+      }
+      if(L.annA>0.02) drawConLabel(L,P);
+    }
+    // 星座名の注記: 主星から細い引出線→英大文字Cormorant+小さな角距離目盛
+    function drawConLabel(L,P){
+      const c=L.con,a=0.62*L.annA;
+      const M=P[c.main];
+      const flip=L.scx>W*0.62;
+      const dx=flip?-1:1;
+      const x1=M[0]+dx*16,y1=M[1]-14;
+      const x2=x1+dx*12;
+      sctx.strokeStyle='rgba(244,244,242,'+(0.55*a).toFixed(3)+')';
+      sctx.lineWidth=1;
+      sctx.beginPath();
+      sctx.moveTo(M[0]+dx*5,M[1]-4);
+      sctx.lineTo(x1,y1);sctx.lineTo(x2,y1);
+      sctx.stroke();
+      sctx.save();
+      sctx.font='500 11px "Cormorant Garamond",serif';
+      sctx.letterSpacing='2.6px';
+      sctx.textBaseline='middle';
+      sctx.textAlign=flip?'right':'left';
+      sctx.fillStyle='rgba(244,244,242,'+a.toFixed(3)+')';
+      const tx=x2+dx*6;
+      sctx.fillText(c.name,tx,y1);
+      const twd=sctx.measureText(c.name).width;
+      sctx.restore();
+      const rx0=flip?tx-twd:tx,rw=Math.max(30,twd);
+      const ry=y1+9;
+      sctx.strokeStyle='rgba(244,244,242,'+(0.45*a).toFixed(3)+')';
+      sctx.beginPath();
+      sctx.moveTo(rx0,ry);sctx.lineTo(rx0+rw,ry);
+      for(let i2=0;i2<=4;i2++){
+        const px=rx0+rw*i2/4,l=i2%2===0?3:1.8;
+        sctx.moveTo(px,ry);sctx.lineTo(px,ry-l);
+      }
+      sctx.stroke();
+    }
+
+    // --- 空席の作図跡(破線下線+両端ティック)。ゴースト字はcomposeWmが担う ---
+    function drawSeats(){
+      letters.forEach(L=>{
+        if(!L.con||L.st==='ground') return;
+        const yb=wmTop+padL+ascG+7;
+        const x0=wmX+L.dx+3,x1=wmX+L.dx+L.cw-3;
+        sctx.lineWidth=1;
+        sctx.strokeStyle='rgba(244,244,242,0.13)';
+        sctx.setLineDash([3,4]);
+        sctx.beginPath();sctx.moveTo(x0,yb);sctx.lineTo(x1,yb);sctx.stroke();
+        sctx.setLineDash([]);
+        sctx.beginPath();
+        sctx.moveTo(x0,yb-3);sctx.lineTo(x0,yb+3);
+        sctx.moveTo(x1,yb-3);sctx.lineTo(x1,yb+3);
+        sctx.stroke();
+      });
+    }
+
+    // --- 逆流れ星(離床)と流星カスケード(帰還) ---
+    function drawMeteors(time){
+      letters.forEach(L=>{
+        if(!L.con) return;
+        if(L.st==='depart') drawDepartMeteor(L,time);
+        else if(L.st==='return') drawReturnMeteors(L,time);
+      });
+    }
+    function drawDepartMeteor(L,time){
+      const c=L.con;
+      const S=conStarPos(L,c.edges[0][0],time);
+      const gx=L.gcx,gy=L.gcy;
+      const u=(time-L.tSt)/DEP_T;
+      const cxq=(gx+S[0])/2+(S[0]-gx)*0.12;
+      const cyq=Math.min(gy,S[1])-110;
+      let px=null,py=null;
+      for(let j=5;j>=0;j--){
+        const u2=u-j*0.034;
+        if(u2<=0) continue;
+        const e=ease(clamp01(u2));
+        const bx=(1-e)*(1-e)*gx+2*(1-e)*e*cxq+e*e*S[0];
+        const by=(1-e)*(1-e)*gy+2*(1-e)*e*cyq+e*e*S[1];
+        if(px!==null){
+          sctx.strokeStyle='rgba(244,244,242,'+(0.42*(1-j/6)).toFixed(3)+')';
+          sctx.beginPath();sctx.moveTo(px,py);sctx.lineTo(bx,by);sctx.stroke();
+        }
+        px=bx;py=by;
+        if(j===0){
+          sctx.fillStyle='rgba(244,244,242,0.9)';
+          sctx.beginPath();sctx.arc(bx,by,1.5,0,TAU);sctx.fill();
+        }
+      }
+      if(u<0.22){   // 離床の発光輪(足元)
+        sctx.strokeStyle='rgba(244,244,242,'+(0.4*(1-u/0.22)).toFixed(3)+')';
+        sctx.beginPath();sctx.arc(gx,gy,3+u*46,0,TAU);sctx.stroke();
+      }
+    }
+    function drawReturnMeteors(L,time){
+      const c=L.con,nS=c.stars.length;
+      for(let k=0;k<nS;k++){
+        const ord=nS-1-c.rank[k];   // 末端の星から順に帰る
+        const S=conStarPos(L,k,time);
+        const gx=L.gcx+(ord%3-1)*3,gy=L.gcy;
+        const u=(time-L.tSt-ord*RET_STEP)/RET_DUR;
+        if(u<=0){   // 出発待ちの星は残光のまま
+          sctx.fillStyle='rgba(244,244,242,0.5)';
+          sctx.beginPath();
+          sctx.arc(S[0],S[1],Math.max(1,rStar(c.stars[k][2])*0.8),0,TAU);
+          sctx.fill();
+          continue;
+        }
+        if(u>=1) continue;
+        const cxq=S[0]+(gx-S[0])*0.22,cyq=S[1]-42-ord*5;
+        let px=null,py=null;
+        for(let j=5;j>=0;j--){
+          const u2=u-j*0.03;
+          if(u2<=0) continue;
+          const uu=clamp01(u2),e=uu*uu*(3-2*uu);
+          const bx=(1-e)*(1-e)*S[0]+2*(1-e)*e*cxq+e*e*gx;
+          const by=(1-e)*(1-e)*S[1]+2*(1-e)*e*cyq+e*e*gy;
+          if(px!==null){
+            sctx.strokeStyle='rgba(244,244,242,'+(0.45*(1-j/6.5)).toFixed(3)+')';
+            sctx.beginPath();sctx.moveTo(px,py);sctx.lineTo(bx,by);sctx.stroke();
+          }
+          px=bx;py=by;
+          if(j===0){
+            sctx.fillStyle='rgba(244,244,242,0.95)';
+            sctx.beginPath();sctx.arc(bx,by,1.4,0,TAU);sctx.fill();
+          }
+        }
+      }
+    }
+    // ==================== 文字⇄実在星座 ここまで ====================
+
+    // --- 石碑(測るたびに多重露光でブレて逃げる被写体) ---
+    let wmOff=0,wmVel=0;
+    function drawWordmarkLayer(time){
+      const ox=wmOff+2.6*Math.sin(time*0.5)+1.1*Math.sin(time*0.23+1.3);
+      const kick=Math.min(1,Math.abs(wmOff)/1.5);
+      if(kick>0.1){   // モノクロ多重露光(2枚ずれ)
+        sctx.globalAlpha=0.26*kick;
+        sctx.drawImage(wmLive,wmX-ox*0.9,wmTop,wmW,wmH);
+        sctx.globalAlpha=0.15*kick;
+        sctx.drawImage(wmLive,wmX+ox*1.9,wmTop-0.6,wmW,wmH);
+      }
+      sctx.globalAlpha=0.88;
+      sctx.drawImage(wmLive,wmX+ox,wmTop,wmW,wmH);
+      sctx.globalAlpha=1;
+    }
+
+    // --- クリック=観測の確定(コンパス円+測地線+打刻) ---
+    let compasses=[],geos=[];
+    window.__heroFloorRipple=function(e){
+      if(staticMode||!ready||frozen) return false;
+      const py=e.clientY+scrollY;
+      if(scrollY>H*0.6||py>H) return false;
+      const px=e.clientX;
+      compasses.push({x:px,y:Math.min(py,H-14),a0:Math.random()*TAU,t0:t});
+      const tgt=meas?{x:meas.x,y:meas.y}:(oStars[0]||{x:C.x,y:C.y});
+      geos.push({x1:px,y1:py,x2:tgt.x,y2:tgt.y,t0:t});
+      let ang=Math.atan2(py-C.y,px-C.x);
+      if(Math.sin(ang)>0.1) ang=-ang;   // 打刻は床上に写像
+      pushPunch(ang);
+      wavePhase+=0.25;
+      return true;
+    };
+    function drawCompasses(time,dim){
+      for(let i=compasses.length-1;i>=0;i--){
+        const cc=compasses[i],age=time-cc.t0;
+        if(age>1.3||age<0){compasses.splice(i,1);continue;}
+        const p=Math.min(1,age/0.7);
+        const a=(1-age/1.3)*0.5*dim;
+        const r=20+age*16;
+        const isFloor=cc.y>floorY;
+        ctx.save();
+        if(isFloor){   // 床では作図円も反射面に寝る
+          ctx.beginPath();ctx.rect(0,floorY,W,H-floorY);ctx.clip();
+          ctx.translate(cc.x,cc.y);ctx.scale(1,0.22);ctx.translate(-cc.x,-cc.y);
+        }
+        ctx.lineWidth=1;
+        ctx.strokeStyle='rgba(244,244,242,'+a.toFixed(4)+')';
+        const a2=cc.a0+easeOut(p)*TAU;
+        ctx.beginPath();ctx.arc(cc.x,cc.y,r,cc.a0,a2);ctx.stroke();
+        // コンパスの脚(中心→弧の先端)
+        ctx.beginPath();
+        ctx.moveTo(cc.x,cc.y);
+        ctx.lineTo(cc.x+Math.cos(a2)*r,cc.y+Math.sin(a2)*r);
+        ctx.stroke();
+        ctx.fillStyle='rgba(244,244,242,'+Math.min(1,a*1.2).toFixed(4)+')';
+        ctx.fillRect(cc.x-1,cc.y-1,2,2);
+        ctx.restore();
+      }
+    }
+    function drawGeos(time,dim){
+      for(let i=geos.length-1;i>=0;i--){
+        const gg=geos[i],age=time-gg.t0;
+        if(age>0.9||age<0){geos.splice(i,1);continue;}
+        const p=easeOut(Math.min(1,age/0.35));
+        const a=(1-age/0.9)*0.35*dim;
+        ctx.strokeStyle='rgba(244,244,242,'+a.toFixed(4)+')';
+        ctx.lineWidth=1;
+        ctx.setLineDash([5,6]);
+        ctx.beginPath();
+        ctx.moveTo(gg.x1,gg.y1);
+        ctx.lineTo(gg.x1+(gg.x2-gg.x1)*p,gg.y1+(gg.y2-gg.y1)*p);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+
+    // --- フィルムグレイン(128pxタイル) ---
+    // タイルはシード固定のmulberry32(上の乱数・補助で定義済)で生成する
+    // (?t0/?still凍結フックでのバイト単位の決定性を保証。タイルは静的
+    //  パターンなので視覚差はない)
+    const grainTile=document.createElement('canvas');
+    grainTile.width=grainTile.height=128;
+    (function(){
+      const g=grainTile.getContext('2d');
+      const id=g.createImageData(128,128);
+      const d=id.data;
+      const rnd=mulberry32(0x53345234);   // 固定シード
+      for(let i=0;i<d.length;i+=4){
+        const light=rnd()<.5;
+        d[i]=d[i+1]=light?244:13;d[i+2]=light?242:13;
+        d[i+3]=(rnd()*12)|0;
+      }
+      g.putImageData(id,0,0);
+    })();
+    let grainPat=null,gox=0,goy=0,frameN=0;
+
+    // --- 状態(シジジー周期のステートマシン) ---
+    const mouse={x:-9999,y:-9999};
+    addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY+scrollY;});
+    document.addEventListener('mouseleave',()=>{mouse.x=-9999;});
+    let mode='observe',stateT=0,syzygyAt=31;
+    let obsV=1,outerPhi=0;
+    let wBoost=0,wavePhase=0,mAmp=0;
+    let t=0,lastTs=null,rafId=null,frozen=false;
+
+    // 「声の線」3本サイン波(床反射の走査線オフセット)。s2の振幅に戻して
+    // 水鏡の揺らぎを常時の密度に数える
+    function waveOff(row,time,rowY){
+      const boost=1+mAmp*1.6*Math.exp(-Math.pow((rowY-mouse.y)/110,2));
+      return (Math.sin(row*.055+time*.9)*3.0
+             +Math.sin(row*.031-time*.55+2.1)*2.1
+             +Math.sin(row*.12+time*1.6+4.4)*1.3)*boost;
+    }
+
+    // ========================= 更新(描画と分離=?t0早回し用) =========================
+    function update(dt){
+      t+=dt;stateT+=dt;
+      // 測定イベントで機械が一瞬引っかかってから進む(生き物感)
+      const hv=1-0.88*Math.exp(-Math.pow((t-hitchT-0.06)/0.16,2))
+                +0.22*Math.exp(-Math.pow((t-hitchT-0.55)/0.22,2));
+      outerPhi+=0.016*dt;
+      rings.forEach(rg=>{
+        const c=rg.cfg;
+        c.phi=(c.phi+c.spin*hv*dt)%TAU;
+        c.rot0+=c.rotSpd*(1+0.25*Math.sin(t*0.11+c.ph))*hv*dt;
+        if(c.rot0>Math.PI/2)c.rot0-=Math.PI;   // 楕円はmod π対称
+        if(c.rot0<-Math.PI/2)c.rot0+=Math.PI;
+      });
+      // 文字の状態遷移(地上→予兆→逆流れ星→作図→掲揚→解け→流星帰還→地上)
+      letters.forEach(L=>{
+        if(!L.con) return;
+        const a=t-L.tSt,nE=L.con.edges.length,nS=L.con.stars.length;
+        if(L.st==='pre'&&a>PRE_T+L.dly){L.st='depart';L.tSt=t;}
+        else if(L.st==='depart'&&a>DEP_T){L.st='draw';L.tSt=t;}
+        else if(L.st==='draw'&&a>(nE+1)*EDGE_T+0.35){
+          L.st='sky';L.tSt=t;L.skyT=t;
+          obsQ.push(L);                              // 完成した星座は観測対象へ
+          nextMeasure=Math.min(nextMeasure,t+0.6);   // 装置がすぐ照準に来る
+        }
+        else if(L.st==='undraw'&&a>nE*UND_T+0.12){L.st='return';L.tSt=t;}
+        else if(L.st==='return'&&a>(nS-1)*RET_STEP+RET_DUR+0.05){
+          L.st='ground';L.landT=t;L.slot=-1;
+          ripples.push({x:L.gcx,y:floorY+(H-floorY)*0.2,t0:t,s:0.8});
+          wavePhase+=0.2;wBoost=Math.min(1.4,wBoost+0.55);
+        }
+        L.annA+=(((L.st==='sky')?1:0)-L.annA)*Math.min(1,dt/0.5);
+      });
+      // モード遷移
+      if(mode==='observe'){
+        // 文字→星座イベントのスケジュール(seed固定=決定的)
+        if(!winterDone&&t>=winterAt){
+          // 冬の夜空(2段階): まず空を畳み、全文字が揃ったら3星座を同時掲揚
+          letters.forEach(l=>{if(l.st==='sky')startUndraw(l);});
+          if(letters.every(l=>!l.con||l.st==='ground')){
+            winterDone=true;
+            deppablesW().forEach((l,k)=>departLetter(l,k*0.85));
+          }
+        }
+        if(t>=letEv){
+          letEv=t+5+srnd()*4;
+          const aloft=letters.filter(l=>l.con&&l.st!=='ground');
+          const skyLs=aloft.filter(l=>l.st==='sky').sort((a,b)=>a.skyT-b.skyT);
+          const winterSoon=!winterDone&&t>=winterAt-3;   // 冬の直前は新規離床を止める
+          if(t<syzygyAt-14&&aloft.length<2&&!winterSoon){
+            const cand=deppables();
+            if(cand.length) departLetter(cand[(srnd()*cand.length)|0],0);
+            else if(skyLs.length) startUndraw(skyLs[0]);
+          }else if(skyLs.length&&t-skyLs[0].skyT>7&&(winterDone||t<winterAt)) startUndraw(skyLs[0]);
+        }
+        // シジジー前に空を畳む(主導権の受け渡し)
+        if(t>syzygyAt-4.2) letters.forEach(l=>{if(l.st==='sky')startUndraw(l);});
+        if(!meas&&t>=nextMeasure) startMeasure();
+        if(meas){
+          const age=t-meas.t0;
+          if(age>=0.42&&!meas.punched){
+            meas.punched=true;
+            let ang=Math.atan2(meas.y-C.y,meas.x-C.x);
+            if(Math.sin(ang)>0.1) ang=-ang;
+            pushPunch(ang);
+            // 観測の瞬間、被写体がブレる(石碑を測った時のみ。星座観測ではブレない)
+            if(meas.kind!=='con') wmVel+=(srnd()<0.5?-1:1)*(95+srnd()*70);
+          }
+          if(age>1.9) meas=null;
+        }
+        if(t>=syzygyAt){
+          mode='align';stateT=0;meas=null;al.target=0;
+          letters.forEach(l=>{if(l.st==='sky'||l.st==='draw'){l.st='undraw';l.tSt=t;}});
+        }
+      }else if(mode==='align'){
+        al.target=0;
+        if(stateT>=2.9){
+          mode='collapse';stateT=0;wmVel+=45;
+          punches.forEach(p=>{p.dropT=t+srnd()*0.35;});
+        }
+      }else if(mode==='collapse'){
+        wBoost=Math.max(wBoost,2.2*ease(stateT/1.0));
+        if(stateT>=1.4){mode='quiet';stateT=0;}
+      }else if(mode==='quiet'){
+        if(stateT>=1.8){
+          mode='reopen';stateT=0;
+          rings.forEach((rg,i)=>{rg.cfg=ringConfig(i,rings.length);});  // 新しい配置
+        }
+      }else if(mode==='reopen'){
+        if(stateT>=2.4+rings.length*0.15){
+          mode='observe';stateT=0;
+          syzygyAt=t+36+srnd()*16;
+          nextMeasure=t+1.6+srnd()*2;
+          winterAt=syzygyAt-20;winterDone=false;   // 次周期の冬の夜空を予約
+          letEv=t+3+srnd()*2;
+        }
+      }
+      if(mode!=='collapse') wBoost-=wBoost*Math.min(1,dt/1.5);
+      rings.forEach((rg,i)=>deriveRing(rg,i));
+      obsV=mode==='observe'?1
+           :mode==='align'?1-ease(stateT/2.4)
+           :mode==='reopen'?ease((stateT-0.8)/1.6):0;
+      alV=(mode==='observe'||mode==='align')?1
+         :mode==='collapse'?1-ease(stateT/0.8)
+         :mode==='reopen'?ease((stateT-1.2)/1.2):0;
+      // アリダードの減衰バネ(角度)
+      {
+        const err=angDiff(al.a,al.target),w=10,z=0.78;
+        al.va+=(-w*w*err-2*z*w*al.va)*dt;
+        al.a+=al.va*dt;
+      }
+      // 石碑の減衰バネ(測定でブレる1〜9pxのスライド)
+      {
+        const w=6.5,z=0.5;
+        wmVel+=(-w*w*wmOff-2*z*w*wmVel)*dt;
+        wmOff+=wmVel*dt;
+      }
+      // カーソルアリダード
+      const mIn=mouse.x>=0&&mouse.y<floorY&&mouse.y>0;
+      cA+=((mIn?1:0)-cA)*Math.min(1,dt/0.3);
+      if(mIn){
+        const err=angDiff(ca.a,Math.atan2(mouse.y-C.y,mouse.x-C.x)),w=9,z=0.8;
+        ca.va+=(-w*w*err-2*z*w*ca.va)*dt;
+        ca.a+=ca.va*dt;
+      }
+      const inFloor=mouse.x>=0&&mouse.y>floorY-40&&mouse.y<H?1:0;
+      mAmp+=(inFloor-mAmp)*.05;
+      wavePhase+=dt*0.5;   // 反射の波を常時ドリフト(静止3秒でも波形が入れ替わる)
+    }
+
+    // --- シジジーの水平線(全環が畳まれて床の走査線と合体する山場) ---
+    function drawFloorLine(dim){
+      let a=0;
+      if(mode==='collapse') a=0.5*ease(stateT/1.1);
+      else if(mode==='quiet') a=0.5*(1-ease(stateT/1.3));
+      if(a<0.01) return;
+      a*=dim;
+      const g=ctx.createLinearGradient(cx-wmW*0.75,0,cx+wmW*0.75,0);
+      g.addColorStop(0,'rgba(244,244,242,0)');
+      g.addColorStop(0.5,'rgba(244,244,242,'+a.toFixed(4)+')');
+      g.addColorStop(1,'rgba(244,244,242,0)');
+      ctx.fillStyle=g;
+      ctx.fillRect(cx-wmW*0.75,floorY-1,wmW*1.5,1.4);
+      ctx.globalAlpha=a*0.25;
+      ctx.fillRect(cx-wmW*0.6,floorY-3,wmW*1.2,6);
+      ctx.globalAlpha=1;
+    }
+
+    function drawFrame(time,dim){
+      // 闇と床(OLED黒潰れ対策で床は#141414未満に落とさない)
+      ctx.fillStyle='#0D0D0D';
+      ctx.fillRect(0,0,W,floorY);
+      ctx.fillStyle='#141414';
+      ctx.fillRect(0,floorY,W,H-floorY);
+
+      // --- 上界(観測装置+星座)をシーンへ合成:
+      //     星野→測距環→方位環→星座(深宇宙)→back弧→石碑→空席/流星→front弧→アリダード ---
+      composeWm(time);
+      sctx.setTransform(dpr,0,0,dpr,0,0);
+      sctx.clearRect(0,0,W,floorY);
+      drawStarfield(time);
+      drawGraticule(time);
+      sctx.drawImage(cornerCv,0,0,W,floorY);
+      drawOuter(time);
+      drawCons(time);
+      rings.forEach(rg=>{if(rg.v>0.02){strokeRingHalf(rg,false);drawTicks(rg,false);}});
+      drawWordmarkLayer(time);
+      drawSeats();
+      drawMeteors(time);
+      rings.forEach(rg=>{if(rg.v>0.02){strokeRingHalf(rg,true);drawTicks(rg,true);}});
+      drawAlidade(time);
+      drawCursorLayer();
+
+      ctx.save();
+      ctx.globalAlpha=0.25+0.75*dim;
+      ctx.drawImage(sceneCv,0,0,W,floorY);
+      ctx.restore();
+
+      // 床際は静かに沈める
+      const fg=ctx.createLinearGradient(0,floorY-H*0.07,0,floorY);
+      fg.addColorStop(0,'rgba(13,13,13,0)');
+      fg.addColorStop(1,'rgba(13,13,13,.55)');
+      ctx.fillStyle=fg;
+      ctx.fillRect(0,floorY-H*0.07,W,H*0.07);
+
+      drawFloorLine(dim);
+
+      // --- 床反射(装置と石碑の倒立像を走査線ストリップで、3本サイン波で歪ませる) ---
+      const reflH=Math.round(wmH*1.35);
+      const reflSrc=Math.min(floorY-2,wmH*1.9);
+      for(let dy=0;dy<reflH;dy+=2){
+        const k=dy/reflH;
+        const a=0.19*(1+wBoost*0.5)*Math.pow(1-k,1.55)*dim;
+        if(a<0.004) break;
+        const srcY=Math.max(0,floorY-2-reflSrc*Math.pow(k,0.9));
+        const off=waveOff(dy,time+wavePhase,floorY+dy)*(1+wBoost*0.9);
+        const dw=W*(1+k*0.045);
+        ctx.globalAlpha=Math.min(0.5,a);
+        ctx.drawImage(sceneCv,0,srcY*dpr,W*dpr,2*dpr,
+                      off-(dw-W)/2,floorY+dy,dw,2.6);
+      }
+      ctx.globalAlpha=1;
+
+      // --- 床: 星座の鏡像(遠い水鏡)と帰還の着地波紋 ---
+      ctx.save();
+      ctx.beginPath();ctx.rect(0,floorY,W,H-floorY);ctx.clip();
+      letters.forEach(L=>{
+        if(!L.con||!(L.st==='draw'||L.st==='sky'||L.st==='undraw')) return;
+        const P=L.con.stars.map((s,k)=>conStarPos(L,k,time));
+        ctx.save();
+        ctx.translate(1.8*Math.sin(time*0.8+L.i),1.3*floorY);
+        ctx.scale(1,-0.3);
+        ctx.strokeStyle='rgba(244,244,242,'+(0.05*dim).toFixed(4)+')';
+        ctx.lineWidth=2.6;
+        ctx.beginPath();
+        L.con.edges.forEach(e=>{
+          ctx.moveTo(P[e[0]][0],P[e[0]][1]);
+          ctx.lineTo(P[e[1]][0],P[e[1]][1]);
+        });
+        ctx.stroke();
+        ctx.restore();
+      });
+      for(let i=ripples.length-1;i>=0;i--){
+        const rp=ripples[i],age=time-rp.t0;
+        if(age>1.35||age<0){ripples.splice(i,1);continue;}
+        for(let ring=0;ring<2;ring++){
+          const p=(age-ring*0.14)/1.1;
+          if(p<=0||p>=1) continue;
+          const e2=1-Math.pow(1-p,3);
+          const r=e2*wmW*0.42*(rp.s||1);
+          ctx.strokeStyle='rgba(244,244,242,'+(0.38*(1-p)*dim).toFixed(4)+')';
+          ctx.lineWidth=1;
+          ctx.beginPath();
+          ctx.ellipse(rp.x,rp.y,r,r*0.2,0,0,TAU);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+
+      // --- クリックの作図(コンパス円・測地線) ---
+      drawCompasses(time,dim);
+      drawGeos(time,dim);
+
+      // --- フィルムグレイン ---
+      if(!grainPat) grainPat=ctx.createPattern(grainTile,'repeat');
+      if(!staticMode&&!frozen&&frameN%3===0){gox=(Math.random()*128)|0;goy=(Math.random()*128)|0;}
+      ctx.save();
+      ctx.translate(-gox,-goy);
+      ctx.fillStyle=grainPat;
+      ctx.fillRect(0,0,W+128,H+128);
+      ctx.restore();
+    }
+
+    function frame(ts){
+      rafId=requestAnimationFrame(frame);
+      if(document.hidden) return;
+      if(lastTs==null) lastTs=ts;
+      const dt=Math.min(.05,(ts-lastTs)/1000);
+      lastTs=ts;
+      frameN++;
+      if(scrollY>H) return;   // ヒーローが画面外なら描画スキップ
+      update(dt);
+      const dim=Math.max(0,1-scrollY/(H*0.75));
+      drawFrame(t,dim);
+    }
+
+    // ?still / prefers-reduced-motion: 代表フレーム
+    // (決定的に9秒進め、ORIONとCYGNUSが結ばれ、アリダードがベテルギウスを
+    //  照準した「星座観測の瞬間」で止める)
+    function renderStatic(){
+      mouse.x=-9999;mAmp=0;gox=0;goy=0;cA=0;
+      preSeed();
+      const steps=Math.round(9.0*120);
+      for(let i=0;i<steps;i++) update(1/120);
+      // 全文字を一旦地上へ戻し、代表の2星座を空に固定する
+      letters.forEach(L=>{L.st='ground';L.landT=-9;L.slot=-1;L.annA=0;});
+      obsQ.length=0;
+      const fix=(idx,slot)=>{
+        const L=letters[idx];
+        L.st='sky';L.tSt=t-20;L.skyT=t-20;L.slot=slot;L.annA=1;
+        const tg=slotTarget(L);
+        L.scx=tg.x;L.scy=tg.y;L.scl=tg.s;
+      };
+      fix(4,1);   // E → ORION(中央)
+      fix(0,0);   // N → CYGNUS(左)
+      const mp=conStarPos(letters[4],letters[4].con.main,t);
+      meas={x:mp[0],y:mp[1],t0:t-0.72,punched:true,kind:'con'};
+      al.a=Math.atan2(mp[1]-C.y,mp[0]-C.x);al.va=0;
+      wmOff=2.4;wmVel=0;
+      [-2.2,-1.55,-0.6,-2.7].forEach((a2,i)=>punches.push({ang:a2,born:t-3-i*4,dropT:null}));
+      drawFrame(t,1);
+    }
+
+    function resize(){
+      // 寸法が変わらない偽resize(ヘッドレス等)で動的状態を壊さない
+      if(ready&&innerWidth===W&&innerHeight===H) return;
+      W=innerWidth;H=innerHeight;cx=W/2;floorY=Math.round(H*0.66);
+      cv.width=W*dpr;cv.height=H*dpr;
+      cv.style.height=H+'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      sceneCv.width=Math.ceil(W*dpr);
+      sceneCv.height=Math.ceil(floorY*dpr);
+      grainPat=null;
+      if(ready){
+        buildWordmark();
+        buildLayout();
+        buildCorners();
+        // 空中の文字は新レイアウトの持ち場へ即時再配置(凍結フレームの状態引き継ぎ)
+        letters.forEach(L=>{
+          if(L.con&&L.st!=='ground'){
+            const tg=slotTarget(L);
+            L.scx=tg.x;L.scy=tg.y;L.scl=tg.s;
+          }
+        });
+        if(staticMode) renderStatic();
+        else if(frozen) drawFrame(t,1);
+      }
+    }
+    resize();
+    addEventListener('resize',resize);
+
+    document.addEventListener('visibilitychange',()=>{
+      if(document.hidden){
+        if(rafId){cancelAnimationFrame(rafId);rafId=null;}
+        lastTs=null;
+      }else if(!staticMode&&!frozen&&ready&&rafId==null){
+        rafId=requestAnimationFrame(frame);
+      }
     });
-  </script>
+
+    // 専用フォントのロード完了を待ってから一度だけワードマークを焼く
+    const fontSpec='118px "Star Shines Still"';
+    Promise.race([
+      document.fonts.load(fontSpec),
+      new Promise(r=>setTimeout(r,2500))
+    ]).then(()=>{
+      ready=true;
+      buildRings();
+      buildWordmark();
+      buildLayout();
+      buildCorners();
+      if(staticMode){renderStatic();return;}
+      preSeed();   // 開幕からオリオン座が空に結ばれている
+      // ?t0=<秒>: 内部時計を1/120固定ステップで決定的に早回しし、凍結する
+      if(T0>0){
+        frozen=true;
+        const steps=Math.min(14400,Math.round(T0*120));
+        for(let i=0;i<steps;i++) update(1/120);
+        gox=0;goy=0;
+        drawFrame(t,1);
+        return;
+      }
+      rafId=requestAnimationFrame(frame);
+    });
+  })();
+
+  // ギミック(音の波紋/流れ星カメオ/マグネティックボタン) — GIMMICKS=false で無効化
+  const GIMMICKS=true;
+  (function(){
+    if(!GIMMICKS||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // 音の波紋: クリックでソナー状のリングが2重に広がる
+    // (ヒーローの床ではステージ側の楕円波紋が引き受けるため出さない)
+    addEventListener('pointerdown',e=>{
+      if(window.__heroFloorRipple&&window.__heroFloorRipple(e)) return;
+      for(let i=0;i<2;i++){
+        const r=document.createElement('div');
+        r.className='ripple';
+        r.style.left=e.clientX+'px';
+        r.style.top=e.clientY+'px';
+        r.style.animationDelay=(i*130)+'ms';
+        document.body.appendChild(r);
+        setTimeout(()=>r.remove(),1100+i*130);
+      }
+    });
+    // 流れ星カメオ: 10〜16秒に一度、画面上部をよぎる(スプラッシュの星の常駐版)
+    function shootStar(){
+      if(!document.hidden){
+        const el=document.createElement('div');
+        el.className='star-cameo';
+        const fromLeft=Math.random()<.5;
+        const y0=innerHeight*(.08+Math.random()*.28);
+        const x0=fromLeft?-70:innerWidth+70;
+        const x1=fromLeft?innerWidth*(.4+Math.random()*.35):innerWidth*(.6-Math.random()*.35);
+        const y1=y0+innerHeight*(.05+Math.random()*.12);
+        const ang=Math.atan2(y1-y0,x1-x0)*180/Math.PI;
+        document.body.appendChild(el);
+        el.animate([
+          {transform:`translate(${x0}px,${y0}px) rotate(${ang}deg)`,opacity:0},
+          {opacity:.9,offset:.15},
+          {opacity:.9,offset:.8},
+          {transform:`translate(${x1}px,${y1}px) rotate(${ang}deg)`,opacity:0}
+        ],{duration:1700+Math.random()*700,easing:'linear'}).onfinish=()=>el.remove();
+      }
+      setTimeout(shootStar,10000+Math.random()*6000);
+    }
+    setTimeout(shootStar,5000);
+    window.__shootStar=shootStar;
+    // 検証用: ?star で固定パスの星を即時表示(常時opacity=.9で静止画に写る)
+    // ?star=text なら見出しに重なる位置に出す(重なり順の検証用)
+    const starParam=new URLSearchParams(location.search).get('star');
+    if(starParam!==null){
+      const [sx,sy]=starParam==='text'?[320,300]:[150,140];
+      const el=document.createElement('div');
+      el.className='star-cameo';
+      document.body.appendChild(el);
+      el.animate([
+        {transform:`translate(${sx}px,${sy}px) rotate(9deg)`,opacity:.9},
+        {transform:`translate(${sx+780}px,${sy+150}px) rotate(9deg)`,opacity:.9}
+      ],{duration:60000,easing:'linear',fill:'both'});
+    }
+    // マグネティックボタン: カーソルに吸い付く
+    document.querySelectorAll('.btn').forEach(b=>{
+      b.addEventListener('mousemove',e=>{
+        const r=b.getBoundingClientRect();
+        const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+        b.style.transform=`translate(${dx*.18}px,${dy*.3}px)`;
+      });
+      b.addEventListener('mouseleave',()=>{b.style.transform='';});
+    });
+  })();
+  document.querySelectorAll('a,.card,.do .cell').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+  // TODO: 本番プッシュ時は true に戻す(NOUMENONスプラッシュアニメーション)
+  const SPLASH=true;
+  const STILL=new URLSearchParams(location.search).has('still');
+  const io=new IntersectionObserver((es)=>{es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.15});
+  let ioStarted=false;
+  const observeAll=()=>document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));
+  if(STILL){
+    document.getElementById('intro').remove();
+    const ns=document.createElement('style');
+    ns.textContent='.rv{transition:none!important}';
+    document.head.appendChild(ns);
+    document.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
+    // 検証用: ヒーローを圧縮して全セクションを1枚に収める
+    if(new URLSearchParams(location.search).has('compact')){
+      const hero=document.querySelector('.hero');
+      hero.style.height='auto';hero.style.minHeight='auto';hero.style.padding='120px 0 40px';
+      const stage=document.getElementById('heroStage');
+      if(stage)stage.style.display='none';   // 検証用: 圧縮時はステージ絵を重ねない
+    }
+    // 検証用: crop=footer で下部(Request/Connect/footer)だけ表示
+    if(new URLSearchParams(location.search).get('crop')==='footer'){
+      document.querySelectorAll('.hero,#about,#works,#news,.scroll').forEach(el=>el.style.display='none');
+    }
+  }else if(!SPLASH){
+    document.getElementById('intro').remove();
+    ioStarted=true;
+    observeAll();
+  }else{
+    setTimeout(()=>{
+      const intro=document.getElementById('intro');
+      intro.classList.add('done');
+      setTimeout(()=>intro.remove(),400);
+    },2500);
+    setTimeout(()=>{ioStarted=true;observeAll();},2550);
+  }
+
+  // Selected Works: videos.json(Mixの正本)とworks_fixed.json(固定作品の正本)から表示
+  function loadJson(path){
+    return fetch(path,{cache:'no-store'})
+      .then(r=>r.ok?r.json():[])
+      .catch(e=>{console.warn(path+' load failed',e);return[];});
+  }
+  let poolPromise=null;
+  function loadPool(){
+    if(!poolPromise)poolPromise=loadJson('content/videos.json');
+    return poolPromise;
+  }
+  let fixedPromise=null;
+  function loadFixed(){
+    if(!fixedPromise)fixedPromise=loadJson('content/works_fixed.json').then(d=>Array.isArray(d)?d:[]);
+    return fixedPromise;
+  }
+  function ytId(v){
+    if(v.id && !/^\d+$/.test(v.id)) return v.id;
+    const m=(v.link||'').match(/[?&]v=([^&]+)/)||(v.link||'').match(/shorts\/([^?&/]+)/);
+    return m?m[1]:null;
+  }
+  function shuffle(a){
+    for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+    return a;
+  }
+  // レイアウト5パターン(12カラム/明示配置)。k: feat=大枠 wide=全幅21:9 half=中枠 sm=小
+  const PATTERNS=[
+    {name:'feat-left',slots:[
+      {k:'feat',c:'1/9',r:'1/3'},{k:'sm',c:'9/13',r:'1/2'},{k:'sm',c:'9/13',r:'2/3'},
+      {k:'sm',c:'1/5',r:'3/4'},{k:'sm',c:'5/9',r:'3/4'},{k:'sm',c:'9/13',r:'3/4'}]},
+    {name:'feat-right',slots:[
+      {k:'feat',c:'5/13',r:'1/3'},{k:'sm',c:'1/5',r:'1/2'},{k:'sm',c:'1/5',r:'2/3'},
+      {k:'sm',c:'1/5',r:'3/4'},{k:'sm',c:'5/9',r:'3/4'},{k:'sm',c:'9/13',r:'3/4'}]},
+    {name:'twin',slots:[
+      {k:'half',c:'1/7',r:'1/2'},{k:'half',c:'7/13',r:'1/2'},
+      {k:'sm',c:'1/5',r:'2/3'},{k:'sm',c:'5/9',r:'2/3'},{k:'sm',c:'9/13',r:'2/3'}]},
+    {name:'cinema',slots:[
+      {k:'wide',c:'1/13',r:'1/2'},
+      {k:'sm',c:'1/4',r:'2/3'},{k:'sm',c:'4/7',r:'2/3'},{k:'sm',c:'7/10',r:'2/3'},{k:'sm',c:'10/13',r:'2/3'}]},
+    {name:'mosaic',slots:[
+      {k:'sm',c:'1/5',r:'1/2'},{k:'sm',c:'5/9',r:'1/2'},{k:'sm',c:'9/13',r:'1/2'},
+      {k:'feat',c:'1/9',r:'2/4'},{k:'sm',c:'9/13',r:'2/3'},{k:'sm',c:'9/13',r:'3/4'}]}
+  ];
+  function buildCard(w,i){
+    const slot=w.slot;
+    const isOv=slot.k!=='sm';
+    const a=document.createElement('a');
+    a.className='card rv'+(isOv?' card--ov card--'+slot.k:' card--sm')+(STILL?' in':'');
+    a.href=w.link;a.target='_blank';a.rel='noopener';
+    a.style.gridColumn=slot.c;
+    a.style.gridRow=slot.r;
+    a.style.transitionDelay=(i*70)+'ms';
+    const frame=document.createElement('div');
+    frame.className='frame';
+    if(w.img){
+      const img=document.createElement('img');
+      img.className='thumb';img.alt='';img.loading='lazy';
+      img.src=w.img;
+      frame.appendChild(img);
+    }else if(w.id){
+      const img=document.createElement('img');
+      img.className='thumb';img.alt='';img.loading='lazy';
+      const hq=`https://img.youtube.com/vi/${w.id}/hqdefault.jpg`;
+      img.src=`https://img.youtube.com/vi/${w.id}/maxresdefault.jpg`;
+      img.onerror=()=>{img.onerror=null;img.onload=null;img.src=hq;};
+      // maxres欠損時は404でもグレー画像(120x90)が返るため、サイズで判定してhqへ差し替え
+      img.onload=()=>{if(img.naturalWidth<=120){img.onerror=null;img.onload=null;img.src=hq;}};
+      frame.appendChild(img);
+    }else{
+      const ph=document.createElement('div');
+      ph.className='ph';
+      ph.innerHTML='<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>';
+      frame.appendChild(ph);
+    }
+    const t=document.createElement('div');t.className='t';t.textContent=w.title;
+    const r=document.createElement('div');r.className='r';r.textContent=w.role;
+    if(isOv){
+      const ovl=document.createElement('div');
+      ovl.className='ovl';ovl.append(t,r);
+      frame.appendChild(ovl);
+      a.appendChild(frame);
+    }else{
+      a.appendChild(frame);
+      const meta=document.createElement('div');
+      meta.className='meta';
+      const u=document.createElement('div');u.className='u';
+      meta.append(t,r,u);
+      a.appendChild(meta);
+    }
+    return a;
+  }
+  async function renderWorks(patternIndex){
+    const grid=document.getElementById('worksGrid');
+    const [pool,FIXED_WORKS]=await Promise.all([loadPool(),loadFixed()]);
+    const pattern=PATTERNS[patternIndex??Math.floor(Math.random()*PATTERNS.length)];
+    grid.dataset.pattern=pattern.name;
+    const ovSlots=pattern.slots.filter(s=>s.k!=='sm');
+    const smSlots=pattern.slots.filter(s=>s.k==='sm');
+    const need=ovSlots.length+Math.max(0,smSlots.length-FIXED_WORKS.length);
+    const mixes=shuffle(pool.filter(v=>v.platform!=='tiktok'&&!v.isShort&&ytId(v)))
+      .slice(0,need)
+      .map(v=>({role:'Mix',title:v.title,link:/^https?:/.test(v.link)?v.link:'https://'+v.link,id:ytId(v)}));
+    // 大枠(サムネ必須)→MIX、末尾の小枠→固定2件(TRANSITION/YMW)
+    ovSlots.forEach(s=>s.work=mixes.shift());
+    smSlots.forEach((s,i)=>{
+      const fixedStart=smSlots.length-FIXED_WORKS.length;
+      s.work=i>=fixedStart?FIXED_WORKS[i-fixedStart]:mixes.shift();
+    });
+    const works=pattern.slots.filter(s=>s.work).map(s=>({...s.work,slot:s}));
+    grid.replaceChildren(...works.map(buildCard));
+    if(ioStarted) observeAll();
+  }
+  renderWorks();
+
+  // NEWS: 追加日(added)を持つ作品から自動生成。作品を追加すれば自動で記録される
+  function fmtDate(d){return d.replaceAll('-','.');}
+  function buildNewsRow(n,i){
+    const a=document.createElement('a');
+    a.className='news-row rv'+(STILL?' in':'');
+    a.href=n.link;a.target='_blank';a.rel='noopener';
+    a.style.transitionDelay=(i*60)+'ms';
+    const date=document.createElement('span');
+    date.className='news-date';date.textContent=fmtDate(n.date);
+    const tag=document.createElement('span');
+    tag.className='news-tag';tag.textContent=n.role;
+    const text=document.createElement('span');
+    text.className='news-text';
+    const nt=document.createElement('span');
+    nt.className='nt';nt.textContent='「'+n.title+'」';
+    const ns=document.createElement('span');
+    ns.className='ns';ns.textContent=' を Works に追加しました';
+    text.append(nt,ns);
+    const arrow=document.createElement('span');
+    arrow.className='news-arrow';arrow.textContent='→';
+    a.append(date,tag,text,arrow);
+    return a;
+  }
+  async function renderNews(){
+    const list=document.getElementById('newsList');
+    if(!list) return;
+    const [pool,FIXED_WORKS]=await Promise.all([loadPool(),loadFixed()]);
+    const fromWorks=(Array.isArray(pool)?pool:[]).filter(v=>v.added).map(v=>({
+      role:'Mix',title:v.title,date:v.added,
+      link:/^https?:/.test(v.link||'')?v.link:'https://'+(v.link||'')
+    }));
+    const fromFixed=FIXED_WORKS.filter(w=>w.added).map(w=>({role:w.role,title:w.title,date:w.added,link:w.link}));
+    const items=[...fromWorks,...fromFixed]
+      .sort((a,b)=>b.date.localeCompare(a.date))
+      .slice(0,6);
+    list.replaceChildren(...items.map(buildNewsRow));
+    if(ioStarted) observeAll();
+  }
+  renderNews();
+</script>
 </body>
 </html>

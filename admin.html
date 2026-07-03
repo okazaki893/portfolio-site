@@ -1,2413 +1,1289 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Portfolio管理</title>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <!-- OGP -->
-  <meta property="og:title" content="Admin - Noumenon">
-  <meta property="og:description" content="Portfolio管理">
-  <meta property="og:image" content="https://noumenon.jp/OGP.png">
-  <meta property="og:url" content="https://noumenon.jp/admin">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Admin - Noumenon">
-  <meta name="twitter:description" content="Portfolio管理">
-  <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
-  <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/price.css">
-  <style>
-    /* Admin用ダークテーマ */
-    :root {
-      --accent-primary: #fff !important;
-      --accent-secondary: #ccc !important;
-      --accent-glow: rgba(255, 255, 255, 0.3) !important;
-      --accent-muted: rgba(255, 255, 255, 0.2) !important;
-      --accent-dim: rgba(255, 255, 255, 0.1) !important;
-      --border-color: rgba(255, 255, 255, 0.2) !important;
-      --border-hover: rgba(255, 255, 255, 0.4) !important;
-      --border-active: #fff !important;
-      --bg-primary: #101016 !important;
-      --bg-secondary: #1a1a22 !important;
-      --bg-card: #101016 !important;
-      --popup-bg: #101016 !important;
-      --input-bg: #1a1a22 !important;
-      --text-primary: #fff !important;
-      --text-secondary: #ccc !important;
-      --text-dim: #999 !important;
-    }
-
-    body {
-      background: #101016 !important;
-    }
-
-    .admin-container {
-      background: #101016 !important;
-    }
-
-    .login-form,
-    .video-item,
-    .plugin-item,
-    .add-form,
-    .edit-form {
-      background: #1a1a22 !important;
-    }
-
-    .edit-popup-content {
-      background: #101016 !important;
-    }
-
-    input, textarea, select {
-      background: #1a1a22 !important;
-      color: #fff !important;
-      border-color: rgba(255, 255, 255, 0.2) !important;
-    }
-
-    input::placeholder, textarea::placeholder {
-      color: #666 !important;
-    }
-
-    /* ボタン（背景あり）: 背景白、文字黒 */
-    .login-form button,
-    .add-form button,
-    .btn-edit,
-    .btn-save,
-    .btn-delete,
-    .btn-cancel,
-    .modal-buttons button,
-    .logout-btn,
-    button[onclick] {
-      background: #fff !important;
-      color: #000 !important;
-    }
-
-    .login-form button:hover,
-    .add-form button:hover,
-    .btn-edit:hover,
-    .btn-save:hover,
-    .btn-delete:hover,
-    .logout-btn:hover {
-      background: #ccc !important;
-    }
-
-    /* タブボタン: 背景白、文字黒 */
-    .tab-button {
-      color: #000 !important;
-      background: #fff !important;
-    }
-
-    .tab-button.active {
-      color: #000 !important;
-      background: #ccc !important;
-      border-bottom-color: #fff !important;
-    }
-
-    .tab-button:hover {
-      color: #000 !important;
-      background: #ccc !important;
-    }
-
-    /* 背景なしのテキスト: 白 */
-    .admin-title,
-    .section-title,
-    .video-info h4,
-    .video-info p,
-    h3, h4, label {
-      color: #fff !important;
-    }
-
-    /* リンク: 白 */
-    a:not(.btn-edit):not(.btn-delete) {
-      color: #fff !important;
-    }
-
-    /* SVGアイコン: 白 */
-    svg:not(button svg) {
-      fill: #fff !important;
-    }
-
-    /* ボタン内のSVG: 黒 */
-    button svg {
-      fill: #000 !important;
-    }
-
-    .admin-container {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      min-height: 100vh;
-      padding: 40px 60px 60px 340px;
-    }
-
-    .admin-title {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 48px;
-      font-weight: bold;
-      color: var(--accent-primary, #ffffff);
-      letter-spacing: 10px;
-      margin-bottom: 40px;
-      text-shadow: 0 0 40px var(--accent-glow, rgba(255, 255, 255, 0.5));
-    }
-
-    /* Login Form */
-    .login-container {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .login-form {
-      background: var(--bg-card, rgba(20, 20, 25, 0.9));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
-      border-radius: 16px;
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .login-form h2 {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 32px;
-      color: var(--accent-primary, #ffffff);
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .login-form input {
-      width: 100%;
-      padding: 15px;
-      background: var(--input-bg, rgba(26, 26, 34, 0.8));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
-      border-radius: 8px;
-      color: var(--text-primary, #fff);
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    .login-form button {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(135deg, var(--accent-primary, #ffffff) 0%, var(--accent-secondary, #cccccc) 100%);
-      border: none;
-      border-radius: 8px;
-      color: var(--text-primary, #fff);
-      font-size: 16px;
-      cursor: pointer;
-      transition: box-shadow 0.3s ease;
-    }
-
-    .login-form button:hover {
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-    }
-
-    .login-error {
-      color: #ff6b6b;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-
-    /* Admin Panel */
-    .admin-panel {
-      display: none;
-    }
-
-    .admin-section {
-      background: var(--bg-card, rgba(20, 20, 25, 0.8));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
-      border-radius: 16px;
-      padding: 30px;
-      margin-bottom: 30px;
-    }
-
-    .admin-section h3 {
-      font-family: 'Arial', sans-serif;
-      font-size: 20px;
-      color: var(--accent-primary, #ffffff);
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-    }
-
-    .video-list {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .video-item {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px;
-      background: var(--input-bg, rgba(26, 26, 34, 0.5));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    .video-number {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      min-width: 70px;
-    }
-
-    .video-number input {
-      width: 45px;
-      padding: 8px;
-      background: var(--input-bg, rgba(26, 26, 34, 0.8));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
-      border-radius: 4px;
-      color: var(--text-primary, #fff);
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .video-number input:focus {
-      outline: none;
-      border-color: #fff;
-    }
-
-    .video-item img {
-      width: 120px;
-      height: 68px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .video-info {
-      flex: 1;
-    }
-
-    .video-info h4 {
-      color: var(--text-primary, #fff);
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .video-info p {
-      color: var(--text-dim, rgba(255, 255, 255, 0.5));
-      font-size: 12px;
-    }
-
-    .video-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn-edit, .btn-delete {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: opacity 0.3s ease;
-    }
-
-    .btn-edit {
-      background: var(--accent-primary, #ffffff);
-      color: var(--text-primary, #fff);
-    }
-
-    .btn-delete {
-      background: #ffffff;
-      color: var(--text-primary, #fff);
-    }
-
-    .btn-edit:hover, .btn-delete:hover {
-      opacity: 0.8;
-    }
-
-    /* Add Form */
-    .add-form {
-      display: grid;
-      gap: 15px;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .add-form input {
-      padding: 12px 15px;
-      background: var(--input-bg, rgba(26, 26, 34, 0.8));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
-      border-radius: 8px;
-      color: var(--text-primary, #fff);
-      font-size: 14px;
-    }
-
-    .add-form button {
-      padding: 12px 20px;
-      background: linear-gradient(135deg, var(--accent-primary, #ffffff) 0%, var(--accent-secondary, #cccccc) 100%);
-      border: none;
-      border-radius: 8px;
-      color: var(--text-primary, #fff);
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
-    /* Logout Button */
-    .logout-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      background: rgba(255, 107, 107, 0.9);
-      border: none;
-      border-radius: 8px;
-      color: var(--text-primary, #fff);
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 100;
-    }
-
-    .logout-btn:hover {
-      background: rgba(255, 80, 80, 1);
-    }
-
-    /* Save Status */
-    .save-status {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 15px 25px;
-      background: rgba(107, 255, 107, 0.9);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 14px;
-      display: none;
-      z-index: 100;
-    }
-
-    /* Edit Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: var(--popup-bg, rgba(16, 16, 22, 0.98));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
-      border-radius: 16px;
-      padding: 30px;
-      width: 100%;
-      max-width: 500px;
-    }
-
-    .modal-content h3 {
-      color: var(--accent-primary, #ffffff);
-      margin-bottom: 20px;
-    }
-
-    .modal-content input {
-      width: 100%;
-      padding: 12px 15px;
-      background: var(--input-bg, rgba(26, 26, 34, 0.8));
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
-      border-radius: 8px;
-      color: var(--text-primary, #fff);
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .modal-buttons button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-save {
-      background: var(--accent-primary, #ffffff);
-      color: var(--text-primary, #fff);
-    }
-
-    .btn-cancel {
-      background: var(--text-faint, rgba(255, 255, 255, 0.2));
-      color: var(--text-primary, #fff);
-    }
-
-    /* Tab Navigation */
-    .tab-navigation {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      padding-bottom: 0;
-    }
-
-    .tab-button {
-      padding: 15px 30px;
-      background: transparent;
-      border: none;
-      border-bottom: 3px solid transparent;
-      color: var(--text-dim, rgba(255, 255, 255, 0.5));
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 1px;
-    }
-
-    .tab-button:hover {
-      color: var(--text-secondary, rgba(255, 255, 255, 0.8));
-    }
-
-    .tab-button.active {
-      color: var(--accent-primary, #ffffff);
-      border-bottom-color: var(--accent-primary, #ffffff);
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .mixing-subtab-bar {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .mixing-subtab-btn {
-      background: rgba(255, 255, 255, 0.08);
-      color: #ccc;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 8px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
-    }
-
-    .mixing-subtab-btn.active {
-      background: #926bff;
-      color: #fff;
-      border-color: #926bff;
-    }
-
-    .mixing-subtab-btn:hover:not(.active) {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    @media (max-width: 900px) {
-      .admin-container {
-        padding: 20px;
-      }
-
-      .admin-title {
-        font-size: 32px;
-      }
-
-      .video-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .tab-navigation {
-        flex-wrap: wrap;
-      }
-
-      .tab-button {
-        padding: 10px 15px;
-        font-size: 14px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Admin — NOUMENON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D0D0D;
+    --bg-2:#141414;
+    --ink:#F4F4F2;
+    --muted:#9C9C98;
+    --faint:#6C6C68;
+    --line:rgba(244,244,242,.14);
+    --serif:'Shippori Mincho', serif;
+    --disp:'Cormorant Garamond', serif;
+    --gothic:'Zen Kaku Gothic New', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--gothic);font-weight:300;line-height:1.8;
+    -webkit-font-smoothing:antialiased;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--ink);color:#0D0D0D}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(18px,4vw,48px) 80px}
+
+  /* ---------- inputs / buttons ---------- */
+  input[type="text"],input[type="password"],input[type="url"],select,textarea{
+    width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);border-radius:0;
+    padding:8px 2px 9px;color:var(--ink);font-family:var(--gothic);font-weight:300;font-size:14px;
+    letter-spacing:.03em;line-height:1.7;transition:border-color .3s;appearance:none}
+  input:focus,select:focus,textarea:focus{outline:none;border-bottom-color:rgba(244,244,242,.55)}
+  input::placeholder{color:var(--faint);opacity:.7}
+  select{cursor:pointer}
+  select option{background:var(--bg-2);color:var(--ink)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;
+    border:1px solid rgba(244,244,242,.45);border-radius:2px;background:transparent;
+    font-family:var(--gothic);font-size:12.5px;letter-spacing:.1em;color:var(--ink);cursor:pointer;
+    transition:background .3s,color .3s,border-color .3s}
+  .btn:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  .btn.ghost{border-color:var(--line);color:var(--muted)}
+  .btn.ghost:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  .btn.wide{width:100%}
+  .btn.sm{padding:6px 12px;font-size:11.5px}
+
+  /* ---------- header ---------- */
+  .bar{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:16px;
+    padding:18px clamp(18px,4vw,48px);border-bottom:1px solid var(--line);
+    background:rgba(13,13,13,.92);backdrop-filter:blur(6px)}
+  .bar-title{font-family:var(--disp);font-weight:500;font-size:20px;letter-spacing:.22em;text-transform:uppercase}
+  .bar-title .sub{font-style:italic;font-size:13px;color:var(--faint);letter-spacing:.14em;margin-left:12px;text-transform:none}
+  .bar-right{display:flex;align-items:center;gap:14px}
+  .chip{font-size:11.5px;color:var(--muted);letter-spacing:.06em;border:1px solid var(--line);border-radius:2px;padding:4px 10px}
+  .chip.ok{color:var(--ink);border-color:rgba(244,244,242,.4)}
+
+  /* ---------- tabs ---------- */
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;margin:34px 0 26px;border-bottom:1px solid var(--line)}
+  .tab{background:none;border:none;border-bottom:1px solid transparent;margin-bottom:-1px;cursor:pointer;
+    font-family:var(--gothic);font-size:13px;letter-spacing:.1em;color:var(--faint);padding:12px 18px;transition:color .3s}
+  .tab:hover{color:var(--muted)}
+  .tab.on{color:var(--ink);border-bottom-color:var(--ink)}
+
+  .panel{display:none}
+  .panel.on{display:block}
+
+  .panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+  .panel-title{font-family:var(--serif);font-weight:500;font-size:16px;letter-spacing:.08em}
+  .panel-title .count{font-family:var(--disp);font-style:italic;font-size:13px;color:var(--faint);margin-left:10px;letter-spacing:.08em}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+
+  .note{font-size:12px;color:var(--faint);letter-spacing:.03em;line-height:1.8}
+  .warn-line{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:2px;
+    padding:9px 14px;margin-bottom:14px;display:none}
+  .warn-line.show{display:block}
+
+  /* ---------- list ---------- */
+  .list{border:1px solid var(--line);border-radius:2px;overflow:hidden}
+  .row{display:flex;align-items:center;gap:14px;padding:12px 14px;border-bottom:1px solid var(--line);background:transparent}
+  .row:last-child{border-bottom:none}
+  .row:hover{background:rgba(244,244,242,.03)}
+  .row .idx{font-family:var(--disp);font-size:13px;color:var(--faint);min-width:26px;text-align:right;font-variant-numeric:lining-nums}
+  .row .thumb{flex:none;width:96px;height:54px;border:1px solid var(--line);border-radius:2px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;background:var(--bg-2)}
+  .row .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .row .thumb .ph{font-family:var(--disp);font-style:italic;font-size:11px;color:var(--faint);letter-spacing:.1em}
+  .row .info{flex:1;min-width:0}
+  .row .info h4{font-family:var(--serif);font-weight:500;font-size:13.5px;letter-spacing:.04em;line-height:1.5;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .meta{font-size:11px;color:var(--faint);letter-spacing:.04em;margin-top:2px;
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .badge{display:inline-block;font-size:10px;letter-spacing:.1em;border:1px solid var(--line);border-radius:2px;
+    padding:1px 7px;color:var(--muted)}
+  .row .ops{display:flex;gap:6px;flex:none;align-items:center}
+  .obtn{width:28px;height:28px;border:1px solid var(--line);border-radius:2px;background:transparent;color:var(--muted);
+    font-size:13px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+    transition:color .25s,border-color .25s}
+  .obtn:hover:not(:disabled){color:var(--ink);border-color:rgba(244,244,242,.5)}
+  .obtn:disabled{opacity:.25;cursor:default}
+  .empty{padding:26px 14px;text-align:center;font-size:12.5px;color:var(--faint)}
+
+  /* ---------- add form ---------- */
+  .sheet{border:1px solid var(--line);border-radius:2px;margin-top:22px;
+    background:linear-gradient(165deg,rgba(244,244,242,.015),transparent 40%)}
+  .sheet-head{padding:14px 20px;border-bottom:1px solid var(--line);
+    font-family:var(--disp);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint)}
+  .sheet-body{padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px 24px}
+  .field{display:flex;flex-direction:column;gap:2px}
+  .field.full{grid-column:1/-1}
+  .field label{font-size:11px;color:var(--faint);letter-spacing:.1em}
+  .field .hint{font-size:10.5px;color:var(--faint);letter-spacing:.03em;margin-top:4px;opacity:.85}
+  .check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);letter-spacing:.04em;padding-top:16px}
+  .check input{width:14px;height:14px;accent-color:#F4F4F2;cursor:pointer}
+  .sheet-foot{padding:0 20px 20px;display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
+  .parse-note{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-right:auto;min-height:1.4em}
+
+  /* ---------- settings ---------- */
+  .set-block{border:1px solid var(--line);border-radius:2px;padding:22px;margin-bottom:18px}
+  .set-block h3{font-family:var(--serif);font-weight:500;font-size:14.5px;letter-spacing:.06em;margin-bottom:12px}
+  .set-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+  .set-row .grow{flex:1;min-width:220px}
+  .kv{font-size:12px;color:var(--muted);letter-spacing:.03em;line-height:2}
+  .kv b{color:var(--ink);font-weight:400}
+
+  /* ---------- dialog ---------- */
+  .overlay{position:fixed;inset:0;z-index:150;background:rgba(13,13,13,.88);display:none;
+    align-items:flex-start;justify-content:center;padding:6vh 20px;overflow-y:auto}
+  .overlay.active{display:flex}
+  .dlg{background:var(--bg-2);border:1px solid var(--line);border-radius:2px;max-width:560px;width:100%;padding:30px 28px}
+  .dlg h3{font-family:var(--serif);font-weight:600;font-size:16px;letter-spacing:.08em;margin-bottom:20px}
+  .dlg .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}
+  .dlg .grid .field.full{grid-column:1/-1}
+  .dlg-foot{margin-top:26px;display:flex;justify-content:flex-end;gap:10px}
+  @media(max-width:560px){.dlg .grid{grid-template-columns:1fr}}
+
+  /* ---------- toast ---------- */
+  .toast{position:fixed;bottom:22px;right:22px;z-index:300;background:var(--bg-2);border:1px solid rgba(244,244,242,.4);
+    border-radius:2px;padding:12px 20px;font-size:12.5px;letter-spacing:.05em;color:var(--ink);
+    opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:min(420px,80vw)}
+  .toast.show{opacity:1;transform:none}
+
+  #selftestResult{display:none;margin:22px 0;border:1px solid var(--line);border-radius:2px;padding:16px 18px;
+    font-family:Consolas,monospace;font-size:12px;line-height:1.9;color:var(--muted);white-space:pre-wrap;word-break:break-all}
+</style>
 </head>
 <body>
-  <div class="price-page">
-    <!-- Animated gradient background -->
-    <div class="gradient-bg"></div>
-    <div class="grid-pattern"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
 
-    <!-- Login Form -->
-    <div class="login-container" id="loginContainer">
-      <div class="login-form">
-        <h2>ADMIN LOGIN</h2>
-        <input type="password" id="passwordInput" placeholder="パスワードを入力">
-        <button onclick="login()">ログイン</button>
-        <p class="login-error" id="loginError"></p>
-      </div>
+<!-- Admin（認証はサイト外側の Cloudflare Access が担う。ここに到達＝認証済み） -->
+<div id="adminRoot">
+  <header class="bar">
+    <div class="bar-title">Admin<span class="sub">content manager</span></div>
+    <div class="bar-right">
+      <span class="chip" id="tokenChip">token 未設定</span>
+      <button class="btn ghost sm" id="logoutBtn">ログアウト</button>
     </div>
+  </header>
 
-    <!-- Admin Panel -->
-    <div class="admin-panel" id="adminPanel">
-      <button class="logout-btn" onclick="logout()">ログアウト</button>
+  <main class="wrap">
+    <pre id="selftestResult"></pre>
 
-      <div class="admin-container">
-        <h1 class="admin-title">ADMIN</h1>
+    <nav class="tabs" id="tabNav">
+      <button class="tab on" data-panel="videos">Mix作品</button>
+      <button class="tab" data-panel="works">Produce / Live</button>
+      <button class="tab" data-panel="news">News</button>
+      <button class="tab" data-panel="settings">設定</button>
+    </nav>
 
-        <!-- Tab Navigation -->
-        <div class="tab-navigation">
-          <button class="tab-button active" onclick="switchTab('top')">Top</button>
-          <button class="tab-button" onclick="switchTab('mixing')">Mixing</button>
-          <button class="tab-button" onclick="switchTab('3d')">3D Animation</button>
-          <button class="tab-button" onclick="switchTab('music')">Music</button>
-          <button class="tab-button" onclick="switchTab('planning')">Planning</button>
-          <button class="tab-button" onclick="switchTab('plugins')">Plugins</button>
+    <!-- ===== videos ===== -->
+    <section class="panel on" id="panel-videos">
+      <div class="warn-line" id="warn-videos"></div>
+      <div class="panel-head">
+        <h2 class="panel-title">Mix作品 — content/videos.json<span class="count" id="count-videos"></span></h2>
+        <div class="toolbar">
+          <button class="btn ghost sm" data-dl="videos">JSONをダウンロード</button>
+          <button class="btn ghost sm" data-copy="videos">クリップボードにコピー</button>
+          <button class="btn ghost sm" data-reload="videos">再読込</button>
         </div>
+      </div>
+      <div class="list" id="list-videos"></div>
 
-        <!-- TOP Tab Content -->
-        <div class="tab-content active" id="tab-top">
-          <div class="admin-section">
-            <h3>TOPページ モザイク動画管理</h3>
-            <p style="color: #ccc; margin-bottom: 20px; font-size: 14px;">各スロットの動画リンクとサムネイルを編集できます（配置位置は固定）</p>
-            <div class="video-list" id="topVideoList" style="max-height: 600px;"></div>
+      <div class="sheet">
+        <div class="sheet-head">Add — Mix</div>
+        <div class="sheet-body">
+          <div class="field full">
+            <label for="vUrl">URL（YouTube / TikTok）</label>
+            <input type="text" id="vUrl" placeholder="https://www.youtube.com/watch?v=... / youtu.be/... / shorts/... / tiktok.com/...">
           </div>
-
-        </div>
-
-        <!-- Mixing Tab Content -->
-        <div class="tab-content" id="tab-mixing">
-          <div class="admin-section">
-            <h3>Mixing Portfolio 動画管理</h3>
-            <div class="mixing-subtab-bar" id="mixingSubtabBar">
-              <button class="mixing-subtab-btn active" data-subtab="full" onclick="switchMixingSubtab('full')">Full</button>
-              <button class="mixing-subtab-btn" data-subtab="short" onclick="switchMixingSubtab('short')">short</button>
-            </div>
-            <div class="video-list" id="mixingVideoList"></div>
-
-            <div class="add-form">
-              <h4 id="newVideoFormHeading" style="color: #fff; margin-bottom: 10px;">新規追加 (Full)</h4>
-              <input type="text" id="newTitle" placeholder="タイトル">
-              <input type="text" id="newYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
-              <input type="text" id="newThumbnail" placeholder="カスタムサムネイル（任意）">
-              <button onclick="addVideo()">追加</button>
-            </div>
+          <div class="field full">
+            <label for="vTitle">タイトル</label>
+            <input type="text" id="vTitle" placeholder="曲名 / 歌ってみた【〇〇】">
           </div>
-
-        </div>
-
-        <!-- 3D Animation Tab Content -->
-        <div class="tab-content" id="tab-3d">
-          <div class="admin-section">
-            <h3>3D Animation Portfolio 動画管理</h3>
-            <div class="video-list" id="animation3dList"></div>
-
-            <div class="add-form">
-              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
-              <input type="text" id="new3dTitle" placeholder="タイトル">
-              <input type="text" id="new3dYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
-              <button onclick="add3dVideo()">追加</button>
-            </div>
+          <div class="field">
+            <label for="vThumb">カスタムサムネイルURL（任意）</label>
+            <input type="text" id="vThumb" placeholder="https://...">
+            <span class="hint">TikTokはサムネイル必須（未入力時はoEmbedで自動取得を試行）</span>
           </div>
-
+          <label class="check"><input type="checkbox" id="vShort">Short動画として扱う（shorts URLで自動ON）</label>
         </div>
+        <div class="sheet-foot">
+          <span class="parse-note" id="vParse"></span>
+          <button class="btn" id="vAddBtn">追加する</button>
+        </div>
+      </div>
+      <p class="note" style="margin-top:12px">追加時に本日の日付が added に自動記録され、Newsの「Works に追加しました」に反映されます。</p>
+    </section>
 
-        <!-- Music Tab Content -->
-        <div class="tab-content" id="tab-music">
-          <div class="admin-section">
-            <h3>Music Portfolio 音源管理</h3>
-            <div class="video-list" id="musicList"></div>
+    <!-- ===== works ===== -->
+    <section class="panel" id="panel-works">
+      <div class="warn-line" id="warn-works"></div>
+      <div class="panel-head">
+        <h2 class="panel-title">Produce / Live / Exhibition — content/works_fixed.json<span class="count" id="count-works"></span></h2>
+        <div class="toolbar">
+          <button class="btn ghost sm" data-dl="works">JSONをダウンロード</button>
+          <button class="btn ghost sm" data-copy="works">クリップボードにコピー</button>
+          <button class="btn ghost sm" data-reload="works">再読込</button>
+        </div>
+      </div>
+      <div class="list" id="list-works"></div>
 
-            <div class="add-form">
-              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
-              <input type="text" id="newMusicTitle" placeholder="曲名">
-              <input type="text" id="newSoundcloudUrl" placeholder="SoundCloudのURL（例: https://soundcloud.com/artist/track）">
-              <button onclick="addMusic()">追加</button>
-            </div>
+      <div class="sheet">
+        <div class="sheet-head">Add — Fixed Work</div>
+        <div class="sheet-body">
+          <div class="field">
+            <label for="wCat">カテゴリ</label>
+            <select id="wCat">
+              <option value="produce">produce</option>
+              <option value="live">live</option>
+            </select>
           </div>
-
-        </div>
-
-        <!-- Planning Tab Content -->
-        <div class="tab-content" id="tab-planning">
-          <div class="admin-section">
-            <h3>Planning Progress 作品管理</h3>
-            <div class="video-list" id="planningList"></div>
-
-            <div class="add-form">
-              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
-              <input type="text" id="newPlanningTitle" placeholder="作品タイトル">
-              <input type="text" id="newPlanningYoutubeUrl" placeholder="YouTubeのURL（例: https://www.youtube.com/watch?v=xxxxx）">
-              <button onclick="addPlanning()">追加</button>
-            </div>
+          <div class="field">
+            <label for="wRole">表示ロール</label>
+            <input type="text" id="wRole" list="roleList" placeholder="Produce / Live / Exhibition">
+            <datalist id="roleList">
+              <option value="Produce"></option>
+              <option value="Live"></option>
+              <option value="Exhibition"></option>
+            </datalist>
           </div>
-
-        </div>
-
-        <!-- Plugins Tab Content -->
-        <div class="tab-content" id="tab-plugins">
-          <div class="admin-section">
-            <h3>プラグイン管理</h3>
-            <p style="color: #ccc; margin-bottom: 20px; font-size: 14px;">OtherページのPlug-inタブに表示されるプラグインを管理します</p>
-            <div class="video-list" id="pluginsList"></div>
-
-            <div class="add-form">
-              <h4 style="color: #fff; margin-bottom: 10px;">新規追加</h4>
-              <input type="text" id="newPluginTitle" placeholder="プラグイン名">
-              <input type="text" id="newPluginDescription" placeholder="説明">
-              <input type="text" id="newPluginLink" placeholder="リンクURL（例: https://example.com/plugin）">
-              <input type="text" id="newPluginTag" placeholder="カテゴリタグ（例: Audio, Video, Utility）">
-              <button onclick="addPlugin()">追加</button>
-            </div>
+          <div class="field full">
+            <label for="wTitle">タイトル</label>
+            <input type="text" id="wTitle" placeholder="作品名 / 役割">
           </div>
-
+          <div class="field full">
+            <label for="wLink">リンクURL</label>
+            <input type="text" id="wLink" placeholder="https://...（YouTubeなら動画IDを自動抽出）">
+          </div>
+          <div class="field">
+            <label for="wImg">画像パス（任意）</label>
+            <input type="text" id="wImg" placeholder="images/xxxx.jpg">
+          </div>
+          <div class="field">
+            <label for="wId">YouTube動画ID（任意・サムネ用）</label>
+            <input type="text" id="wId" placeholder="11文字のID">
+          </div>
         </div>
-
-      </div>
-    </div>
-
-    <!-- Edit TOP Modal -->
-    <div class="modal" id="editTopModal">
-      <div class="modal-content">
-        <h3>TOPスロットを編集</h3>
-        <p id="editTopSlotName" style="color: #aaa; margin-bottom: 15px; font-size: 14px;"></p>
-        <input type="text" id="editTopLink" placeholder="YouTubeのURL">
-        <input type="text" id="editTopThumbnail" placeholder="カスタムサムネイル（任意、空欄でYouTubeサムネ使用）">
-        <div class="modal-buttons">
-          <button class="btn-cancel" onclick="closeTopModal()">キャンセル</button>
-          <button class="btn-save" onclick="saveTopEdit()">保存</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Mixing Modal -->
-    <div class="modal" id="editModal">
-      <div class="modal-content">
-        <h3>Mixing動画を編集</h3>
-        <input type="text" id="editTitle" placeholder="タイトル">
-        <input type="text" id="editYoutubeUrl" placeholder="YouTubeのURL">
-        <input type="text" id="editThumbnail" placeholder="カスタムサムネイル（任意）">
-        <label style="display: flex; align-items: center; gap: 8px; margin-top: 12px; color: #ccc; font-size: 14px;">
-          <input type="checkbox" id="editIsShort">
-          Short動画として扱う
-        </label>
-        <div class="modal-buttons">
-          <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
-          <button class="btn-save" onclick="saveEdit()">保存</button>
+        <div class="sheet-foot">
+          <span class="parse-note" id="wParse"></span>
+          <button class="btn" id="wAddBtn">追加する</button>
         </div>
       </div>
-    </div>
+      <p class="note" style="margin-top:12px">画像パスと動画IDが両方空の場合はサムネイルなしで表示されます。added は追加時に自動記録されます。</p>
+    </section>
 
-    <!-- Edit Music Modal -->
-    <div class="modal" id="editMusicModal">
-      <div class="modal-content">
-        <h3>音源を編集</h3>
-        <input type="text" id="editMusicTitle" placeholder="曲名">
-        <input type="text" id="editSoundcloudUrl" placeholder="SoundCloudのURL">
-        <div class="modal-buttons">
-          <button class="btn-cancel" onclick="closeMusicModal()">キャンセル</button>
-          <button class="btn-save" onclick="saveMusicEdit()">保存</button>
+    <!-- ===== news ===== -->
+    <section class="panel" id="panel-news">
+      <div class="warn-line" id="warn-news"></div>
+      <div class="panel-head">
+        <h2 class="panel-title">手動News — content/news_extra.json<span class="count" id="count-news"></span></h2>
+        <div class="toolbar">
+          <button class="btn ghost sm" data-dl="news">JSONをダウンロード</button>
+          <button class="btn ghost sm" data-copy="news">クリップボードにコピー</button>
+          <button class="btn ghost sm" data-reload="news">再読込</button>
         </div>
       </div>
-    </div>
+      <div class="list" id="list-news"></div>
 
-    <!-- Edit 3D Animation Modal -->
-    <div class="modal" id="edit3dModal">
-      <div class="modal-content">
-        <h3>3D Animation動画を編集</h3>
-        <input type="text" id="edit3dTitle" placeholder="タイトル">
-        <input type="text" id="edit3dYoutubeUrl" placeholder="YouTubeのURL">
-        <div class="modal-buttons">
-          <button class="btn-cancel" onclick="close3dModal()">キャンセル</button>
-          <button class="btn-save" onclick="save3dEdit()">保存</button>
+      <div class="sheet">
+        <div class="sheet-head">Add — News</div>
+        <div class="sheet-body">
+          <div class="field">
+            <label for="nDate">日付（YYYY-MM-DD）</label>
+            <input type="text" id="nDate" placeholder="2026-07-03">
+          </div>
+          <div class="field">
+            <label for="nTag">タグ</label>
+            <input type="text" id="nTag" placeholder="Site / Info / Release など">
+          </div>
+          <div class="field full">
+            <label for="nTitle">タイトル</label>
+            <input type="text" id="nTitle" placeholder="お知らせ本文の主語部分">
+          </div>
+          <div class="field">
+            <label for="nSuffix">接尾辞（任意）</label>
+            <input type="text" id="nSuffix" placeholder="です。〜（タイトルの後に続く文）">
+          </div>
+          <div class="field">
+            <label for="nLink">リンクURL（任意）</label>
+            <input type="text" id="nLink" placeholder="https://...">
+          </div>
+        </div>
+        <div class="sheet-foot">
+          <button class="btn" id="nAddBtn">追加する</button>
         </div>
       </div>
-    </div>
+      <p class="note" style="margin-top:12px">作品追加の自動News（added由来）はページ側で生成されるため、ここには手動のお知らせのみ登録します。</p>
+    </section>
 
-    <!-- Edit Planning Modal -->
-    <div class="modal" id="editPlanningModal">
-      <div class="modal-content">
-        <h3>Planning作品を編集</h3>
-        <input type="text" id="editPlanningTitle" placeholder="作品タイトル">
-        <input type="text" id="editPlanningYoutubeUrl" placeholder="YouTubeのURL">
-        <div class="modal-buttons">
-          <button class="btn-cancel" onclick="closePlanningModal()">キャンセル</button>
-          <button class="btn-save" onclick="savePlanningEdit()">保存</button>
+    <!-- ===== settings ===== -->
+    <section class="panel" id="panel-settings">
+      <div class="set-block">
+        <h3>GitHubトークン</h3>
+        <p class="note" style="margin-bottom:14px">Contents APIで各JSONをリポジトリに直接保存します。トークンは画面に表示されず、このブラウザのlocalStorageにのみ保管されます。</p>
+        <div class="set-row">
+          <div class="grow">
+            <label class="note" for="tokenInput">Personal Access Token（repo権限）</label>
+            <input type="password" id="tokenInput" placeholder="ghp_..." autocomplete="off">
+          </div>
+          <button class="btn sm" id="tokenSaveBtn">保存</button>
+          <button class="btn ghost sm" id="tokenDeleteBtn">削除</button>
         </div>
+        <p class="note" style="margin-top:12px">状態: <span id="tokenState">未設定</span></p>
       </div>
-    </div>
-
-    <!-- Edit Plugin Modal -->
-    <div class="modal" id="editPluginModal">
-      <div class="modal-content">
-        <h3>プラグインを編集</h3>
-        <input type="text" id="editPluginTitle" placeholder="プラグイン名">
-        <input type="text" id="editPluginDescription" placeholder="説明">
-        <input type="text" id="editPluginLink" placeholder="リンクURL">
-        <input type="text" id="editPluginTag" placeholder="カテゴリタグ">
-        <div class="modal-buttons">
-          <button class="btn-cancel" onclick="closePluginModal()">キャンセル</button>
-          <button class="btn-save" onclick="savePluginEdit()">保存</button>
-        </div>
+      <div class="set-block">
+        <h3>保存先</h3>
+        <p class="kv">リポジトリ: <b>okazaki893/portfolio-site</b>（main）</p>
+        <p class="kv">対象: <b>content/videos.json</b> / <b>content/works_fixed.json</b> / <b>content/news_extra.json</b></p>
+        <p class="kv">トークン未設定時はlocalStorageへのキャッシュ保存のみ。各タブの「JSONをダウンロード」「クリップボードにコピー」で書き出して手動反映できます。</p>
       </div>
-    </div>
+    </section>
+  </main>
+</div>
 
-    <div class="save-status" id="saveStatus">保存しました</div>
+<!-- ===== edit dialogs ===== -->
+<div class="overlay" id="dlgVideo">
+  <div class="dlg">
+    <h3>Mix作品を編集</h3>
+    <div class="grid">
+      <div class="field full">
+        <label for="evTitle">タイトル</label>
+        <input type="text" id="evTitle">
+      </div>
+      <div class="field full">
+        <label for="evUrl">URL（YouTube / TikTok）</label>
+        <input type="text" id="evUrl">
+      </div>
+      <div class="field full">
+        <label for="evThumb">カスタムサムネイルURL（任意）</label>
+        <input type="text" id="evThumb">
+      </div>
+      <div class="field">
+        <label for="evAdded">added（YYYY-MM-DD・空欄で削除）</label>
+        <input type="text" id="evAdded" placeholder="2026-07-03">
+      </div>
+      <label class="check"><input type="checkbox" id="evShort">Short動画として扱う</label>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost" data-close="dlgVideo">キャンセル</button>
+      <button class="btn" id="evSaveBtn">保存</button>
+    </div>
   </div>
-
-  <script>
-    // パスワード設定
-    const ADMIN_PASSWORD = 'abc99387';
-
-    // ローカルストレージのキー
-    const STORAGE_KEY = 'portfolio_videos';
-    const MUSIC_STORAGE_KEY = 'portfolio_music';
-    const ANIMATION3D_STORAGE_KEY = 'portfolio_3d_animation';
-    const PLANNING_STORAGE_KEY = 'portfolio_planning';
-    const TOP_STORAGE_KEY = 'portfolio_top_videos';
-    const MIXING_SUBTAB_KEY = 'admin_mixing_subtab';
-    let activeMixingSubtab = 'full'; // 'full' | 'short'
-
-    function getCurrentSubtabFilter() {
-      return activeMixingSubtab === 'short'
-        ? (v => v.isShort === true)
-        : (v => !v.isShort);
-    }
-
-    function toAbsoluteIndex(relativeIndex) {
-      const filtered = videos.filter(getCurrentSubtabFilter());
-      const target = filtered[relativeIndex];
-      return target ? videos.indexOf(target) : -1;
-    }
-
-    // デフォルトの動画データ
-    const defaultVideos = [
-      { id: '3qpLV6US96M', title: '18歳が / 全力で【化けの花】歌ってみた', link: 'https://www.youtube.com/watch?v=3qpLV6US96M' },
-      { id: 'XP-nYV8GAOo', title: "Hell's Greatest Dad/Hazbin Hotel - ver.Rim", link: 'https://www.youtube.com/watch?v=XP-nYV8GAOo' },
-      { id: 'd21zmSD-Oh4', title: '【怜巳】百花繚乱☆スターマイン / 雪乃イト【歌ってみた】', link: 'https://www.youtube.com/watch?v=d21zmSD-Oh4' },
-      { id: '6hn1pNWSCNI', title: '【お化け5人が】HALLOWEEN PARTY/歌ってみた【どるれく】', link: 'https://www.youtube.com/watch?v=6hn1pNWSCNI' },
-      { id: 'Ag9Ay7XJC24', title: '【オリジナルMV】脱法ロック／歌ってみた【あぽす×みぬた】', link: 'https://www.youtube.com/watch?v=Ag9Ay7XJC24' },
-      { id: 'KWbXAIrVWxk', title: 'ファタール / GEMN 歌ってみた 【まいたけxかにちゃん】', link: 'https://www.youtube.com/watch?v=KWbXAIrVWxk' },
-      { id: 'ArdkSMvRqxo', title: 'ハオ / 歌ってみた【みそら】', link: 'https://www.youtube.com/watch?v=ArdkSMvRqxo' },
-      { id: 'khYh9nJxO9o', title: 'Love Forever - ジョアンナ町田×緋赤まい(Cover)', link: 'https://www.youtube.com/watch?v=khYh9nJxO9o' },
-      { id: '2X77fyZSIM4', title: 'アンノウン・マザーグース(wowaka)/尾長真昼cover', link: 'https://www.youtube.com/watch?v=2X77fyZSIM4' },
-      { id: 'VVUW23SBnoE', title: 'セリフありで】キングスレイヤー / あれと【歌ってみた / めるぷれ】', link: 'https://www.youtube.com/watch?v=VVUW23SBnoE' },
-      { id: '-W3QisNkoCQ', title: '【三兄弟で】のだ / 歌ってみた 【まぎすと】', link: 'https://www.youtube.com/watch?v=-W3QisNkoCQ' },
-      { id: 'Et7CpkC1ilI', title: '【ボカデュオ2024】　泡沫　Team 響曲〜kyoma〜', link: 'https://www.youtube.com/watch?v=Et7CpkC1ilI' },
-      { id: 'PBd2yrrnZ-4', title: 'UNDEAD/cover.ネア', link: 'https://www.youtube.com/watch?v=PBd2yrrnZ-4' },
-      { id: 'ZSEfPjaEjEs', title: '【歌ってみた】私は、私達は(Guiano)/尾長真昼cover', link: 'https://www.youtube.com/watch?v=ZSEfPjaEjEs' },
-      { id: 'BAFzZ3hgccU', title: '【ショタカテ配信者が】3周年記念に【しわ】歌ってみた', link: 'https://www.youtube.com/watch?v=BAFzZ3hgccU' },
-      { id: '73K8Q4F-Uo0', title: '【アニメ賭ケグルイOP】Deal with the devil / coverはなまる', link: 'https://www.youtube.com/watch?v=73K8Q4F-Uo0' },
-      { id: 'wXdpFwtZk5A', title: 'Tonight ~月の下眠る君~ - マクドナルド･ジョアンナ･まい (Cover)', link: 'https://www.youtube.com/watch?v=wXdpFwtZk5A' }
-    ];
-
-    let videos = [];
-    let musicList = [];
-    let animation3dList = [];
-    let planningList = [];
-    let topSlots = [];
-    let editIndex = -1;
-    let editMusicIndex = -1;
-    let edit3dIndex = -1;
-    let editPlanningIndex = -1;
-    let editTopIndex = -1;
-
-    // TOPページのスロット定義（位置は固定、動画情報のみ編集可能）
-    const defaultTopSlots = [
-      { slotName: 'スロット1: Deal with the devil（大）', link: 'https://www.youtube.com/watch?v=73K8Q4F-Uo0', customThumbnail: '' },
-      { slotName: 'スロット2: ハオ（縦長）', link: 'https://www.youtube.com/watch?v=ArdkSMvRqxo', customThumbnail: '' },
-      { slotName: 'スロット3: 百花繚乱（横長）', link: 'https://www.youtube.com/watch?v=d21zmSD-Oh4', customThumbnail: '' },
-      { slotName: 'スロット4: のだ（横長）', link: 'https://www.youtube.com/watch?v=-W3QisNkoCQ', customThumbnail: '' },
-      { slotName: 'スロット5: しわ（縦長）', link: 'https://www.youtube.com/watch?v=BAFzZ3hgccU', customThumbnail: '' },
-      { slotName: 'スロット6: HALLOWEEN PARTY（横長）', link: 'https://www.youtube.com/watch?v=6hn1pNWSCNI', customThumbnail: '' },
-      { slotName: 'スロット7: 泡沫（縦長）', link: 'https://www.youtube.com/watch?v=Et7CpkC1ilI', customThumbnail: '' },
-      { slotName: 'スロット8: 脱法ロック（横長）', link: 'https://www.youtube.com/watch?v=Ag9Ay7XJC24', customThumbnail: '' },
-      { slotName: 'スロット9: UNDEAD（縦長）', link: 'https://www.youtube.com/watch?v=PBd2yrrnZ-4', customThumbnail: '' },
-      { slotName: 'スロット10: Hells Greatest Dad（横長）', link: 'https://www.youtube.com/watch?v=XP-nYV8GAOo', customThumbnail: '' },
-      { slotName: 'スロット11: Love Forever（横長）', link: 'https://www.youtube.com/watch?v=khYh9nJxO9o', customThumbnail: '' },
-      { slotName: 'スロット12: アンノウン（縦長）', link: 'https://www.youtube.com/watch?v=2X77fyZSIM4', customThumbnail: '' },
-      { slotName: 'スロット13: Tonight（横長）', link: 'https://www.youtube.com/watch?v=wXdpFwtZk5A', customThumbnail: '' },
-      { slotName: 'スロット14: キングスレイヤー（縦長）', link: 'https://www.youtube.com/watch?v=VVUW23SBnoE', customThumbnail: '' },
-      { slotName: 'スロット15: ファタール（横長）', link: 'https://www.youtube.com/watch?v=KWbXAIrVWxk', customThumbnail: '' },
-      { slotName: 'スロット16: 私は、私達は（横長）', link: 'https://www.youtube.com/watch?v=ZSEfPjaEjEs', customThumbnail: 'images/onaga-saisho.jpg' },
-      { slotName: 'スロット17: 化けの花（最大）', link: 'https://www.youtube.com/watch?v=3qpLV6US96M', customThumbnail: '' }
-    ];
-
-    // デフォルトの3Dアニメーションデータ
-    const default3dVideos = [
-      { id: 'YlREYofJlZU', title: '3D Animation 1', link: 'https://www.youtube.com/watch?v=YlREYofJlZU' },
-      { id: 'FQwnJEvqYfE', title: '3D Animation 2', link: 'https://www.youtube.com/watch?v=FQwnJEvqYfE' },
-      { id: '_J-Dhutoz_k', title: '3D Animation 3', link: 'https://www.youtube.com/watch?v=_J-Dhutoz_k' }
-    ];
-
-    // 初期化
-    async function init() {
-      // TOPスロットデータ（GitHub → localStorage → defaults の順でフォールバック）
-      await loadTopSlots();
-
-      // Mixing動画データ（GitHub → localStorage → defaults の順でフォールバック）
-      await loadVideos();
-
-      // 音源データ
-      const savedMusic = localStorage.getItem(MUSIC_STORAGE_KEY);
-      if (savedMusic) {
-        musicList = JSON.parse(savedMusic);
-      } else {
-        // デフォルトの音源データ
-        musicList = [
-          { title: '01a1', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F01a1&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/01a1' },
-          { title: '02a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F02a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/02a' },
-          { title: '03a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F03a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/03a' },
-          { title: '04a', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F04a&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/04a' },
-          { title: '05wav', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F05wav&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/05wav' },
-          { title: '06a1', embedUrl: 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fhx62trzckls7%2F06a1&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true', originalUrl: 'https://soundcloud.com/hx62trzckls7/06a1' }
-        ];
-        saveMusic();
-      }
-
-      // 3Dアニメーションデータ
-      const saved3d = localStorage.getItem(ANIMATION3D_STORAGE_KEY);
-      if (saved3d) {
-        animation3dList = JSON.parse(saved3d);
-      } else {
-        animation3dList = [...default3dVideos];
-        save3dVideos();
-      }
-
-      // Planningデータ
-      const savedPlanning = localStorage.getItem(PLANNING_STORAGE_KEY);
-      if (savedPlanning) {
-        planningList = JSON.parse(savedPlanning);
-      } else {
-        // デフォルトのPlanningデータ
-        planningList = [
-          { id: 'UAV_q6xKtu4', title: 'ドキシック/かわいいJKふぁん倶楽部', link: 'https://www.youtube.com/watch?v=UAV_q6xKtu4' }
-        ];
-        savePlanning();
-      }
-
-      // ログイン状態確認（自動ログイン対応）
-      if (localStorage.getItem('admin_logged_in') === 'true') {
-        showAdminPanel();
-      }
-    }
-
-    // ログイン
-    function login() {
-      const password = document.getElementById('passwordInput').value;
-      if (password === ADMIN_PASSWORD) {
-        localStorage.setItem('admin_logged_in', 'true');
-        showAdminPanel();
-      } else {
-        document.getElementById('loginError').textContent = 'パスワードが違います';
-      }
-    }
-
-    // ログアウト
-    function logout() {
-      localStorage.removeItem('admin_logged_in');
-      document.getElementById('loginContainer').style.display = 'flex';
-      document.getElementById('adminPanel').style.display = 'none';
-      document.getElementById('passwordInput').value = '';
-    }
-
-    // 管理パネル表示
-    function showAdminPanel() {
-      document.getElementById('loginContainer').style.display = 'none';
-      document.getElementById('adminPanel').style.display = 'block';
-      renderTopList();
-      renderVideoList();
-      restoreMixingSubtab();
-      render3dList();
-      renderMusicList();
-      renderPlanningList();
-      loadPlugins();
-    }
-
-    // 動画リスト表示
-    function renderVideoList() {
-      const list = document.getElementById('mixingVideoList');
-      list.innerHTML = '';
-
-      const filtered = videos.filter(getCurrentSubtabFilter());
-
-      if (filtered.length === 0) {
-        const label = activeMixingSubtab === 'short' ? 'short' : 'Full';
-        list.innerHTML = `<p style="color: #999; text-align: center; padding: 20px;">${label}動画がまだありません</p>`;
-        return;
-      }
-
-      filtered.forEach((video, index) => {
-        const isTikTok = video.platform === 'tiktok';
-        let thumbnailId = video.id;
-        if (!isTikTok && video.link) {
-          const match = video.link.match(/[?&]v=([^&]+)/);
-          if (match) thumbnailId = match[1];
-        }
-
-        const thumbnailUrl = video.customThumbnail
-          || (isTikTok ? '' : `https://img.youtube.com/vi/${thumbnailId}/mqdefault.jpg`);
-
-        const videoLink = video.link || (isTikTok ? '#' : `https://www.youtube.com/watch?v=${thumbnailId}`);
-
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `
-          <div class="video-number">
-            <input type="number" value="${index + 1}" min="1" max="${filtered.length}" onchange="moveVideoToPosition(${index}, this.value)" title="順番を変更">
-          </div>
-          <a href="${videoLink}" target="_blank" style="display: block;">
-            <img src="${thumbnailUrl}" alt="${video.title}" onerror="${isTikTok ? `this.style.display='none'; this.parentElement.style.background='#111';` : `this.src='https://img.youtube.com/vi/${video.id}/mqdefault.jpg'`}" style="cursor: pointer;">
-          </a>
-          <div class="video-info">
-            <h4>${video.title}</h4>
-            <p>ID: ${video.id}</p>
-          </div>
-          <div class="video-actions">
-            <button class="btn-edit" onclick="openEdit(${index})">編集</button>
-            <button class="btn-delete" onclick="deleteVideo(${index})">削除</button>
-          </div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    // YouTubeのURLから動画IDを抽出
-    function extractVideoId(url) {
-      // 様々なYouTube URLパターンに対応（Shorts URL 形式 youtube.com/shorts/VIDEOID も含む）
-      const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([^&\n?#]+)/,
-        /^([a-zA-Z0-9_-]{11})$/  // 動画IDのみの場合
-      ];
-
-      for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match) {
-          return match[1];
-        }
-      }
-      return null;
-    }
-
-    // URL から platform と video ID を判定
-    function detectPlatform(url) {
-      if (!url) return null;
-
-      // TikTok パターン
-      const tiktokVideo = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
-      if (tiktokVideo) return { platform: 'tiktok', id: tiktokVideo[1] };
-      const tiktokShort = url.match(/(?:vm|vt)\.tiktok\.com\/(\w+)/);
-      if (tiktokShort) return { platform: 'tiktok', id: tiktokShort[1] };
-      const tiktokT = url.match(/tiktok\.com\/t\/(\w+)/);
-      if (tiktokT) return { platform: 'tiktok', id: tiktokT[1] };
-
-      // YouTube（既存 extractVideoId を流用）
-      const youtubeId = extractVideoId(url);
-      if (youtubeId) return { platform: 'youtube', id: youtubeId };
-
-      return null;
-    }
-
-    // TikTok oEmbed で title と thumbnail_url を取得
-    async function fetchTikTokOembed(url) {
-      const endpoint = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
-      const r = await fetch(endpoint);
-      if (!r.ok) throw new Error(`oEmbed failed: ${r.status}`);
-      const data = await r.json();
-      return {
-        title: data.title || '',
-        thumbnail_url: data.thumbnail_url || ''
-      };
-    }
-
-    // 動画追加
-    async function addVideo() {
-      const title = document.getElementById('newTitle').value.trim();
-      const youtubeUrl = document.getElementById('newYoutubeUrl').value.trim();
-      const thumbnail = document.getElementById('newThumbnail').value.trim();
-
-      if (!youtubeUrl) {
-        alert('URLは必須です');
-        return;
-      }
-
-      const detected = detectPlatform(youtubeUrl);
-      if (!detected) {
-        alert('有効な YouTube または TikTok の URL を入力してください');
-        return;
-      }
-
-      let finalTitle = title;
-      let finalThumbnail = thumbnail;
-
-      // TikTok は oEmbed で title / thumbnail を自動取得
-      if (detected.platform === 'tiktok') {
-        try {
-          const oembed = await fetchTikTokOembed(youtubeUrl);
-          if (!finalTitle && oembed.title) finalTitle = oembed.title;
-          if (!finalThumbnail && oembed.thumbnail_url) finalThumbnail = oembed.thumbnail_url;
-        } catch (e) {
-          console.error('TikTok oEmbed failed', e);
-          if (!finalThumbnail) {
-            alert('TikTokのサムネ自動取得に失敗しました。カスタムサムネイル欄に手動で画像URLを入力してください。');
-            return;
-          }
-        }
-      }
-
-      if (!finalTitle) {
-        alert('タイトルは必須です');
-        return;
-      }
-
-      const newVideo = {
-        id: detected.id,
-        title: finalTitle,
-        link: youtubeUrl,
-        isShort: activeMixingSubtab === 'short'
-      };
-
-      if (detected.platform === 'tiktok') {
-        newVideo.platform = 'tiktok';
-      }
-
-      if (finalThumbnail) {
-        newVideo.customThumbnail = finalThumbnail;
-      }
-
-      videos.unshift(newVideo);
-      const success = await saveVideos();
-
-      if (success) {
-        renderVideoList();
-        document.getElementById('newTitle').value = '';
-        document.getElementById('newYoutubeUrl').value = '';
-        document.getElementById('newThumbnail').value = '';
-        showSaveStatus();
-      } else {
-        videos.shift();
-      }
-    }
-
-    // 動画削除
-    async function deleteVideo(index) {
-      const absIdx = toAbsoluteIndex(index);
-      if (absIdx < 0) return;
-      if (!confirm(`「${videos[absIdx].title}」を削除しますか？`)) return;
-      const removed = videos.splice(absIdx, 1)[0];
-      const success = await saveVideos();
-      if (success) {
-        renderVideoList();
-        showSaveStatus();
-      } else {
-        videos.splice(absIdx, 0, removed);
-      }
-    }
-
-    // Mixing動画を指定位置に移動（filter 後の相対 index / position を絶対 index に変換）
-    async function moveVideoToPosition(currentIndex, newPosition) {
-      const targetRelative = parseInt(newPosition) - 1;
-      const filtered = videos.filter(getCurrentSubtabFilter());
-      if (isNaN(targetRelative) || targetRelative < 0 || targetRelative >= filtered.length || targetRelative === currentIndex) {
-        renderVideoList();
-        return;
-      }
-
-      const currentItem = filtered[currentIndex];
-      const currentAbs = videos.indexOf(currentItem);
-      if (currentAbs < 0) { renderVideoList(); return; }
-
-      // 現在のアイテムを取り出し
-      videos.splice(currentAbs, 1);
-
-      // 目的位置の絶対 index を再計算
-      const filteredAfter = videos.filter(getCurrentSubtabFilter());
-      let insertAbs;
-      if (targetRelative >= filteredAfter.length) {
-        insertAbs = filteredAfter.length > 0
-          ? videos.indexOf(filteredAfter[filteredAfter.length - 1]) + 1
-          : videos.length;
-      } else {
-        insertAbs = videos.indexOf(filteredAfter[targetRelative]);
-      }
-
-      videos.splice(insertAbs, 0, currentItem);
-
-      const success = await saveVideos();
-      if (success) {
-        renderVideoList();
-        showSaveStatus();
-      } else {
-        // ロールバック
-        const revertedIdx = videos.indexOf(currentItem);
-        if (revertedIdx >= 0) videos.splice(revertedIdx, 1);
-        videos.splice(currentAbs, 0, currentItem);
-        renderVideoList();
-      }
-    }
-
-    // 編集モーダルを開く（index は filter 後の相対 index）
-    function openEdit(index) {
-      const absIdx = toAbsoluteIndex(index);
-      if (absIdx < 0) return;
-      editIndex = absIdx;
-      const video = videos[absIdx];
-      document.getElementById('editTitle').value = video.title;
-      document.getElementById('editYoutubeUrl').value = video.link || `https://www.youtube.com/watch?v=${video.id}`;
-      document.getElementById('editThumbnail').value = video.customThumbnail || '';
-      const editIsShortEl = document.getElementById('editIsShort');
-      if (editIsShortEl) editIsShortEl.checked = video.isShort === true;
-      document.getElementById('editModal').style.display = 'flex';
-    }
-
-    // モーダルを閉じる
-    function closeModal() {
-      document.getElementById('editModal').style.display = 'none';
-      editIndex = -1;
-    }
-
-    // 編集を保存
-    async function saveEdit() {
-      if (editIndex === -1) return;
-
-      const title = document.getElementById('editTitle').value.trim();
-      const youtubeUrl = document.getElementById('editYoutubeUrl').value.trim();
-      const thumbnail = document.getElementById('editThumbnail').value.trim();
-
-      if (!youtubeUrl) {
-        alert('URLは必須です');
-        return;
-      }
-
-      const detected = detectPlatform(youtubeUrl);
-      if (!detected) {
-        alert('有効な YouTube または TikTok の URL を入力してください');
-        return;
-      }
-
-      let finalTitle = title;
-      let finalThumbnail = thumbnail;
-
-      // TikTok は oEmbed で title / thumbnail を自動取得（入力されていれば上書きしない）
-      if (detected.platform === 'tiktok') {
-        try {
-          const oembed = await fetchTikTokOembed(youtubeUrl);
-          if (!finalTitle && oembed.title) finalTitle = oembed.title;
-          if (!finalThumbnail && oembed.thumbnail_url) finalThumbnail = oembed.thumbnail_url;
-        } catch (e) {
-          console.error('TikTok oEmbed failed', e);
-          if (!finalThumbnail) {
-            alert('TikTokのサムネ自動取得に失敗しました。カスタムサムネイル欄に手動で画像URLを入力してください。');
-            return;
-          }
-        }
-      }
-
-      if (!finalTitle) {
-        alert('タイトルは必須です');
-        return;
-      }
-
-      const oldVideo = { ...videos[editIndex] };
-      const isShortChecked = document.getElementById('editIsShort').checked;
-      videos[editIndex] = {
-        id: detected.id,
-        title: finalTitle,
-        link: youtubeUrl,
-        isShort: isShortChecked
-      };
-      if (detected.platform === 'tiktok') {
-        videos[editIndex].platform = 'tiktok';
-      }
-      if (finalThumbnail) {
-        videos[editIndex].customThumbnail = finalThumbnail;
-      }
-
-      const success = await saveVideos();
-      if (success) {
-        renderVideoList();
-        closeModal();
-        showSaveStatus();
-      } else {
-        videos[editIndex] = oldVideo;
-      }
-    }
-
-    // 保存（GitHub Contents API 経由 + localStorage キャッシュ）
-    async function saveVideos() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
-      if (!token) {
-        alert('GitHubトークンが設定されていません。変更は公開サイトに反映されません。');
-        return false;
-      }
-      try {
-        const content = JSON.stringify(videos, null, 2);
-        const encodedContent = btoa(unescape(encodeURIComponent(content)));
-        const body = {
-          message: 'Update mixing videos via admin',
-          content: encodedContent,
-          branch: GITHUB_BRANCH
-        };
-        if (videosFileSha) body.sha = videosFileSha;
-
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${VIDEOS_JSON_PATH}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to save videos');
-        }
-
-        const result = await response.json();
-        videosFileSha = result.content.sha;
-        await triggerDeploy();
-        return true;
-      } catch (error) {
-        console.error('Error saving videos:', error);
-        alert('動画の保存に失敗しました: ' + error.message);
-        return false;
-      }
-    }
-
-    // GitHub から mixing 動画データを読み込み
-    async function loadVideos() {
-      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
-      const savedLS = (() => {
-        try {
-          const s = localStorage.getItem(STORAGE_KEY);
-          const arr = s ? JSON.parse(s) : null;
-          return Array.isArray(arr) && arr.length > 0 ? arr : null;
-        } catch { return null; }
-      })();
-
-      let remoteArr = null;
-
-      if (token) {
-        try {
-          const r = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${VIDEOS_JSON_PATH}?ref=${GITHUB_BRANCH}`, {
-            headers: {
-              'Authorization': `token ${token}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          if (r.ok) {
-            const data = await r.json();
-            videosFileSha = data.sha;
-            const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-            const parsed = JSON.parse(content);
-            if (Array.isArray(parsed)) remoteArr = parsed;
-          } else if (r.status === 404) {
-            videosFileSha = null;
-          } else {
-            console.warn('loadVideos GitHub API error', r.status);
-          }
-        } catch (e) {
-          console.warn('loadVideos GitHub API exception', e);
-        }
-      } else {
-        // トークンなし → 静的ファイル読み込み
-        try {
-          const r = await fetch(VIDEOS_JSON_PATH, { cache: 'no-store' });
-          if (r.ok) {
-            const parsed = await r.json();
-            if (Array.isArray(parsed)) remoteArr = parsed;
-          }
-        } catch (e) {}
-      }
-
-      if (remoteArr && remoteArr.length > 0) {
-        videos = remoteArr;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-        return;
-      }
-
-      if (savedLS) {
-        videos = savedLS;
-        // JSON が空 or 未作成 で localStorage に編集データがある場合、初回マイグレーション
-        if (token) {
-          saveVideos().catch(err => console.warn('migrate videos failed', err));
-        }
-        return;
-      }
-
-      videos = [...defaultVideos];
-    }
-
-    // ========== TOP管理機能 ==========
-
-    // TOPリスト表示
-    function renderTopList() {
-      const list = document.getElementById('topVideoList');
-      list.innerHTML = '';
-
-      topSlots.forEach((slot, index) => {
-        // リンクからビデオIDを抽出
-        let videoId = '';
-        if (slot.link) {
-          const match = slot.link.match(/[?&]v=([^&]+)/);
-          if (match) videoId = match[1];
-        }
-
-        const thumbnailUrl = slot.customThumbnail || (videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '');
-
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `
-          <div class="video-number" style="min-width: 40px;">
-            <span style="color: #fff; font-weight: bold;">${index + 1}</span>
-          </div>
-          ${thumbnailUrl ? `
-            <a href="${slot.link}" target="_blank" style="display: block;">
-              <img src="${thumbnailUrl}" alt="${slot.slotName}" onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'" style="cursor: pointer;">
-            </a>
-          ` : `
-            <div style="width: 120px; height: 68px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-              <span style="color: #999;">No Video</span>
-            </div>
-          `}
-          <div class="video-info">
-            <h4>${slot.slotName}</h4>
-            <p style="font-size: 11px; word-break: break-all;">${slot.link || '未設定'}</p>
-            ${slot.customThumbnail ? `<p style="font-size: 10px; color: #ccc;">カスタムサムネ: ${slot.customThumbnail}</p>` : ''}
-          </div>
-          <div class="video-actions">
-            <button class="btn-edit" onclick="openTopEdit(${index})">編集</button>
-          </div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    // TOP編集モーダルを開く
-    function openTopEdit(index) {
-      editTopIndex = index;
-      const slot = topSlots[index];
-      document.getElementById('editTopSlotName').textContent = slot.slotName;
-      document.getElementById('editTopLink').value = slot.link || '';
-      document.getElementById('editTopThumbnail').value = slot.customThumbnail || '';
-      document.getElementById('editTopModal').style.display = 'flex';
-    }
-
-    // TOPモーダルを閉じる
-    function closeTopModal() {
-      document.getElementById('editTopModal').style.display = 'none';
-      editTopIndex = -1;
-    }
-
-    // TOP編集を保存
-    async function saveTopEdit() {
-      if (editTopIndex === -1) return;
-
-      const link = document.getElementById('editTopLink').value.trim();
-      const thumbnail = document.getElementById('editTopThumbnail').value.trim();
-
-      if (!link) {
-        alert('YouTubeのURLは必須です');
-        return;
-      }
-
-      // URLの基本チェック
-      if (!link.includes('youtube.com') && !link.includes('youtu.be')) {
-        alert('有効なYouTubeのURLを入力してください');
-        return;
-      }
-
-      const oldSlot = { ...topSlots[editTopIndex] };
-      topSlots[editTopIndex].link = link;
-      topSlots[editTopIndex].customThumbnail = thumbnail;
-
-      const success = await saveTopSlots();
-      if (success) {
-        renderTopList();
-        closeTopModal();
-        showSaveStatus();
-      } else {
-        topSlots[editTopIndex] = oldSlot;
-      }
-    }
-
-    // TOPスロットデータを保存（GitHub Contents API 経由 + localStorage キャッシュ）
-    async function saveTopSlots() {
-      localStorage.setItem(TOP_STORAGE_KEY, JSON.stringify(topSlots));
-      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
-      if (!token) {
-        alert('GitHubトークンが設定されていません。変更は公開サイトに反映されません。');
-        return false;
-      }
-      try {
-        const content = JSON.stringify(topSlots, null, 2);
-        const encodedContent = btoa(unescape(encodeURIComponent(content)));
-        const body = {
-          message: 'Update top videos via admin',
-          content: encodedContent,
-          branch: GITHUB_BRANCH
-        };
-        if (topSlotsFileSha) body.sha = topSlotsFileSha;
-
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${TOP_VIDEOS_JSON_PATH}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to save top slots');
-        }
-
-        const result = await response.json();
-        topSlotsFileSha = result.content.sha;
-        await triggerDeploy();
-        return true;
-      } catch (error) {
-        console.error('Error saving top slots:', error);
-        alert('TOP動画の保存に失敗しました: ' + error.message);
-        return false;
-      }
-    }
-
-    // GitHub から TOP スロットデータを読み込み
-    async function loadTopSlots() {
-      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
-      const savedLS = (() => {
-        try {
-          const s = localStorage.getItem(TOP_STORAGE_KEY);
-          const arr = s ? JSON.parse(s) : null;
-          // 新フォーマット（slotName を持つ）のみ採用
-          return Array.isArray(arr) && arr.length > 0 && arr[0].slotName ? arr : null;
-        } catch { return null; }
-      })();
-
-      let remoteArr = null;
-
-      if (token) {
-        try {
-          const r = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${TOP_VIDEOS_JSON_PATH}?ref=${GITHUB_BRANCH}`, {
-            headers: {
-              'Authorization': `token ${token}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          if (r.ok) {
-            const data = await r.json();
-            topSlotsFileSha = data.sha;
-            const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-            const parsed = JSON.parse(content);
-            if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].slotName) remoteArr = parsed;
-          } else if (r.status === 404) {
-            topSlotsFileSha = null;
-          } else {
-            console.warn('loadTopSlots GitHub API error', r.status);
-          }
-        } catch (e) {
-          console.warn('loadTopSlots GitHub API exception', e);
-        }
-      } else {
-        try {
-          const r = await fetch(TOP_VIDEOS_JSON_PATH, { cache: 'no-store' });
-          if (r.ok) {
-            const parsed = await r.json();
-            if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].slotName) remoteArr = parsed;
-          }
-        } catch (e) {}
-      }
-
-      if (remoteArr) {
-        topSlots = remoteArr;
-        localStorage.setItem(TOP_STORAGE_KEY, JSON.stringify(topSlots));
-        return;
-      }
-
-      if (savedLS) {
-        topSlots = savedLS;
-        if (token) {
-          saveTopSlots().catch(err => console.warn('migrate topSlots failed', err));
-        }
-        return;
-      }
-
-      topSlots = JSON.parse(JSON.stringify(defaultTopSlots));
-    }
-
-    // ========== ここまでTOP管理機能 ==========
-
-    // 保存ステータス表示
-    function showSaveStatus() {
-      const status = document.getElementById('saveStatus');
-      status.style.display = 'block';
-      setTimeout(() => {
-        status.style.display = 'none';
-      }, 2000);
-    }
-
-    // ========== Music管理機能 ==========
-
-    // SoundCloudのURLを埋め込みURLに変換
-    function convertToSoundcloudEmbed(url) {
-      // SoundCloudの埋め込みURL形式に変換
-      // https://soundcloud.com/artist/track -> https://w.soundcloud.com/player/?url=...
-      const encodedUrl = encodeURIComponent(url);
-      return `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%23926bff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
-    }
-
-    // 音源リスト表示
-    function renderMusicList() {
-      const list = document.getElementById('musicList');
-      list.innerHTML = '';
-
-      if (musicList.length === 0) {
-        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">音源がまだありません</p>';
-        return;
-      }
-
-      musicList.forEach((track, index) => {
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `
-          <div class="video-number">
-            <input type="number" value="${index + 1}" min="1" max="${musicList.length}" onchange="moveMusicToPosition(${index}, this.value)" title="順番を変更">
-          </div>
-          <a href="${track.originalUrl || '#'}" target="_blank" style="display: block; width: 120px; height: 68px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-            <span style="font-size: 24px;">🎵</span>
-          </a>
-          <div class="video-info">
-            <h4>${track.title}</h4>
-            <p style="font-size: 11px; word-break: break-all;">${track.originalUrl || 'SoundCloud'}</p>
-          </div>
-          <div class="video-actions">
-            <button class="btn-edit" onclick="openMusicEdit(${index})">編集</button>
-            <button class="btn-delete" onclick="deleteMusic(${index})">削除</button>
-          </div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    // 音源追加
-    function addMusic() {
-      const title = document.getElementById('newMusicTitle').value.trim();
-      const soundcloudUrl = document.getElementById('newSoundcloudUrl').value.trim();
-
-      if (!title || !soundcloudUrl) {
-        alert('曲名とSoundCloudのURLは必須です');
-        return;
-      }
-
-      // SoundCloudのURL検証（基本的なチェック）
-      if (!soundcloudUrl.includes('soundcloud.com')) {
-        alert('有効なSoundCloudのURLを入力してください');
-        return;
-      }
-
-      const embedUrl = convertToSoundcloudEmbed(soundcloudUrl);
-
-      const newTrack = {
-        title: title,
-        embedUrl: embedUrl,
-        originalUrl: soundcloudUrl
-      };
-
-      musicList.unshift(newTrack);
-      saveMusic();
-      renderMusicList();
-
-      // フォームクリア
-      document.getElementById('newMusicTitle').value = '';
-      document.getElementById('newSoundcloudUrl').value = '';
-
-      showSaveStatus();
-    }
-
-    // 音源削除
-    function deleteMusic(index) {
-      if (confirm(`「${musicList[index].title}」を削除しますか？`)) {
-        musicList.splice(index, 1);
-        saveMusic();
-        renderMusicList();
-        showSaveStatus();
-      }
-    }
-
-    // 音源を指定位置に移動
-    function moveMusicToPosition(currentIndex, newPosition) {
-      const targetIndex = parseInt(newPosition) - 1;
-      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= musicList.length || targetIndex === currentIndex) {
-        renderMusicList(); // 無効な値の場合はリセット
-        return;
-      }
-
-      const item = musicList.splice(currentIndex, 1)[0];
-      musicList.splice(targetIndex, 0, item);
-      saveMusic();
-      renderMusicList();
-      showSaveStatus();
-    }
-
-    // 音源編集モーダルを開く
-    function openMusicEdit(index) {
-      editMusicIndex = index;
-      const track = musicList[index];
-      document.getElementById('editMusicTitle').value = track.title;
-      document.getElementById('editSoundcloudUrl').value = track.originalUrl || '';
-      document.getElementById('editMusicModal').style.display = 'flex';
-    }
-
-    // 音源モーダルを閉じる
-    function closeMusicModal() {
-      document.getElementById('editMusicModal').style.display = 'none';
-      editMusicIndex = -1;
-    }
-
-    // 音源編集を保存
-    function saveMusicEdit() {
-      if (editMusicIndex === -1) return;
-
-      const title = document.getElementById('editMusicTitle').value.trim();
-      const soundcloudUrl = document.getElementById('editSoundcloudUrl').value.trim();
-
-      if (!title || !soundcloudUrl) {
-        alert('曲名とSoundCloudのURLは必須です');
-        return;
-      }
-
-      if (!soundcloudUrl.includes('soundcloud.com')) {
-        alert('有効なSoundCloudのURLを入力してください');
-        return;
-      }
-
-      const embedUrl = convertToSoundcloudEmbed(soundcloudUrl);
-
-      musicList[editMusicIndex] = {
-        title: title,
-        embedUrl: embedUrl,
-        originalUrl: soundcloudUrl
-      };
-
-      saveMusic();
-      renderMusicList();
-      closeMusicModal();
-      showSaveStatus();
-    }
-
-    // 音源データを保存
-    function saveMusic() {
-      localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify(musicList));
-    }
-
-    // ========== ここまでMusic管理機能 ==========
-
-    // ========== 3D Animation管理機能 ==========
-
-    // 3Dアニメーションリスト表示
-    function render3dList() {
-      const list = document.getElementById('animation3dList');
-      list.innerHTML = '';
-
-      if (animation3dList.length === 0) {
-        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">動画がまだありません</p>';
-        return;
-      }
-
-      animation3dList.forEach((video, index) => {
-        const thumbnailUrl = `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
-        const videoLink = video.link || `https://www.youtube.com/watch?v=${video.id}`;
-
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `
-          <div class="video-number">
-            <input type="number" value="${index + 1}" min="1" max="${animation3dList.length}" onchange="move3dToPosition(${index}, this.value)" title="順番を変更">
-          </div>
-          <a href="${videoLink}" target="_blank" style="display: block;">
-            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'" style="cursor: pointer;">
-          </a>
-          <div class="video-info">
-            <h4>${video.title}</h4>
-            <p>ID: ${video.id}</p>
-          </div>
-          <div class="video-actions">
-            <button class="btn-edit" onclick="open3dEdit(${index})">編集</button>
-            <button class="btn-delete" onclick="delete3dVideo(${index})">削除</button>
-          </div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    // 3D動画追加
-    function add3dVideo() {
-      const title = document.getElementById('new3dTitle').value.trim();
-      const youtubeUrl = document.getElementById('new3dYoutubeUrl').value.trim();
-
-      if (!title || !youtubeUrl) {
-        alert('タイトルとYouTubeのURLは必須です');
-        return;
-      }
-
-      const videoId = extractVideoId(youtubeUrl);
-      if (!videoId) {
-        alert('有効なYouTubeのURLを入力してください');
-        return;
-      }
-
-      const newVideo = {
-        id: videoId,
-        title: title,
-        link: youtubeUrl
-      };
-
-      animation3dList.unshift(newVideo);
-      save3dVideos();
-      render3dList();
-
-      // フォームクリア
-      document.getElementById('new3dTitle').value = '';
-      document.getElementById('new3dYoutubeUrl').value = '';
-
-      showSaveStatus();
-    }
-
-    // 3D動画削除
-    function delete3dVideo(index) {
-      if (confirm(`「${animation3dList[index].title}」を削除しますか？`)) {
-        animation3dList.splice(index, 1);
-        save3dVideos();
-        render3dList();
-        showSaveStatus();
-      }
-    }
-
-    // 3D動画を指定位置に移動
-    function move3dToPosition(currentIndex, newPosition) {
-      const targetIndex = parseInt(newPosition) - 1;
-      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= animation3dList.length || targetIndex === currentIndex) {
-        render3dList(); // 無効な値の場合はリセット
-        return;
-      }
-
-      const item = animation3dList.splice(currentIndex, 1)[0];
-      animation3dList.splice(targetIndex, 0, item);
-      save3dVideos();
-      render3dList();
-      showSaveStatus();
-    }
-
-    // 3D動画編集モーダルを開く
-    function open3dEdit(index) {
-      edit3dIndex = index;
-      const video = animation3dList[index];
-      document.getElementById('edit3dTitle').value = video.title;
-      document.getElementById('edit3dYoutubeUrl').value = video.link || `https://www.youtube.com/watch?v=${video.id}`;
-      document.getElementById('edit3dModal').style.display = 'flex';
-    }
-
-    // 3Dモーダルを閉じる
-    function close3dModal() {
-      document.getElementById('edit3dModal').style.display = 'none';
-      edit3dIndex = -1;
-    }
-
-    // 3D動画編集を保存
-    function save3dEdit() {
-      if (edit3dIndex === -1) return;
-
-      const title = document.getElementById('edit3dTitle').value.trim();
-      const youtubeUrl = document.getElementById('edit3dYoutubeUrl').value.trim();
-
-      if (!title || !youtubeUrl) {
-        alert('タイトルとYouTubeのURLは必須です');
-        return;
-      }
-
-      const videoId = extractVideoId(youtubeUrl);
-      if (!videoId) {
-        alert('有効なYouTubeのURLを入力してください');
-        return;
-      }
-
-      animation3dList[edit3dIndex] = {
-        id: videoId,
-        title: title,
-        link: youtubeUrl
-      };
-
-      save3dVideos();
-      render3dList();
-      close3dModal();
-      showSaveStatus();
-    }
-
-    // 3Dアニメーションデータを保存
-    function save3dVideos() {
-      localStorage.setItem(ANIMATION3D_STORAGE_KEY, JSON.stringify(animation3dList));
-    }
-
-    // ========== ここまで3D Animation管理機能 ==========
-
-    // ========== Planning Progress管理機能 ==========
-
-    // Planningリスト表示
-    function renderPlanningList() {
-      const list = document.getElementById('planningList');
-      list.innerHTML = '';
-
-      if (planningList.length === 0) {
-        list.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">作品がまだありません</p>';
-        return;
-      }
-
-      planningList.forEach((video, index) => {
-        const thumbnailUrl = `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
-        const videoLink = video.link || `https://www.youtube.com/watch?v=${video.id}`;
-
-        const item = document.createElement('div');
-        item.className = 'video-item';
-        item.innerHTML = `
-          <div class="video-number">
-            <input type="number" value="${index + 1}" min="1" max="${planningList.length}" onchange="movePlanningToPosition(${index}, this.value)" title="順番を変更">
-          </div>
-          <a href="${videoLink}" target="_blank" style="display: block;">
-            <img src="${thumbnailUrl}" alt="${video.title}" onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'" style="cursor: pointer;">
-          </a>
-          <div class="video-info">
-            <h4>${video.title}</h4>
-            <p>ID: ${video.id}</p>
-          </div>
-          <div class="video-actions">
-            <button class="btn-edit" onclick="openPlanningEdit(${index})">編集</button>
-            <button class="btn-delete" onclick="deletePlanning(${index})">削除</button>
-          </div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    // Planning作品追加
-    function addPlanning() {
-      const title = document.getElementById('newPlanningTitle').value.trim();
-      const youtubeUrl = document.getElementById('newPlanningYoutubeUrl').value.trim();
-
-      if (!title || !youtubeUrl) {
-        alert('作品タイトルとYouTubeのURLは必須です');
-        return;
-      }
-
-      const videoId = extractVideoId(youtubeUrl);
-      if (!videoId) {
-        alert('有効なYouTubeのURLを入力してください');
-        return;
-      }
-
-      const newVideo = {
-        id: videoId,
-        title: title,
-        link: youtubeUrl
-      };
-
-      planningList.unshift(newVideo);
-      savePlanning();
-      renderPlanningList();
-
-      // フォームクリア
-      document.getElementById('newPlanningTitle').value = '';
-      document.getElementById('newPlanningYoutubeUrl').value = '';
-
-      showSaveStatus();
-    }
-
-    // Planning作品削除
-    function deletePlanning(index) {
-      if (confirm(`「${planningList[index].title}」を削除しますか？`)) {
-        planningList.splice(index, 1);
-        savePlanning();
-        renderPlanningList();
-        showSaveStatus();
-      }
-    }
-
-    // Planning作品を指定位置に移動
-    function movePlanningToPosition(currentIndex, newPosition) {
-      const targetIndex = parseInt(newPosition) - 1;
-      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= planningList.length || targetIndex === currentIndex) {
-        renderPlanningList(); // 無効な値の場合はリセット
-        return;
-      }
-
-      const item = planningList.splice(currentIndex, 1)[0];
-      planningList.splice(targetIndex, 0, item);
-      savePlanning();
-      renderPlanningList();
-      showSaveStatus();
-    }
-
-    // Planning編集モーダルを開く
-    function openPlanningEdit(index) {
-      editPlanningIndex = index;
-      const video = planningList[index];
-      document.getElementById('editPlanningTitle').value = video.title;
-      document.getElementById('editPlanningYoutubeUrl').value = video.link || `https://www.youtube.com/watch?v=${video.id}`;
-      document.getElementById('editPlanningModal').style.display = 'flex';
-    }
-
-    // Planningモーダルを閉じる
-    function closePlanningModal() {
-      document.getElementById('editPlanningModal').style.display = 'none';
-      editPlanningIndex = -1;
-    }
-
-    // Planning編集を保存
-    function savePlanningEdit() {
-      if (editPlanningIndex === -1) return;
-
-      const title = document.getElementById('editPlanningTitle').value.trim();
-      const youtubeUrl = document.getElementById('editPlanningYoutubeUrl').value.trim();
-
-      if (!title || !youtubeUrl) {
-        alert('作品タイトルとYouTubeのURLは必須です');
-        return;
-      }
-
-      const videoId = extractVideoId(youtubeUrl);
-      if (!videoId) {
-        alert('有効なYouTubeのURLを入力してください');
-        return;
-      }
-
-      planningList[editPlanningIndex] = {
-        id: videoId,
-        title: title,
-        link: youtubeUrl
-      };
-
-      savePlanning();
-      renderPlanningList();
-      closePlanningModal();
-      showSaveStatus();
-    }
-
-    // Planningデータを保存
-    function savePlanning() {
-      localStorage.setItem(PLANNING_STORAGE_KEY, JSON.stringify(planningList));
-    }
-
-    // ========== ここまでPlanning Progress管理機能 ==========
-
-    // ========== Plugins管理機能（GitHub API） ==========
-
-    // GitHub設定（共通）
-    const GITHUB_REPO = 'okazaki893/portfolio-site';
-    const GITHUB_BRANCH = 'main';
-    const GITHUB_TOKEN_KEY = 'github_access_token';
-
-    const PLUGINS_JSON_PATH = 'data/plugins.json';
-    const VIDEOS_JSON_PATH = 'content/videos.json';
-    const TOP_VIDEOS_JSON_PATH = 'content/top_videos.json';
-    let pluginsList = [];
-    let pluginsFileSha = null;
-    let videosFileSha = null;
-    let topSlotsFileSha = null;
-    let editPluginIndex = -1;
-
-    // プラグインアイコンSVG
-    const pluginIconSVG = `<svg style="width: 40px; height: 40px; fill: #ffffff;" viewBox="0 0 24 24"><path d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7s2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"/></svg>`;
-
-    // プラグイン一覧表示
-    function renderPluginsList() {
-      const listEl = document.getElementById('pluginsList');
-      if (!listEl) return;
-
-      if (pluginsList.length === 0) {
-        listEl.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">プラグインがまだありません</p>';
-        return;
-      }
-
-      listEl.innerHTML = pluginsList.map((plugin, index) => `
-        <div class="video-item">
-          <div class="video-number">
-            <input type="number" value="${index + 1}" min="1" max="${pluginsList.length}"
-              onchange="movePluginToPosition(${index}, this.value)"
-              onclick="this.select()"
-              title="順番を変更">
-          </div>
-          <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.1); border-radius: 8px;">
-            ${pluginIconSVG}
-          </div>
-          <div class="video-info">
-            <h4>${plugin.title}</h4>
-            <p style="margin-bottom: 3px;">${plugin.description || ''}</p>
-            <p style="font-size: 11px; color: rgba(255, 255, 255, 0.6);">${plugin.link}</p>
-            ${plugin.tag ? `<span style="display: inline-block; margin-top: 5px; padding: 2px 8px; background: rgba(255, 255, 255, 0.15); border-radius: 4px; font-size: 11px; color: #bbb;">${plugin.tag}</span>` : ''}
-          </div>
-          <div class="video-actions">
-            <button class="btn-edit" onclick="openPluginEdit(${index})">編集</button>
-            <button class="btn-delete" onclick="deletePlugin(${index})">削除</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // プラグイン追加
-    async function addPlugin() {
-      const title = document.getElementById('newPluginTitle').value.trim();
-      const description = document.getElementById('newPluginDescription').value.trim();
-      const link = document.getElementById('newPluginLink').value.trim();
-      const tag = document.getElementById('newPluginTag').value.trim();
-
-      if (!title || !link) {
-        alert('プラグイン名とリンクURLは必須です');
-        return;
-      }
-
-      const newPlugin = {
-        title: title,
-        description: description,
-        link: link,
-        tag: tag
-      };
-
-      pluginsList.unshift(newPlugin);
-      const success = await savePlugins();
-
-      if (success) {
-        renderPluginsList();
-        // フォームクリア
-        document.getElementById('newPluginTitle').value = '';
-        document.getElementById('newPluginDescription').value = '';
-        document.getElementById('newPluginLink').value = '';
-        document.getElementById('newPluginTag').value = '';
-        showSaveStatus();
-      } else {
-        // 失敗した場合は元に戻す
-        pluginsList.shift();
-      }
-    }
-
-    // プラグイン削除
-    async function deletePlugin(index) {
-      if (confirm(`「${pluginsList[index].title}」を削除しますか？`)) {
-        const deleted = pluginsList.splice(index, 1)[0];
-        const success = await savePlugins();
-
-        if (success) {
-          renderPluginsList();
-          showSaveStatus();
-        } else {
-          // 失敗した場合は元に戻す
-          pluginsList.splice(index, 0, deleted);
-        }
-      }
-    }
-
-    // プラグインを指定位置に移動
-    async function movePluginToPosition(currentIndex, newPosition) {
-      const targetIndex = parseInt(newPosition) - 1;
-      if (isNaN(targetIndex) || targetIndex < 0 || targetIndex >= pluginsList.length || targetIndex === currentIndex) {
-        renderPluginsList();
-        return;
-      }
-
-      const item = pluginsList.splice(currentIndex, 1)[0];
-      pluginsList.splice(targetIndex, 0, item);
-      const success = await savePlugins();
-
-      if (success) {
-        renderPluginsList();
-        showSaveStatus();
-      } else {
-        // 失敗した場合は元に戻す
-        pluginsList.splice(targetIndex, 1);
-        pluginsList.splice(currentIndex, 0, item);
-        renderPluginsList();
-      }
-    }
-
-    // プラグイン編集モーダルを開く
-    function openPluginEdit(index) {
-      editPluginIndex = index;
-      const plugin = pluginsList[index];
-      document.getElementById('editPluginTitle').value = plugin.title;
-      document.getElementById('editPluginDescription').value = plugin.description || '';
-      document.getElementById('editPluginLink').value = plugin.link;
-      document.getElementById('editPluginTag').value = plugin.tag || '';
-      document.getElementById('editPluginModal').style.display = 'flex';
-    }
-
-    // プラグインモーダルを閉じる
-    function closePluginModal() {
-      document.getElementById('editPluginModal').style.display = 'none';
-      editPluginIndex = -1;
-    }
-
-    // プラグイン編集を保存
-    async function savePluginEdit() {
-      if (editPluginIndex === -1) return;
-
-      const title = document.getElementById('editPluginTitle').value.trim();
-      const description = document.getElementById('editPluginDescription').value.trim();
-      const link = document.getElementById('editPluginLink').value.trim();
-      const tag = document.getElementById('editPluginTag').value.trim();
-
-      if (!title || !link) {
-        alert('プラグイン名とリンクURLは必須です');
-        return;
-      }
-
-      const oldPlugin = { ...pluginsList[editPluginIndex] };
-      pluginsList[editPluginIndex] = {
-        title: title,
-        description: description,
-        link: link,
-        tag: tag
-      };
-
-      const success = await savePlugins();
-
-      if (success) {
-        renderPluginsList();
-        closePluginModal();
-        showSaveStatus();
-      } else {
-        // 失敗した場合は元に戻す
-        pluginsList[editPluginIndex] = oldPlugin;
-      }
-    }
-
-    // GitHubからプラグインデータを読み込み
-    async function loadPlugins() {
-      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
-      if (!token) {
-        // トークンがない場合はJSONファイルから直接読み込み
-        try {
-          const response = await fetch('data/plugins.json');
-          if (response.ok) {
-            pluginsList = await response.json();
-          }
-        } catch (e) {
-          console.log('Failed to load local plugins.json');
-        }
-        renderPluginsList();
-        return;
-      }
-
-      try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${PLUGINS_JSON_PATH}?ref=${GITHUB_BRANCH}`, {
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-
-        if (response.status === 404) {
-          pluginsList = [];
-          pluginsFileSha = null;
-          renderPluginsList();
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch plugins');
-        }
-
-        const data = await response.json();
-        pluginsFileSha = data.sha;
-
-        // Base64デコード
-        const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-        pluginsList = JSON.parse(content);
-        renderPluginsList();
-
-      } catch (error) {
-        console.error('Error loading plugins:', error);
-        renderPluginsList();
-      }
-    }
-
-    // プラグインデータをGitHubに保存
-    async function savePlugins() {
-      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
-      if (!token) {
-        alert('GitHubトークンが設定されていません。');
-        return false;
-      }
-
-      try {
-        const content = JSON.stringify(pluginsList, null, 2);
-        const encodedContent = btoa(unescape(encodeURIComponent(content)));
-
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${PLUGINS_JSON_PATH}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: 'Update plugins via admin',
-            content: encodedContent,
-            sha: pluginsFileSha,
-            branch: GITHUB_BRANCH
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to save plugins');
-        }
-
-        const result = await response.json();
-        pluginsFileSha = result.content.sha;
-
-        // デプロイをトリガー
-        await triggerDeploy();
-
-        return true;
-
-      } catch (error) {
-        console.error('Error saving plugins:', error);
-        alert('プラグインの保存に失敗しました: ' + error.message);
-        return false;
-      }
-    }
-
-    // ========== ここまでPlugins管理機能 ==========
-
-    // ========== タブ切り替え機能 ==========
-
-    function switchTab(tabName, saveState = true) {
-      // すべてのタブボタンからactiveクラスを削除
-      document.querySelectorAll('.tab-button').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
-      // すべてのタブコンテンツを非表示
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-      });
-
-      // 対応するタブボタンにactiveクラスを追加
-      const tabButton = document.querySelector(`.tab-button[onclick*="'${tabName}'"]`);
-      if (tabButton) {
-        tabButton.classList.add('active');
-      }
-
-      // 対応するタブコンテンツを表示
-      document.getElementById('tab-' + tabName).classList.add('active');
-
-      // タブ状態を保存
-      if (saveState) {
-        localStorage.setItem('admin_active_tab', tabName);
-      }
-    }
-
-    // 保存されたタブ状態を復元
-    function restoreTab() {
-      const savedTab = localStorage.getItem('admin_active_tab');
-      if (savedTab) {
-        const tabContent = document.getElementById('tab-' + savedTab);
-        if (tabContent) {
-          switchTab(savedTab, false);
-        }
-      }
-    }
-
-    // ページ読み込み時にタブを復元
-    document.addEventListener('DOMContentLoaded', restoreTab);
-
-    // Mixing サブタブ切替（FULL / short）
-    function switchMixingSubtab(name) {
-      if (name !== 'full' && name !== 'short') return;
-      activeMixingSubtab = name;
-      localStorage.setItem(MIXING_SUBTAB_KEY, name);
-
-      document.querySelectorAll('.mixing-subtab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.subtab === name);
-      });
-
-      const newFormHeading = document.getElementById('newVideoFormHeading');
-      if (newFormHeading) {
-        newFormHeading.textContent = name === 'short' ? '新規追加 (short)' : '新規追加 (Full)';
-      }
-
-      if (typeof renderVideoList === 'function') {
-        renderVideoList();
-      }
-    }
-
-    function restoreMixingSubtab() {
-      const saved = localStorage.getItem(MIXING_SUBTAB_KEY);
-      if (saved === 'full' || saved === 'short') {
-        activeMixingSubtab = saved;
-      }
-      switchMixingSubtab(activeMixingSubtab);
-    }
-
-    // ========== ここまでタブ切り替え機能 ==========
-
-    // ========== GitHub Pages デプロイトリガー ==========
-    async function triggerDeploy() {
-      const token = localStorage.getItem(GITHUB_TOKEN_KEY);
-      if (!token) return;
-      try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/static.yml/dispatches`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ ref: GITHUB_BRANCH })
-        });
-        if (response.ok || response.status === 204) {
-          console.log('Deploy triggered successfully');
-        } else {
-          console.error('Failed to trigger deploy:', response.status);
-        }
-      } catch (error) {
-        console.error('Error triggering deploy:', error);
-      }
-    }
-
-
-    // Enterキーでログイン
-    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        login();
-      }
+</div>
+
+<div class="overlay" id="dlgWork">
+  <div class="dlg">
+    <h3>Produce / Live 作品を編集</h3>
+    <div class="grid">
+      <div class="field">
+        <label for="ewCat">カテゴリ</label>
+        <select id="ewCat">
+          <option value="produce">produce</option>
+          <option value="live">live</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="ewRole">表示ロール</label>
+        <input type="text" id="ewRole" list="roleList">
+      </div>
+      <div class="field full">
+        <label for="ewTitle">タイトル</label>
+        <input type="text" id="ewTitle">
+      </div>
+      <div class="field full">
+        <label for="ewLink">リンクURL</label>
+        <input type="text" id="ewLink">
+      </div>
+      <div class="field">
+        <label for="ewImg">画像パス（任意）</label>
+        <input type="text" id="ewImg">
+      </div>
+      <div class="field">
+        <label for="ewId">YouTube動画ID（任意）</label>
+        <input type="text" id="ewId">
+      </div>
+      <div class="field">
+        <label for="ewAdded">added（YYYY-MM-DD・空欄で削除）</label>
+        <input type="text" id="ewAdded">
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost" data-close="dlgWork">キャンセル</button>
+      <button class="btn" id="ewSaveBtn">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="dlgNews">
+  <div class="dlg">
+    <h3>Newsを編集</h3>
+    <div class="grid">
+      <div class="field">
+        <label for="enDate">日付（YYYY-MM-DD）</label>
+        <input type="text" id="enDate">
+      </div>
+      <div class="field">
+        <label for="enTag">タグ</label>
+        <input type="text" id="enTag">
+      </div>
+      <div class="field full">
+        <label for="enTitle">タイトル</label>
+        <input type="text" id="enTitle">
+      </div>
+      <div class="field full">
+        <label for="enSuffix">接尾辞（任意）</label>
+        <input type="text" id="enSuffix">
+      </div>
+      <div class="field full">
+        <label for="enLink">リンクURL（任意）</label>
+        <input type="text" id="enLink">
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost" data-close="dlgNews">キャンセル</button>
+      <button class="btn" id="enSaveBtn">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ================= 定数 ================= */
+// 認証はサイト外側の Cloudflare Access が担うため、クライアント側パスワードは廃止。
+const GITHUB_REPO = 'okazaki893/portfolio-site';
+const GITHUB_BRANCH = 'main';
+const GITHUB_TOKEN_KEY = 'github_access_token';
+
+const SELFTEST = new URLSearchParams(location.search).has('selftest')
+  && (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+
+/* 管理対象3ファイル */
+const FILES = {
+  videos: {
+    path: 'content/videos.json',
+    lsKey: 'renewal_admin_videos',
+    dirtyKey: 'renewal_admin_videos_dirty',
+    commit: 'Update mixing videos via admin',
+    data: [], sha: null,
+    defaults: []
+  },
+  works: {
+    path: 'content/works_fixed.json',
+    lsKey: 'renewal_admin_works_fixed',
+    dirtyKey: 'renewal_admin_works_fixed_dirty',
+    commit: 'Update fixed works via admin',
+    data: [], sha: null,
+    // works.html / news.html の FIXED_WORKS 現物と同内容（初回シード）
+    defaults: [
+      { cat: 'produce', role: 'Produce', title: 'TRANSITION / 歌い手ライブ', link: 'https://ql.studio/transition', img: 'images/transition-flyer.jpg', added: '2025-08-20' },
+      { cat: 'live', role: 'Live', title: 'YouTube Music Weekend / 撮影', link: 'https://www.youtube.com/watch?v=VDq39kxN8NQ', id: 'VDq39kxN8NQ', added: '2025-11-15' },
+      { cat: 'live', role: 'Exhibition', title: '共に在る音楽 / 展示協力', link: 'https://x.com/n_storytelling', img: 'images/coexisting-music.jpg', added: '2024-12-10' }
+    ]
+  },
+  news: {
+    path: 'content/news_extra.json',
+    lsKey: 'renewal_admin_news_extra',
+    dirtyKey: 'renewal_admin_news_extra_dirty',
+    commit: 'Update news extra via admin',
+    data: [], sha: null,
+    // news.html の NEWS_EXTRA 現物と同内容（初回シード）
+    defaults: [
+      { date: '2026-07-03', tag: 'Site', title: 'サイトリニューアル準備中', suffix: 'です。新しいNOUMENONをここで公開します', link: null }
+    ]
+  }
+};
+
+/* ================= 汎用ヘルパー ================= */
+const $ = id => document.getElementById(id);
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function isDateStr(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s); }
+function normLink(l) {
+  if (!l) return null;
+  return /^https?:\/\//.test(l) ? l : 'https://' + String(l).replace(/^\/+/, '');
+}
+/* UTF-8 <-> base64（本番実装の方式を踏襲） */
+function utf8ToBase64(s) { return btoa(unescape(encodeURIComponent(s))); }
+function base64ToUtf8(s) { return decodeURIComponent(escape(atob(String(s).replace(/\n/g, '')))); }
+
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ================= URL解析 ================= */
+function parseMediaUrl(url) {
+  if (!url) return null;
+  const t1 = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+  if (t1) return { platform: 'tiktok', id: t1[1], isShort: true };
+  const t2 = url.match(/(?:vm|vt)\.tiktok\.com\/(\w+)/);
+  if (t2) return { platform: 'tiktok', id: t2[1], isShort: true };
+  const t3 = url.match(/tiktok\.com\/t\/(\w+)/);
+  if (t3) return { platform: 'tiktok', id: t3[1], isShort: true };
+  const isShorts = /youtube\.com\/shorts\//.test(url);
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([^&\n?#/]+)/);
+  if (m) return { platform: 'youtube', id: m[1], isShort: isShorts };
+  return null;
+}
+
+/* TikTok oEmbed（本番から移植・タイトル/サムネ自動取得） */
+async function fetchTikTokOembed(url) {
+  const r = await fetch('https://www.tiktok.com/oembed?url=' + encodeURIComponent(url));
+  if (!r.ok) throw new Error('oEmbed failed: ' + r.status);
+  const data = await r.json();
+  return { title: data.title || '', thumbnail_url: data.thumbnail_url || '' };
+}
+
+/* ================= レコード生成（純粋関数・セルフテスト対象） ================= */
+function buildVideoRecord({ url, title, thumb, isShort }) {
+  const parsed = parseMediaUrl(url);
+  if (!parsed) throw new Error('有効なYouTube / TikTokのURLではありません');
+  if (!title) throw new Error('タイトルは必須です');
+  const rec = { id: parsed.id, title: title, link: url };
+  const short = (isShort == null) ? parsed.isShort : !!isShort;
+  if (short) rec.isShort = true;
+  if (parsed.platform === 'tiktok') rec.platform = 'tiktok';
+  if (thumb) rec.customThumbnail = thumb;
+  rec.added = todayStr(); // added自動スタンプ
+  return rec;
+}
+function buildWorkRecord({ cat, role, title, link, img, id, added }) {
+  if (cat !== 'produce' && cat !== 'live') throw new Error('カテゴリはproduce / liveのいずれかです');
+  if (!role) throw new Error('表示ロールは必須です');
+  if (!title) throw new Error('タイトルは必須です');
+  if (!link) throw new Error('リンクURLは必須です');
+  const rec = { cat: cat, role: role, title: title, link: link };
+  if (img) rec.img = img;
+  let vid = id;
+  if (!vid) {
+    const p = parseMediaUrl(link);
+    if (p && p.platform === 'youtube') vid = p.id;
+  }
+  if (vid) rec.id = vid;
+  if (added !== undefined) { if (added) rec.added = added; }
+  else rec.added = todayStr();
+  return rec;
+}
+function buildNewsRecord({ date, tag, title, suffix, link }) {
+  if (!isDateStr(date)) throw new Error('日付はYYYY-MM-DD形式で入力してください');
+  if (!tag) throw new Error('タグは必須です');
+  if (!title) throw new Error('タイトルは必須です');
+  const rec = { date: date, tag: tag, title: title };
+  if (suffix) rec.suffix = suffix;
+  if (link) rec.link = link;
+  return rec;
+}
+
+/* 並べ替え（上下入れ替え） */
+function swapItems(arr, i, j) {
+  if (i < 0 || j < 0 || i >= arr.length || j >= arr.length) return false;
+  const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  return true;
+}
+
+/* ================= GitHub Contents API（本番から移植） ================= */
+function apiUrl(path) { return 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + path; }
+function ghHeaders(token) {
+  return { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' };
+}
+
+async function triggerDeploy(token) {
+  try {
+    const response = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/actions/workflows/static.yml/dispatches', {
+      method: 'POST',
+      headers: Object.assign({}, ghHeaders(token), { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ ref: GITHUB_BRANCH })
     });
+    if (!(response.ok || response.status === 204)) console.error('Failed to trigger deploy:', response.status);
+  } catch (e) { console.error('Error triggering deploy:', e); }
+}
 
-    // 初期化実行
-    init();
+function readLS(key) {
+  try {
+    const s = localStorage.getItem(key);
+    const arr = s ? JSON.parse(s) : null;
+    return Array.isArray(arr) ? arr : null;
+  } catch (e) { return null; }
+}
 
-  </script>
+/* 読み込み: GitHub API（トークンあり）→ 静的fetch → localStorage編集中データ → シード */
+async function loadFile(key, force) {
+  const f = FILES[key];
+  const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+  const ls = readLS(f.lsKey);
+  const dirty = localStorage.getItem(f.dirtyKey) === '1';
+  let remote = null;
+
+  if (token) {
+    try {
+      const r = await fetch(apiUrl(f.path) + '?ref=' + GITHUB_BRANCH, { headers: ghHeaders(token) });
+      if (r.ok) {
+        const d = await r.json();
+        f.sha = d.sha;
+        const parsed = JSON.parse(base64ToUtf8(d.content));
+        if (Array.isArray(parsed)) remote = parsed;
+      } else if (r.status === 404) {
+        f.sha = null;
+      } else {
+        console.warn('loadFile GitHub API error', key, r.status);
+      }
+    } catch (e) { console.warn('loadFile GitHub API exception', key, e); }
+  } else if (force || !dirty || !ls) {
+    // トークンなし: ローカル未保存編集があれば静的ファイルで潰さない（再読込時は強制）
+    try {
+      const r = await fetch(f.path, { cache: 'no-store' });
+      if (r.ok) {
+        const parsed = await r.json();
+        if (Array.isArray(parsed)) remote = parsed;
+      }
+    } catch (e) { /* 静的ファイル未作成など */ }
+  }
+
+  if (remote) {
+    f.data = remote;
+    localStorage.setItem(f.lsKey, JSON.stringify(f.data));
+    localStorage.removeItem(f.dirtyKey);
+    return;
+  }
+  if (ls) { f.data = ls; return; }
+  f.data = JSON.parse(JSON.stringify(f.defaults));
+}
+
+/* 保存: localStorageキャッシュ + GitHub PUT（sha取得→PUT） */
+async function saveFile(key) {
+  const f = FILES[key];
+  localStorage.setItem(f.lsKey, JSON.stringify(f.data));
+
+  const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+  if (!token) {
+    localStorage.setItem(f.dirtyKey, '1');
+    updateWarn(key);
+    showToast('ローカルに保存しました（トークン未設定のため公開サイト未反映）');
+    return true;
+  }
+  try {
+    const content = JSON.stringify(f.data, null, 2);
+    const body = { message: f.commit, content: utf8ToBase64(content), branch: GITHUB_BRANCH };
+    if (!f.sha) {
+      // sha未取得ならGETで取得（新規ファイルは404のままPUT）
+      try {
+        const r = await fetch(apiUrl(f.path) + '?ref=' + GITHUB_BRANCH, { headers: ghHeaders(token) });
+        if (r.ok) { const d = await r.json(); f.sha = d.sha; }
+      } catch (e) { /* noop */ }
+    }
+    if (f.sha) body.sha = f.sha;
+
+    const response = await fetch(apiUrl(f.path), {
+      method: 'PUT',
+      headers: Object.assign({}, ghHeaders(token), { 'Content-Type': 'application/json' }),
+      body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || ('HTTP ' + response.status));
+    }
+    const result = await response.json();
+    f.sha = result.content.sha;
+    localStorage.removeItem(f.dirtyKey);
+    updateWarn(key);
+    await triggerDeploy(token);
+    showToast('GitHubに保存しました');
+    return true;
+  } catch (error) {
+    console.error('Error saving', key, error);
+    alert('保存に失敗しました: ' + error.message);
+    return false;
+  }
+}
+
+/* ================= サムネイル ================= */
+function ytThumbImg(id, alt) {
+  const img = document.createElement('img');
+  img.alt = alt || '';
+  img.loading = 'lazy';
+  let swapped = false;
+  const fallback = () => {
+    if (swapped) return;
+    swapped = true;
+    img.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+  };
+  img.addEventListener('load', () => { if (img.naturalWidth <= 120) fallback(); });
+  img.addEventListener('error', fallback);
+  img.src = 'https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg';
+  return img;
+}
+function customThumbImg(url, alt) {
+  const img = document.createElement('img');
+  img.alt = alt || '';
+  img.loading = 'lazy';
+  img.addEventListener('error', () => { img.remove(); });
+  img.src = url;
+  return img;
+}
+
+/* ================= 描画 ================= */
+function makeThumbBox(node, phText) {
+  const box = el('div', 'thumb');
+  if (node) box.appendChild(node);
+  else box.appendChild(el('span', 'ph', phText || 'No Image'));
+  return box;
+}
+function makeOps(key, index, total) {
+  const ops = el('div', 'ops');
+  const up = el('button', 'obtn', '↑'); up.title = '上へ';
+  const down = el('button', 'obtn', '↓'); down.title = '下へ';
+  up.disabled = index === 0;
+  down.disabled = index === total - 1;
+  up.addEventListener('click', () => moveItem(key, index, -1));
+  down.addEventListener('click', () => moveItem(key, index, 1));
+  const edit = el('button', 'btn ghost sm', '編集');
+  edit.addEventListener('click', () => openEdit(key, index));
+  const del = el('button', 'btn ghost sm', '削除');
+  del.addEventListener('click', () => deleteItem(key, index));
+  ops.append(up, down, edit, del);
+  return ops;
+}
+function badge(text) { return el('span', 'badge', text); }
+
+function renderVideos() {
+  const list = $('list-videos');
+  list.replaceChildren();
+  const arr = FILES.videos.data;
+  $('count-videos').textContent = arr.length + ' items';
+  if (arr.length === 0) { list.appendChild(el('p', 'empty', 'まだ作品がありません')); return; }
+  arr.forEach((v, i) => {
+    const row = el('div', 'row');
+    row.appendChild(el('span', 'idx', String(i + 1)));
+
+    const isTikTok = v.platform === 'tiktok';
+    let thumbId = v.id;
+    const p = parseMediaUrl(v.link || '');
+    if (p && p.platform === 'youtube') thumbId = p.id;
+
+    let thumbNode = null;
+    if (v.customThumbnail) thumbNode = customThumbImg(v.customThumbnail, v.title);
+    else if (!isTikTok && thumbId) thumbNode = ytThumbImg(thumbId, v.title);
+    const link = normLink(v.link);
+    const thumbBox = makeThumbBox(thumbNode, isTikTok ? 'TikTok' : 'No Image');
+    if (link) {
+      const a = document.createElement('a');
+      a.href = link; a.target = '_blank'; a.rel = 'noopener';
+      a.appendChild(thumbBox);
+      a.style.flex = 'none';
+      row.appendChild(a);
+    } else {
+      row.appendChild(thumbBox);
+    }
+
+    const info = el('div', 'info');
+    info.appendChild(el('h4', null, v.title || '(無題)'));
+    const meta = el('div', 'meta');
+    meta.appendChild(el('span', null, 'ID: ' + (v.id || '-')));
+    if (isTikTok) meta.appendChild(badge('TikTok'));
+    if (v.isShort) meta.appendChild(badge('Short'));
+    if (v.added) meta.appendChild(badge('added ' + v.added));
+    info.appendChild(meta);
+    row.appendChild(info);
+
+    row.appendChild(makeOps('videos', i, arr.length));
+    list.appendChild(row);
+  });
+}
+
+function renderWorks() {
+  const list = $('list-works');
+  list.replaceChildren();
+  const arr = FILES.works.data;
+  $('count-works').textContent = arr.length + ' items';
+  if (arr.length === 0) { list.appendChild(el('p', 'empty', 'まだ作品がありません')); return; }
+  arr.forEach((w, i) => {
+    const row = el('div', 'row');
+    row.appendChild(el('span', 'idx', String(i + 1)));
+
+    let thumbNode = null;
+    if (w.img) thumbNode = customThumbImg(w.img, w.title);
+    else if (w.id && !/^\d+$/.test(w.id)) thumbNode = ytThumbImg(w.id, w.title);
+    const thumbBox = makeThumbBox(thumbNode, w.role || 'Work');
+    const link = normLink(w.link);
+    if (link) {
+      const a = document.createElement('a');
+      a.href = link; a.target = '_blank'; a.rel = 'noopener';
+      a.appendChild(thumbBox);
+      a.style.flex = 'none';
+      row.appendChild(a);
+    } else row.appendChild(thumbBox);
+
+    const info = el('div', 'info');
+    info.appendChild(el('h4', null, w.title || '(無題)'));
+    const meta = el('div', 'meta');
+    meta.appendChild(badge(w.cat || '-'));
+    meta.appendChild(el('span', null, w.role || ''));
+    if (w.img) meta.appendChild(el('span', null, w.img));
+    if (w.id) meta.appendChild(el('span', null, 'ID: ' + w.id));
+    if (w.added) meta.appendChild(badge('added ' + w.added));
+    info.appendChild(meta);
+    row.appendChild(info);
+
+    row.appendChild(makeOps('works', i, arr.length));
+    list.appendChild(row);
+  });
+}
+
+function renderNews() {
+  const list = $('list-news');
+  list.replaceChildren();
+  const arr = FILES.news.data;
+  $('count-news').textContent = arr.length + ' items';
+  if (arr.length === 0) { list.appendChild(el('p', 'empty', 'まだお知らせがありません')); return; }
+  arr.forEach((n, i) => {
+    const row = el('div', 'row');
+    row.appendChild(el('span', 'idx', String(i + 1)));
+
+    const info = el('div', 'info');
+    info.appendChild(el('h4', null, (n.title || '(無題)') + (n.suffix || '')));
+    const meta = el('div', 'meta');
+    meta.appendChild(el('span', null, n.date || '-'));
+    meta.appendChild(badge(n.tag || '-'));
+    if (n.link) meta.appendChild(el('span', null, n.link));
+    info.appendChild(meta);
+    row.appendChild(info);
+
+    row.appendChild(makeOps('news', i, arr.length));
+    list.appendChild(row);
+  });
+}
+
+const RENDERERS = { videos: renderVideos, works: renderWorks, news: renderNews };
+function render(key) { RENDERERS[key](); }
+function renderAll() { render('videos'); render('works'); render('news'); }
+
+function updateWarn(key) {
+  const w = $('warn-' + key);
+  if (!w) return;
+  const dirty = localStorage.getItem(FILES[key].dirtyKey) === '1';
+  const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+  if (dirty && !token) {
+    w.textContent = '未反映のローカル編集があります。トークンを設定して保存し直すか、「JSONをダウンロード」で書き出してリポジトリに手動反映してください。';
+    w.classList.add('show');
+  } else {
+    w.classList.remove('show');
+  }
+}
+function updateAllWarns() { updateWarn('videos'); updateWarn('works'); updateWarn('news'); }
+
+/* ================= CRUD操作 ================= */
+async function moveItem(key, index, dir) {
+  const arr = FILES[key].data;
+  const j = index + dir;
+  if (!swapItems(arr, index, j)) return;
+  const ok = await saveFile(key);
+  if (!ok) swapItems(arr, index, j); // ロールバック
+  render(key);
+}
+
+async function deleteItem(key, index) {
+  const arr = FILES[key].data;
+  const item = arr[index];
+  const name = item.title || item.date || '';
+  if (!confirm('「' + name + '」を削除しますか？')) return;
+  const removed = arr.splice(index, 1)[0];
+  const ok = await saveFile(key);
+  if (!ok) arr.splice(index, 0, removed); // ロールバック
+  render(key);
+}
+
+/* --- 追加ハンドラ --- */
+async function addVideo() {
+  const url = $('vUrl').value.trim();
+  const title = $('vTitle').value.trim();
+  let thumb = $('vThumb').value.trim();
+  const isShort = $('vShort').checked;
+
+  const parsed = parseMediaUrl(url);
+  if (!parsed) { alert('有効なYouTubeまたはTikTokのURLを入力してください'); return; }
+
+  let finalTitle = title;
+  if (parsed.platform === 'tiktok' && (!finalTitle || !thumb)) {
+    try {
+      const oe = await fetchTikTokOembed(url);
+      if (!finalTitle && oe.title) finalTitle = oe.title;
+      if (!thumb && oe.thumbnail_url) thumb = oe.thumbnail_url;
+    } catch (e) { console.warn('TikTok oEmbed failed', e); }
+    if (!thumb) { alert('TikTokのサムネ自動取得に失敗しました。カスタムサムネイル欄に画像URLを入力してください。'); return; }
+  }
+
+  let rec;
+  try { rec = buildVideoRecord({ url: url, title: finalTitle, thumb: thumb, isShort: isShort }); }
+  catch (e) { alert(e.message); return; }
+
+  FILES.videos.data.unshift(rec);
+  const ok = await saveFile('videos');
+  if (!ok) { FILES.videos.data.shift(); render('videos'); return; }
+  render('videos');
+  $('vUrl').value = ''; $('vTitle').value = ''; $('vThumb').value = '';
+  $('vShort').checked = false; $('vParse').textContent = '';
+}
+
+async function addWork() {
+  let rec;
+  try {
+    rec = buildWorkRecord({
+      cat: $('wCat').value,
+      role: $('wRole').value.trim(),
+      title: $('wTitle').value.trim(),
+      link: $('wLink').value.trim(),
+      img: $('wImg').value.trim(),
+      id: $('wId').value.trim()
+    });
+  } catch (e) { alert(e.message); return; }
+  FILES.works.data.unshift(rec);
+  const ok = await saveFile('works');
+  if (!ok) { FILES.works.data.shift(); render('works'); return; }
+  render('works');
+  $('wRole').value = ''; $('wTitle').value = ''; $('wLink').value = '';
+  $('wImg').value = ''; $('wId').value = ''; $('wParse').textContent = '';
+}
+
+async function addNews() {
+  let rec;
+  try {
+    rec = buildNewsRecord({
+      date: $('nDate').value.trim(),
+      tag: $('nTag').value.trim(),
+      title: $('nTitle').value.trim(),
+      suffix: $('nSuffix').value.trim(),
+      link: $('nLink').value.trim()
+    });
+  } catch (e) { alert(e.message); return; }
+  FILES.news.data.unshift(rec);
+  const ok = await saveFile('news');
+  if (!ok) { FILES.news.data.shift(); render('news'); return; }
+  render('news');
+  $('nDate').value = todayStr(); $('nTag').value = ''; $('nTitle').value = '';
+  $('nSuffix').value = ''; $('nLink').value = '';
+}
+
+/* --- 編集ダイアログ --- */
+let editCtx = { key: null, index: -1 };
+
+function openEdit(key, index) {
+  editCtx = { key: key, index: index };
+  const item = FILES[key].data[index];
+  if (key === 'videos') {
+    $('evTitle').value = item.title || '';
+    $('evUrl').value = item.link || '';
+    $('evThumb').value = item.customThumbnail || '';
+    $('evAdded').value = item.added || '';
+    $('evShort').checked = item.isShort === true;
+    $('dlgVideo').classList.add('active');
+  } else if (key === 'works') {
+    $('ewCat').value = (item.cat === 'live') ? 'live' : 'produce';
+    $('ewRole').value = item.role || '';
+    $('ewTitle').value = item.title || '';
+    $('ewLink').value = item.link || '';
+    $('ewImg').value = item.img || '';
+    $('ewId').value = item.id || '';
+    $('ewAdded').value = item.added || '';
+    $('dlgWork').classList.add('active');
+  } else {
+    $('enDate').value = item.date || '';
+    $('enTag').value = item.tag || '';
+    $('enTitle').value = item.title || '';
+    $('enSuffix').value = item.suffix || '';
+    $('enLink').value = item.link || '';
+    $('dlgNews').classList.add('active');
+  }
+}
+function closeDialogs() {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('active'));
+  editCtx = { key: null, index: -1 };
+}
+
+async function applyEdit(key, newItem) {
+  const arr = FILES[key].data;
+  const idx = editCtx.index;
+  if (idx < 0 || idx >= arr.length) return;
+  const old = arr[idx];
+  arr[idx] = newItem;
+  const ok = await saveFile(key);
+  if (!ok) { arr[idx] = old; render(key); return; }
+  render(key);
+  closeDialogs();
+}
+
+async function saveVideoEdit() {
+  const url = $('evUrl').value.trim();
+  let thumb = $('evThumb').value.trim();
+  const addedRaw = $('evAdded').value.trim();
+  if (addedRaw && !isDateStr(addedRaw)) { alert('addedはYYYY-MM-DD形式で入力してください'); return; }
+  const parsed = parseMediaUrl(url);
+  if (!parsed) { alert('有効なYouTubeまたはTikTokのURLを入力してください'); return; }
+  const title = $('evTitle').value.trim();
+  if (!title) { alert('タイトルは必須です'); return; }
+  if (parsed.platform === 'tiktok' && !thumb) {
+    try { const oe = await fetchTikTokOembed(url); if (oe.thumbnail_url) thumb = oe.thumbnail_url; }
+    catch (e) { console.warn('TikTok oEmbed failed', e); }
+    if (!thumb) { alert('TikTokはカスタムサムネイルが必要です'); return; }
+  }
+  const rec = { id: parsed.id, title: title, link: url };
+  if ($('evShort').checked) rec.isShort = true;
+  if (parsed.platform === 'tiktok') rec.platform = 'tiktok';
+  if (thumb) rec.customThumbnail = thumb;
+  if (addedRaw) rec.added = addedRaw; // 空欄ならaddedを削除（News自動生成から外れる）
+  await applyEdit('videos', rec);
+}
+
+async function saveWorkEdit() {
+  const addedRaw = $('ewAdded').value.trim();
+  if (addedRaw && !isDateStr(addedRaw)) { alert('addedはYYYY-MM-DD形式で入力してください'); return; }
+  let rec;
+  try {
+    rec = buildWorkRecord({
+      cat: $('ewCat').value,
+      role: $('ewRole').value.trim(),
+      title: $('ewTitle').value.trim(),
+      link: $('ewLink').value.trim(),
+      img: $('ewImg').value.trim(),
+      id: $('ewId').value.trim(),
+      added: addedRaw // 空文字ならaddedなし
+    });
+  } catch (e) { alert(e.message); return; }
+  await applyEdit('works', rec);
+}
+
+async function saveNewsEdit() {
+  let rec;
+  try {
+    rec = buildNewsRecord({
+      date: $('enDate').value.trim(),
+      tag: $('enTag').value.trim(),
+      title: $('enTitle').value.trim(),
+      suffix: $('enSuffix').value.trim(),
+      link: $('enLink').value.trim()
+    });
+  } catch (e) { alert(e.message); return; }
+  await applyEdit('news', rec);
+}
+
+/* ================= フォールバック（DL / コピー / 再読込） ================= */
+function fileJson(key) { return JSON.stringify(FILES[key].data, null, 2); }
+
+function downloadJson(key) {
+  const name = FILES[key].path.split('/').pop();
+  const blob = new Blob([fileJson(key)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  showToast(name + ' をダウンロードしました');
+}
+function copyJson(key) {
+  const text = fileJson(key);
+  const done = () => showToast('JSONをクリップボードにコピーしました');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => { legacyCopy(text); done(); });
+  } else { legacyCopy(text); done(); }
+}
+function legacyCopy(text) {
+  const tmp = document.createElement('textarea');
+  tmp.value = text;
+  document.body.appendChild(tmp);
+  tmp.select();
+  document.execCommand('copy');
+  tmp.remove();
+}
+async function reloadFile(key) {
+  const dirty = localStorage.getItem(FILES[key].dirtyKey) === '1';
+  if (dirty && !confirm('未反映のローカル編集があります。サーバーの内容で上書きして再読込しますか？')) return;
+  await loadFile(key, true);
+  render(key);
+  updateWarn(key);
+  showToast('再読込しました');
+}
+
+/* ================= ログアウト（認証は Cloudflare Access が担当） ================= */
+// サイト外側の Cloudflare Access がログインの壁。ログアウトは Access のセッションを破棄する。
+function logout() {
+  location.href = '/cdn-cgi/access/logout';
+}
+function showAdmin() {
+  $('adminRoot').hidden = false;
+}
+
+/* ================= トークン設定 ================= */
+function updateTokenState() {
+  const has = !!localStorage.getItem(GITHUB_TOKEN_KEY);
+  $('tokenState').textContent = has ? '設定済み' : '未設定';
+  const chip = $('tokenChip');
+  chip.textContent = has ? 'token 設定済み' : 'token 未設定';
+  chip.classList.toggle('ok', has);
+}
+async function saveToken() {
+  const v = $('tokenInput').value.trim();
+  if (!v) { alert('トークンを入力してください'); return; }
+  localStorage.setItem(GITHUB_TOKEN_KEY, v);
+  $('tokenInput').value = '';
+  updateTokenState();
+  showToast('トークンを保存しました。データを再読込します');
+  await initData();
+}
+async function deleteToken() {
+  if (!confirm('保存済みのトークンを削除しますか？')) return;
+  localStorage.removeItem(GITHUB_TOKEN_KEY);
+  updateTokenState();
+  showToast('トークンを削除しました');
+}
+
+/* ================= タブ ================= */
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.panel === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + name));
+  localStorage.setItem('renewal_admin_tab', name);
+}
+
+/* ================= セルフテスト ================= */
+function runSelfTest() {
+  const out = [];
+  const ok = (name, cond, detail) => out.push((cond ? 'PASS: ' : 'FAIL: ') + name + (cond ? '' : ' — ' + (detail || '')));
+  const today = todayStr();
+  try {
+    // 1. URL解析（watch / youtu.be / shorts / tiktok）
+    let r = parseMediaUrl('https://www.youtube.com/watch?v=KDcoF0LsDsg');
+    ok('URL解析 watch形式', !!r && r.platform === 'youtube' && r.id === 'KDcoF0LsDsg' && r.isShort === false, JSON.stringify(r));
+    r = parseMediaUrl('https://youtu.be/TCIPVthc7kw');
+    ok('URL解析 youtu.be形式', !!r && r.platform === 'youtube' && r.id === 'TCIPVthc7kw' && r.isShort === false, JSON.stringify(r));
+    r = parseMediaUrl('https://www.youtube.com/shorts/cjntjXy2Zxs');
+    ok('URL解析 shorts形式(isShort自動判定)', !!r && r.platform === 'youtube' && r.id === 'cjntjXy2Zxs' && r.isShort === true, JSON.stringify(r));
+    r = parseMediaUrl('https://www.tiktok.com/@mikoto_miko11/video/7618517067867720980?_r=1');
+    ok('URL解析 TikTok形式(platform+ID抽出)', !!r && r.platform === 'tiktok' && r.id === '7618517067867720980', JSON.stringify(r));
+    ok('URL解析 無効URLはnull', parseMediaUrl('https://example.com/foo') === null);
+
+    // 2. added自動スタンプ
+    const rec1 = buildVideoRecord({ url: 'https://www.youtube.com/shorts/cjntjXy2Zxs', title: 'テスト曲A', thumb: '', isShort: null });
+    ok('added自動スタンプ(今日=' + today + ')', rec1.added === today, JSON.stringify(rec1));
+    ok('shorts URLでisShort:true自動付与', rec1.isShort === true, JSON.stringify(rec1));
+    const recT = buildVideoRecord({ url: 'https://www.tiktok.com/@x/video/1234567890', title: 'テストTikTok', thumb: 'https://example.com/t.jpg', isShort: null });
+    ok('TikTokレコード(platform/customThumbnail)', recT.platform === 'tiktok' && recT.id === '1234567890' && recT.customThumbnail === 'https://example.com/t.jpg', JSON.stringify(recT));
+
+    // 3. 編集
+    const arr = [rec1, buildVideoRecord({ url: 'https://youtu.be/AAAAAAAAAAA', title: 'テスト曲B', thumb: '', isShort: false })];
+    arr[0] = Object.assign({}, arr[0], { title: '編集済みタイトル', added: '2026-01-01' });
+    ok('編集(タイトル/added変更)', arr[0].title === '編集済みタイトル' && arr[0].added === '2026-01-01', JSON.stringify(arr[0]));
+
+    // 4. 並べ替え
+    swapItems(arr, 0, 1);
+    ok('並べ替え(下へ移動)', arr[0].title === 'テスト曲B' && arr[1].title === '編集済みタイトル');
+    swapItems(arr, 1, 0);
+    ok('並べ替え(上へ移動で復帰)', arr[0].title === '編集済みタイトル');
+
+    // 5. 削除
+    arr.splice(1, 1);
+    ok('削除', arr.length === 1 && arr[0].title === '編集済みタイトル');
+
+    // 6. JSON書き出し往復一致（localStorageのみで完結）
+    const json = JSON.stringify(arr, null, 2);
+    const TEST_KEY = 'renewal_admin_selftest_tmp';
+    localStorage.setItem(TEST_KEY, json);
+    const back = JSON.parse(localStorage.getItem(TEST_KEY));
+    localStorage.removeItem(TEST_KEY);
+    ok('JSON書き出し→localStorage→再パース往復一致', JSON.stringify(back) === JSON.stringify(arr));
+
+    // 7. works / newsレコード生成
+    const w = buildWorkRecord({ cat: 'live', role: 'Live', title: 'テストライブ', link: 'https://www.youtube.com/watch?v=VDq39kxN8NQ', img: '', id: '' });
+    ok('worksレコード(YouTubeリンクからID自動抽出+added)', w.id === 'VDq39kxN8NQ' && w.added === today && w.cat === 'live', JSON.stringify(w));
+    const n = buildNewsRecord({ date: '2026-07-03', tag: 'Site', title: 'テスト告知', suffix: 'です', link: '' });
+    ok('newsレコード(スキーマ準拠)', n.date === '2026-07-03' && n.tag === 'Site' && n.suffix === 'です' && !('link' in n), JSON.stringify(n));
+    let threw = false;
+    try { buildNewsRecord({ date: '2026/07/03', tag: 'Site', title: 'x', suffix: '', link: '' }); } catch (e) { threw = true; }
+    ok('news日付バリデーション(不正形式は拒否)', threw);
+  } catch (e) {
+    out.push('FAIL: セルフテスト実行中に例外 — ' + e.message);
+  }
+  const pre = $('selftestResult');
+  pre.textContent = out.join('\n');
+  pre.style.display = 'block';
+}
+
+/* ================= 初期化 ================= */
+async function initData() {
+  await Promise.all([loadFile('videos'), loadFile('works'), loadFile('news')]);
+  renderAll();
+  updateAllWarns();
+}
+
+async function init() {
+  updateTokenState();
+  $('nDate').value = todayStr();
+
+  // タブ復元
+  const savedTab = localStorage.getItem('renewal_admin_tab');
+  if (savedTab && $('panel-' + savedTab)) switchTab(savedTab);
+
+  await initData();
+
+  // 認証はサイト外側の Cloudflare Access が担う。ここに到達＝認証済みなので管理画面を表示。
+  showAdmin();
+
+  if (SELFTEST) runSelfTest();
+}
+
+/* ================= イベント配線 ================= */
+$('logoutBtn').addEventListener('click', logout);
+
+$('tabNav').addEventListener('click', e => {
+  const b = e.target.closest('.tab');
+  if (b) switchTab(b.dataset.panel);
+});
+
+$('vAddBtn').addEventListener('click', addVideo);
+$('wAddBtn').addEventListener('click', addWork);
+$('nAddBtn').addEventListener('click', addNews);
+
+$('evSaveBtn').addEventListener('click', saveVideoEdit);
+$('ewSaveBtn').addEventListener('click', saveWorkEdit);
+$('enSaveBtn').addEventListener('click', saveNewsEdit);
+
+document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeDialogs));
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) closeDialogs(); }));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDialogs(); });
+
+document.querySelectorAll('[data-dl]').forEach(b => b.addEventListener('click', () => downloadJson(b.dataset.dl)));
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => copyJson(b.dataset.copy)));
+document.querySelectorAll('[data-reload]').forEach(b => b.addEventListener('click', () => reloadFile(b.dataset.reload)));
+
+$('tokenSaveBtn').addEventListener('click', saveToken);
+$('tokenDeleteBtn').addEventListener('click', deleteToken);
+
+/* URL入力時の自動解析プレビュー（Mix追加） */
+$('vUrl').addEventListener('input', () => {
+  const p = parseMediaUrl($('vUrl').value.trim());
+  const note = $('vParse');
+  if (!p) { note.textContent = $('vUrl').value.trim() ? '未対応のURL形式です' : ''; return; }
+  note.textContent = (p.platform === 'tiktok' ? 'TikTok' : 'YouTube') + ' / ID: ' + p.id + (p.isShort ? ' / Short' : '');
+  $('vShort').checked = p.isShort;
+});
+/* works: YouTubeリンクからID自動抽出 */
+$('wLink').addEventListener('input', () => {
+  const p = parseMediaUrl($('wLink').value.trim());
+  const note = $('wParse');
+  if (p && p.platform === 'youtube') {
+    $('wId').value = p.id;
+    note.textContent = 'YouTube ID自動抽出: ' + p.id;
+  } else {
+    note.textContent = '';
+  }
+});
+
+init();
+</script>
 </body>
 </html>

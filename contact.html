@@ -1,808 +1,944 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact</title>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VSVT7TT4R"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-0VSVT7TT4R');
-  </script>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <!-- OGP -->
-  <meta property="og:title" content="Contact - Noumenon">
-  <meta property="og:description" content="お問い合わせ">
-  <meta property="og:image" content="https://noumenon.jp/OGP.png">
-  <meta property="og:url" content="https://noumenon.jp/contact">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Contact - Noumenon">
-  <meta name="twitter:description" content="お問い合わせ">
-  <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
-  <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/price.css?v=20260412d">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — NOUMENON / 岡崎有希</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/StarShinesStill.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+  @font-face{
+    font-family:'Star Shines Still';
+    src:url('fonts/StarShinesStill.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal;
+  }
+  :root{
+    --bg:#0D0D0D;
+    --bg-2:#141414;
+    --ink:#F4F4F2;
+    --muted:#9C9C98;
+    --faint:#6C6C68;
+    --line:rgba(244,244,242,.14);
+    --gold:#F4F4F2;
+    --serif:'Shippori Mincho', serif;
+    --disp:'Cormorant Garamond', serif;
+    --gothic:'Zen Kaku Gothic New', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--gothic);
+    font-weight:300;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--ink);color:#0D0D0D}
+
+  /* 音の波紋(クリック) */
+  .ripple{position:fixed;border:1px solid rgba(244,244,242,.55);border-radius:50%;pointer-events:none;z-index:90;
+    transform:translate(-50%,-50%);animation:rip .9s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes rip{from{width:6px;height:6px;opacity:.75}to{width:130px;height:130px;opacity:0}}
+
+  /* atmospheric layers */
+  .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 78% 22%, rgba(244,244,242,.055), transparent 45%),
+               radial-gradient(120% 120% at 10% 100%, rgba(244,244,242,.03), transparent 46%);}
+  .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* custom cursor */
+  .cursor{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid rgba(242,236,226,.5);border-radius:50%;
+    transform:translate(-50%,-50%);z-index:100;pointer-events:none;transition:width .25s,height .25s,background .25s,border-color .25s;mix-blend-mode:difference}
+  .cursor.big{width:64px;height:64px;background:rgba(242,236,226,.12);border-color:transparent}
+  @media (hover:none){.cursor{display:none} body{cursor:auto}}
+
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 clamp(22px,5vw,64px)}
+
+  /* header */
+  header{position:fixed;top:0;left:0;right:0;z-index:40;padding:22px clamp(22px,5vw,64px);
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(180deg,rgba(16,12,10,.82),transparent)}
+  .brand{font-family:'Star Shines Still','Times New Roman',Times,serif;font-size:22px;letter-spacing:4px}
+  nav{display:flex;gap:30px;font-family:var(--disp);font-size:15px;letter-spacing:.18em;text-transform:uppercase}
+  nav a{position:relative;color:var(--muted);transition:color .35s}
+  nav a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold);transition:width .35s}
+  nav a:hover{color:var(--ink)}nav a:hover::after{width:100%}
+  nav a.on{color:var(--ink)}
+  @media(max-width:720px){nav{display:none}}
+
+  /* section label */
+  .label{font-family:var(--disp);font-style:italic;font-size:20px;color:var(--muted);letter-spacing:.08em;margin-bottom:8px}
+  .label .num{font-style:normal;font-size:13px;color:var(--faint);letter-spacing:.2em;margin-right:14px}
+
+  /* page head */
+  .page-head{padding:clamp(130px,17vh,170px) 0 clamp(30px,5vw,52px)}
+  .page-title{font-family:var(--disp);font-weight:500;font-size:clamp(44px,7vw,84px);color:var(--ink);
+    letter-spacing:.16em;text-transform:uppercase;line-height:1.08;margin-bottom:22px}
+  .page-lead{font-size:clamp(14px,1.6vw,15px);color:var(--muted);max-width:38em;line-height:2.05}
+  .quick{margin-top:32px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .quick-note{font-size:13px;color:var(--faint);letter-spacing:.04em}
+  .quick-note a{color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:2px;transition:color .35s,border-color .35s}
+  .quick-note a:hover{color:var(--ink);border-color:var(--gold)}
+
+  /* buttons (indexの.btnを踏襲) */
+  .btn{display:inline-flex;align-items:center;gap:12px;padding:15px 26px;border:1px solid rgba(244,244,242,.45);border-radius:2px;
+    background:transparent;font-family:var(--gothic);font-size:13px;letter-spacing:.12em;color:var(--ink);cursor:none;
+    transition:background .35s,color .35s,border-color .35s,transform .35s cubic-bezier(.2,.7,.3,1)}
+  .btn .btn-arrow{font-family:var(--disp);transition:transform .35s}
+  .btn:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  .btn:hover .btn-arrow{transform:translateX(4px)}
+  .btn.ghost{border-color:var(--line);color:var(--muted)}
+  .btn.ghost:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  .btn:disabled{opacity:.4;pointer-events:none}
+
+  /* booking sheet */
+  .sheet-wrap{padding-bottom:clamp(50px,7vw,90px)}
+  .sheet{border:1px solid var(--line);border-radius:2px;background:linear-gradient(165deg,rgba(244,244,242,.015),transparent 40%)}
+  .sheet-head{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    padding:26px clamp(22px,4vw,46px);border-bottom:1px solid var(--line)}
+  .sheet-head .sh-t{font-family:var(--disp);font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--faint)}
+  .sheet-head .sh-p{font-size:12.5px;color:var(--faint);letter-spacing:.04em}
+  .sheet-head .sh-p a{color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:2px;transition:color .35s,border-color .35s}
+  .sheet-head .sh-p a:hover{color:var(--ink);border-color:var(--gold)}
+
+  .fgroup{display:grid;grid-template-columns:230px 1fr;gap:26px;padding:clamp(28px,4vw,40px) clamp(22px,4vw,46px)}
+  .fgroup + .fgroup{border-top:1px solid var(--line)}
+  .fhead .fnum{font-family:var(--disp);font-style:italic;font-size:13px;color:var(--faint);letter-spacing:.18em;margin-right:12px;vertical-align:baseline}
+  .fhead .fjp{font-family:var(--serif);font-weight:500;font-size:17px;color:var(--ink);letter-spacing:.06em;line-height:1.5}
+  .fhead .fen{font-family:var(--disp);font-style:italic;font-size:13px;color:var(--faint);letter-spacing:.08em;display:block;margin-top:6px}
+  @media(max-width:820px){
+    .fgroup{grid-template-columns:1fr;gap:16px}
+  }
+
+  /* underline inputs */
+  input[type="text"],input[type="url"],textarea{
+    width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);border-radius:0;
+    padding:10px 2px 12px;color:var(--ink);font-family:var(--gothic);font-weight:300;font-size:15px;
+    letter-spacing:.04em;line-height:1.8;transition:border-color .4s;appearance:none}
+  input:focus,textarea:focus{outline:none;border-bottom-color:rgba(244,244,242,.55)}
+  input::placeholder,textarea::placeholder{color:var(--faint);opacity:.75}
+  textarea{resize:vertical;min-height:96px}
+
+  .form-note{font-size:12.5px;color:var(--faint);letter-spacing:.03em;line-height:1.9}
+  .form-note a{color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:1px;transition:color .35s,border-color .35s}
+  .form-note a:hover{color:var(--ink);border-color:var(--gold)}
+  .form-note.indent{margin-left:1em}
+  .sub-label{font-family:var(--disp);font-style:italic;font-size:14px;color:var(--muted);letter-spacing:.08em;margin-bottom:12px}
+  .mt-18{margin-top:18px}.mt-24{margin-top:24px}
+
+  /* selection cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:10px}
+  .opt{display:flex;flex-direction:column}
+  .opt-card{border:1px solid var(--line);border-radius:2px;background:transparent;padding:16px 16px 14px;text-align:left;
+    display:flex;flex-direction:column;gap:4px;font-family:var(--gothic);color:var(--ink);cursor:none;
+    transition:border-color .4s,background .4s;min-height:78px}
+  .opt-card:hover{border-color:rgba(244,244,242,.4)}
+  .opt-card .on-name{font-family:var(--serif);font-weight:500;font-size:14px;letter-spacing:.04em;color:var(--ink);line-height:1.5}
+  .opt-card .on-price{font-family:var(--disp);font-size:15px;letter-spacing:.08em;color:var(--faint);transition:color .4s;
+    font-variant-numeric:lining-nums}
+  .opt-card.selected{border-color:rgba(244,244,242,.6);background:var(--bg-2)}
+  .opt-card.selected .on-price{color:var(--ink)}
+  .qty{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 0 0}
+  .qty-btn{width:26px;height:26px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--faint);
+    font-family:var(--disp);font-size:15px;line-height:1;cursor:none;transition:color .3s,border-color .3s;
+    display:inline-flex;align-items:center;justify-content:center}
+  .qty-btn:hover{color:var(--ink);border-color:rgba(244,244,242,.5)}
+  .qty-value{font-family:var(--disp);font-size:15px;color:var(--muted);letter-spacing:.05em;min-width:16px;text-align:center;
+    font-variant-numeric:lining-nums}
+  .opt.active .qty-value{color:var(--ink)}
+  @media(max-width:480px){.cards{grid-template-columns:repeat(2,1fr)}}
+
+  /* submit area */
+  /* 見積エリア: ラベル左 + 金額/注記/送信ボタンは中央 */
+  .submit-area{border-top:1px solid var(--line);padding:clamp(28px,4vw,40px) clamp(22px,4vw,46px)}
+  .est{display:block}
+  .est .est-k{display:block;font-family:var(--disp);font-style:italic;font-size:15px;color:var(--muted);letter-spacing:.1em}
+  .est .est-v{display:block;font-family:var(--disp);font-weight:500;font-size:clamp(30px,3.6vw,40px);color:var(--ink);letter-spacing:.06em;line-height:1.1;
+    font-variant-numeric:lining-nums;text-align:center;margin-top:14px}
+  .est .est-n{display:block;font-size:12px;color:var(--faint);letter-spacing:.03em;text-align:center;margin-top:16px}
+  .submit-row{margin-top:26px;display:flex;justify-content:center}
+  .submit-row .btn{padding:16px 72px;font-size:14px;letter-spacing:.16em}
+  @media(max-width:820px){
+    .submit-row .btn{width:100%;justify-content:center}
+  }
+
+  /* progress + message */
+  .upload-progress{padding:0 clamp(22px,4vw,46px) 30px}
+  .progress-bar{height:1px;background:var(--line);overflow:hidden}
+  .progress-fill{height:1px;background:var(--ink);width:0%;transition:width .5s ease}
+  .progress-text{font-family:var(--disp);font-style:italic;font-size:13px;color:var(--muted);letter-spacing:.1em;margin-top:10px}
+  .form-message{display:none;margin-top:22px;border:1px solid var(--line);border-radius:2px;padding:18px 24px;
+    font-size:13.5px;color:var(--ink);letter-spacing:.04em}
+
+  /* popups */
+  .pop-overlay{position:fixed;inset:0;z-index:150;background:rgba(13,13,13,.88);display:flex;align-items:center;justify-content:center;
+    padding:24px;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+  .pop-overlay.active{opacity:1;visibility:visible}
+  .pop{position:relative;background:var(--bg-2);border:1px solid var(--line);border-radius:2px;max-width:440px;width:100%;
+    padding:clamp(34px,5vw,48px) clamp(26px,4vw,42px);text-align:center;
+    transform:translateY(14px);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .pop-overlay.active .pop{transform:none}
+  .pop-close{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--faint);font-family:var(--disp);
+    font-size:24px;line-height:1;cursor:none;transition:color .3s}
+  .pop-close:hover{color:var(--ink)}
+  .pop-k{font-family:var(--disp);font-style:italic;font-size:13px;color:var(--faint);letter-spacing:.2em;margin-bottom:12px}
+  .pop-t{font-family:var(--serif);font-weight:600;font-size:22px;color:var(--ink);letter-spacing:.08em;margin-bottom:16px}
+  .pop-m{font-size:13.5px;color:var(--muted);line-height:2.05;letter-spacing:.03em}
+  .pop-id{font-family:var(--disp);font-size:24px;color:var(--ink);letter-spacing:.08em;margin:14px 0 4px}
+  .pop-actions{margin-top:26px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+  .pop-actions .btn{padding:12px 22px}
+  .pop-badge{font-family:var(--disp);font-style:italic;font-size:12px;color:var(--faint);letter-spacing:.1em;margin-left:8px}
+
+  footer{text-align:center;padding:8px 0 30px;color:var(--faint);font-family:'Star Shines Still','Times New Roman',Times,serif;letter-spacing:3px;font-size:15px}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .page-head .d1{transition-delay:.1s}.page-head .d2{transition-delay:.22s}.page-head .d3{transition-delay:.34s}.page-head .d4{transition-delay:.46s}
+</style>
 </head>
 <body>
-  <div class="price-page">
-    <!-- Hamburger Menu Button -->
-    <div class="hamburger-menu" onclick="toggleMobileMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
+<div class="glow"></div>
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
+
+<header>
+  <a class="brand" href="index.html">NOUMENON</a>
+  <nav>
+    <a href="index.html">Index</a>
+    <a href="works.html">Works</a>
+    <a href="news.html">News</a>
+    <a href="contact.html" class="on">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="page-head">
+    <h1 class="page-title rv d2">Contact</h1>
+    <p class="page-lead rv d3">MIXのご依頼は、下のブッキングシートからお送りください。このフォームはMix依頼専用です。その他のお問い合わせは、SNSから直接ご連絡ください。</p>
+    <div class="quick rv d4">
+      <a class="btn ghost" href="https://x.com/DOSUKOI_JK" target="_blank" rel="noopener">X (MIX) DM<span class="btn-arrow">→</span></a>
+      <button type="button" class="btn ghost" data-discord-copy>Discord : .okazaki</button>
+      <span class="quick-note">気軽なご相談はSNSでも。</span>
     </div>
+  </section>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-      <ul class="mobile-menu-list">
-        <li><a href="/">Top</a></li>
-        <li><a href="works">Works</a></li>
-        <li><a href="price">Price</a></li>
-        <li><a href="subscribe">Subscribe</a></li>
-        <li><a href="contact" class="active">Contact</a></li>
-      </ul>
-    </div>
-
-    <!-- Side menu -->
-    <nav class="side-menu">
-      <ul class="menu-list">
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="/" class="menu-link">Top</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="works" class="menu-link">Works</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="price" class="menu-link">Price</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="subscribe" class="menu-link">Subscribe</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet active"></span>
-          <a href="contact" class="menu-link active">Contact</a>
-        </li>
-      </ul>
-      <!-- Social Links -->
-      <div class="social-icons">
-        <a href="https://x.com/okazaki_yuki01" target="_blank" class="social-link">X (main)</a>
-        <a href="https://x.com/DOSUKOI_JK" target="_blank" class="social-link">X (mix)</a>
-        <a href="#" class="social-link" onclick="copyDiscordId(event)">Discord</a>
-        <a href="https://okazakiyuki.booth.pm/" target="_blank" class="social-link">BOOTH</a>
-      </div>
-    </nav>
-
-    <!-- Animated gradient background -->
-    <div class="gradient-bg"></div>
-
-    <!-- Grid pattern overlay -->
-    <div class="grid-pattern"></div>
-
-    <!-- Floating orbs -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-    <!-- Main content -->
-    <div class="content">
-      <h1 class="page-title">CONTACT</h1>
-
-      <p class="page-description">このフォームはMix依頼専用です。<br>その他のお問い合わせは下記より直接ご連絡ください。</p>
-
-      <div class="subscribe-contact">
-        <a href="https://x.com/DOSUKOI_JK" target="_blank" class="subscribe-contact-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          X (MIX) DM
-        </a>
-        <button type="button" class="subscribe-contact-btn" onclick="copyDiscordId(event)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-          Discord: .okazaki
-        </button>
+  <section class="sheet-wrap">
+    <form id="estimateForm" class="sheet rv">
+      <div class="sheet-head">
+        <span class="sh-t">Booking Sheet — Vocal Mix</span>
+        <span class="sh-p">料金の詳細は<a href="price.html">Price</a>をご覧ください</span>
       </div>
 
-      <form id="estimateForm" class="estimate-form">
-        <div class="form-group">
-          <label for="name">お名前 <span class="required">*</span></label>
-          <input type="text" id="name" name="name" required>
+      <div class="fgroup">
+        <div class="fhead">
+          <span class="fnum">01</span>
+          <span class="fjp">お名前</span>
+          <span class="fen">Name</span>
         </div>
+        <div class="fbody">
+          <input type="text" id="name" name="name" autocomplete="name" required>
+        </div>
+      </div>
 
-        <div class="form-group">
-          <label for="songName">曲名 <span class="required">*</span></label>
+      <div class="fgroup">
+        <div class="fhead">
+          <span class="fnum">02</span>
+          <span class="fjp">曲名</span>
+          <span class="fen">Song Title</span>
+        </div>
+        <div class="fbody">
           <input type="text" id="songName" name="songName" required>
         </div>
+      </div>
 
-        <!-- プラン選択（カード形式） -->
-        <div class="form-group">
-          <label>プラン <span class="required">*</span></label>
-          <div class="contact-cards" id="planCards">
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-plan="Short" data-price="4000" onclick="tapPlan(this)">
-                <span class="contact-card-name">Short</span>
-                <span class="contact-card-price">¥4,000~</span>
-              </div>
-              <div class="qty-display small" data-for="Short">
-                <button type="button" class="qty-btn minus" onclick="changePlanQty('Short', -1, event)">-</button>
+      <div class="fgroup">
+        <div class="fhead">
+          <span class="fnum">03</span>
+          <span class="fjp">プラン</span>
+          <span class="fen">Plan</span>
+        </div>
+        <div class="fbody">
+          <div class="cards" id="planCards">
+            <div class="opt">
+              <button type="button" class="opt-card" data-plan="Short" data-price="4000">
+                <span class="on-name">Short</span>
+                <span class="on-price">¥4,000~</span>
+              </button>
+              <div class="qty" data-for="Short">
+                <button type="button" class="qty-btn minus" aria-label="Shortを減らす">−</button>
                 <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changePlanQty('Short', 1, event)">+</button>
+                <button type="button" class="qty-btn plus" aria-label="Shortを増やす">＋</button>
               </div>
             </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-plan="One Chorus" data-price="6000" onclick="tapPlan(this)">
-                <span class="contact-card-name">One Chorus</span>
-                <span class="contact-card-price">¥6,000~</span>
-              </div>
-              <div class="qty-display small" data-for="One Chorus">
-                <button type="button" class="qty-btn minus" onclick="changePlanQty('One Chorus', -1, event)">-</button>
+            <div class="opt">
+              <button type="button" class="opt-card" data-plan="One Chorus" data-price="6000">
+                <span class="on-name">One Chorus</span>
+                <span class="on-price">¥6,000~</span>
+              </button>
+              <div class="qty" data-for="One Chorus">
+                <button type="button" class="qty-btn minus" aria-label="One Chorusを減らす">−</button>
                 <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changePlanQty('One Chorus', 1, event)">+</button>
+                <button type="button" class="qty-btn plus" aria-label="One Chorusを増やす">＋</button>
               </div>
             </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-plan="Full Chorus" data-price="10000" onclick="tapPlan(this)">
-                <span class="contact-card-name">Full Chorus</span>
-                <span class="contact-card-price">¥10,000~</span>
-              </div>
-              <div class="qty-display small" data-for="Full Chorus">
-                <button type="button" class="qty-btn minus" onclick="changePlanQty('Full Chorus', -1, event)">-</button>
+            <div class="opt">
+              <button type="button" class="opt-card" data-plan="Full Chorus" data-price="10000">
+                <span class="on-name">Full Chorus</span>
+                <span class="on-price">¥10,000~</span>
+              </button>
+              <div class="qty" data-for="Full Chorus">
+                <button type="button" class="qty-btn minus" aria-label="Full Chorusを減らす">−</button>
                 <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changePlanQty('Full Chorus', 1, event)">+</button>
+                <button type="button" class="qty-btn plus" aria-label="Full Chorusを増やす">＋</button>
+              </div>
+            </div>
+          </div>
+          <p class="form-note mt-18">※ すべてのプランにピッチ補正、タイミング補正、ハモリ生成、マスタリングが含まれています</p>
+        </div>
+      </div>
+
+      <div class="fgroup">
+        <div class="fhead">
+          <span class="fnum">04</span>
+          <span class="fjp">納期オプション</span>
+          <span class="fen">Delivery</span>
+        </div>
+        <div class="fbody">
+          <p class="sub-label">One Chorus / Full Chorus</p>
+          <div class="cards" id="deliveryStandardCards">
+            <div class="opt">
+              <button type="button" class="opt-card" data-delivery="standard-2週間" data-price="0">
+                <span class="on-name">2週間</span>
+                <span class="on-price">¥0</span>
+              </button>
+              <div class="qty" data-for="standard-2週間">
+                <button type="button" class="qty-btn minus" aria-label="2週間を減らす">−</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" aria-label="2週間を増やす">＋</button>
+              </div>
+            </div>
+            <div class="opt">
+              <button type="button" class="opt-card" data-delivery="standard-1週間" data-price="2000">
+                <span class="on-name">1週間</span>
+                <span class="on-price">+¥2,000</span>
+              </button>
+              <div class="qty" data-for="standard-1週間">
+                <button type="button" class="qty-btn minus" aria-label="1週間を減らす">−</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" aria-label="1週間を増やす">＋</button>
+              </div>
+            </div>
+            <div class="opt">
+              <button type="button" class="opt-card" data-delivery="standard-3日" data-price="4000">
+                <span class="on-name">3日</span>
+                <span class="on-price">+¥4,000</span>
+              </button>
+              <div class="qty" data-for="standard-3日">
+                <button type="button" class="qty-btn minus" aria-label="3日を減らす">−</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" aria-label="3日を増やす">＋</button>
+              </div>
+            </div>
+            <div class="opt">
+              <button type="button" class="opt-card" data-delivery="standard-24時間以内" data-price="6000">
+                <span class="on-name">24時間以内</span>
+                <span class="on-price">+¥6,000</span>
+              </button>
+              <div class="qty" data-for="standard-24時間以内">
+                <button type="button" class="qty-btn minus" aria-label="24時間以内を減らす">−</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" aria-label="24時間以内を増やす">＋</button>
+              </div>
+            </div>
+          </div>
+          <p class="sub-label mt-24">Short</p>
+          <div class="cards" id="deliveryShortCards">
+            <div class="opt">
+              <button type="button" class="opt-card" data-delivery="short-3日" data-price="0">
+                <span class="on-name">3日</span>
+                <span class="on-price">¥0</span>
+              </button>
+              <div class="qty" data-for="short-3日">
+                <button type="button" class="qty-btn minus" aria-label="3日を減らす">−</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" aria-label="3日を増やす">＋</button>
+              </div>
+            </div>
+            <div class="opt">
+              <button type="button" class="opt-card" data-delivery="short-24時間以内" data-price="1000">
+                <span class="on-name">24時間以内</span>
+                <span class="on-price">+¥1,000</span>
+              </button>
+              <div class="qty" data-for="short-24時間以内">
+                <button type="button" class="qty-btn minus" aria-label="24時間以内を減らす">−</button>
+                <span class="qty-value">0</span>
+                <button type="button" class="qty-btn plus" aria-label="24時間以内を増やす">＋</button>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- 納期オプション -->
-        <div class="form-group">
-          <label>納期オプション</label>
-          <p class="form-note" style="margin-bottom: 15px;">One Chorus / Full Chorus</p>
-          <div class="contact-cards four-cols" id="deliveryStandardCards">
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-delivery="standard-2週間" data-price="0" onclick="tapDelivery(this)">
-                <span class="contact-card-name">2週間</span>
-                <span class="contact-card-price">¥0</span>
-              </div>
-              <div class="qty-display small" data-for="standard-2週間">
-                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-2週間', -1, event)">-</button>
+      <div class="fgroup">
+        <div class="fhead">
+          <span class="fnum">05</span>
+          <span class="fjp">その他オプション</span>
+          <span class="fen">Options</span>
+        </div>
+        <div class="fbody">
+          <div class="cards" id="otherOptionCards">
+            <div class="opt">
+              <button type="button" class="opt-card" data-option="コラボ" data-price="collab">
+                <span class="on-name">コラボ</span>
+                <span class="on-price">+1人分</span>
+              </button>
+              <div class="qty" data-for="コラボ">
+                <button type="button" class="qty-btn minus" aria-label="コラボを減らす">−</button>
                 <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-2週間', 1, event)">+</button>
+                <button type="button" class="qty-btn plus" aria-label="コラボを増やす">＋</button>
               </div>
             </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-delivery="standard-1週間" data-price="1500" onclick="tapDelivery(this)">
-                <span class="contact-card-name">1週間</span>
-                <span class="contact-card-price">+¥1,500</span>
-              </div>
-              <div class="qty-display small" data-for="standard-1週間">
-                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-1週間', -1, event)">-</button>
+            <div class="opt">
+              <button type="button" class="opt-card" data-option="カットアップ" data-price="2000" data-variable="true">
+                <span class="on-name">カットアップ</span>
+                <span class="on-price">¥2,000~</span>
+              </button>
+              <div class="qty" data-for="カットアップ">
+                <button type="button" class="qty-btn minus" aria-label="カットアップを減らす">−</button>
                 <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-1週間', 1, event)">+</button>
+                <button type="button" class="qty-btn plus" aria-label="カットアップを増やす">＋</button>
               </div>
             </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-delivery="standard-3日" data-price="4000" onclick="tapDelivery(this)">
-                <span class="contact-card-name">3日</span>
-                <span class="contact-card-price">+¥4,000</span>
-              </div>
-              <div class="qty-display small" data-for="standard-3日">
-                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-3日', -1, event)">-</button>
+            <div class="opt">
+              <button type="button" class="opt-card" data-option="エンコード" data-price="1000">
+                <span class="on-name">エンコード</span>
+                <span class="on-price">¥1,000</span>
+              </button>
+              <div class="qty" data-for="エンコード">
+                <button type="button" class="qty-btn minus" aria-label="エンコードを減らす">−</button>
                 <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-3日', 1, event)">+</button>
+                <button type="button" class="qty-btn plus" aria-label="エンコードを増やす">＋</button>
               </div>
             </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-delivery="standard-24時間以内" data-price="6000" onclick="tapDelivery(this)">
-                <span class="contact-card-name">24時間以内</span>
-                <span class="contact-card-price">+¥6,000</span>
-              </div>
-              <div class="qty-display small" data-for="standard-24時間以内">
-                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-24時間以内', -1, event)">-</button>
+            <div class="opt">
+              <button type="button" class="opt-card" data-option="ハモリガイドメロ作成" data-price="3000" data-variable="true">
+                <span class="on-name">ハモリガイドメロ作成</span>
+                <span class="on-price">¥3,000~</span>
+              </button>
+              <div class="qty" data-for="ハモリガイドメロ作成">
+                <button type="button" class="qty-btn minus" aria-label="ハモリガイドメロ作成を減らす">−</button>
                 <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-24時間以内', 1, event)">+</button>
-              </div>
-            </div>
-          </div>
-          <p class="form-note" style="margin-top: 20px; margin-bottom: 15px;">Short</p>
-          <div class="contact-cards" id="deliveryShortCards">
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-delivery="short-3日" data-price="0" onclick="tapDelivery(this)">
-                <span class="contact-card-name">3日</span>
-                <span class="contact-card-price">¥0</span>
-              </div>
-              <div class="qty-display small" data-for="short-3日">
-                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-3日', -1, event)">-</button>
-                <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-3日', 1, event)">+</button>
-              </div>
-            </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-delivery="short-24時間以内" data-price="1000" onclick="tapDelivery(this)">
-                <span class="contact-card-name">24時間以内</span>
-                <span class="contact-card-price">+¥1,000</span>
-              </div>
-              <div class="qty-display small" data-for="short-24時間以内">
-                <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-24時間以内', -1, event)">-</button>
-                <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-24時間以内', 1, event)">+</button>
+                <button type="button" class="qty-btn plus" aria-label="ハモリガイドメロ作成を増やす">＋</button>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- その他オプション -->
-        <div class="form-group">
-          <label>その他オプション</label>
-          <div class="contact-cards" id="otherOptionCards">
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-option="コラボ" data-price="collab" onclick="tapOption(this)">
-                <span class="contact-card-name">コラボ</span>
-                <span class="contact-card-price">+1人分</span>
-              </div>
-              <div class="qty-display small" data-for="コラボ">
-                <button type="button" class="qty-btn minus" onclick="changeOptionQty('コラボ', -1, event)">-</button>
-                <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeOptionQty('コラボ', 1, event)">+</button>
-              </div>
-            </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-option="カットアップ" data-price="2000" data-variable="true" onclick="tapOption(this)">
-                <span class="contact-card-name">カットアップ</span>
-                <span class="contact-card-price">¥2,000~</span>
-              </div>
-              <div class="qty-display small" data-for="カットアップ">
-                <button type="button" class="qty-btn minus" onclick="changeOptionQty('カットアップ', -1, event)">-</button>
-                <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeOptionQty('カットアップ', 1, event)">+</button>
-              </div>
-            </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-option="エンコード" data-price="1000" onclick="tapOption(this)">
-                <span class="contact-card-name">エンコード</span>
-                <span class="contact-card-price">¥1,000</span>
-              </div>
-              <div class="qty-display small" data-for="エンコード">
-                <button type="button" class="qty-btn minus" onclick="changeOptionQty('エンコード', -1, event)">-</button>
-                <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeOptionQty('エンコード', 1, event)">+</button>
-              </div>
-            </div>
-            <div class="contact-card-wrapper">
-              <div class="contact-card tap-select" data-option="ハモリガイドメロ作成" data-price="3000" data-variable="true" onclick="tapOption(this)">
-                <span class="contact-card-name">ハモリガイドメロ作成</span>
-                <span class="contact-card-price">¥3,000~</span>
-              </div>
-              <div class="qty-display small" data-for="ハモリガイドメロ作成">
-                <button type="button" class="qty-btn minus" onclick="changeOptionQty('ハモリガイドメロ作成', -1, event)">-</button>
-                <span class="qty-value">0</span>
-                <button type="button" class="qty-btn plus" onclick="changeOptionQty('ハモリガイドメロ作成', 1, event)">+</button>
-              </div>
-            </div>
-          </div>
+      <div class="fgroup">
+        <div class="fhead">
+          <span class="fnum">06</span>
+          <span class="fjp">備考・要望</span>
+          <span class="fen">Notes</span>
         </div>
-
-        <div class="form-group">
-          <label for="remarks">備考・要望</label>
+        <div class="fbody">
           <textarea id="remarks" name="remarks" rows="4"></textarea>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label for="fileUrl">音源ファイルURL <span class="required">*</span></label>
+      <div class="fgroup">
+        <div class="fhead">
+          <span class="fnum">07</span>
+          <span class="fjp">音源ファイルURL</span>
+          <span class="fen">Audio Files</span>
+        </div>
+        <div class="fbody">
           <input type="url" id="fileUrl" name="fileUrl" placeholder="https://gigafile.nu/XXXX" required>
-          <p class="file-note">※ <a href="https://gigafile.nu/" target="_blank" style="color: var(--accent-primary);">ギガファイル便</a>にアップロードしてURLを貼り付けてください</p>
-          <p class="file-note">※ 複数曲ご依頼の場合は、曲ごとにフォルダ分けをお願いします</p>
-          <p class="file-note" style="margin-left: 1em;">- フォルダ名：曲名＋尺（例：曲名_Short）</p>
-          <p class="file-note" style="margin-left: 1em;">- zipファイル名：活動者名</p>
-          <p class="file-note" style="margin-left: 1em;">- 1つのzipファイルにまとめてください</p>
-        </div>
-
-        <!-- 見積金額 + 送信ボタン -->
-        <div class="submit-area">
-          <div class="estimate-total-inline">
-            <span class="estimate-label">概算見積り金額</span>
-            <span class="estimate-amount" id="estimateAmount">¥0~</span>
-          </div>
-          <p class="estimate-note">※ トラック数や作業の工数によって金額が上下する場合があります</p>
-          <button type="submit" class="submit-btn" id="submitBtn">送信する</button>
-        </div>
-        <div id="uploadProgress" class="upload-progress" style="display: none;">
-          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-          <p class="progress-text" id="progressText">アップロード中...</p>
-        </div>
-      </form>
-
-      <div id="formMessage" class="form-message"></div>
-
-      <!-- Submit Success Popup -->
-      <div class="contact-popup-overlay" id="submitSuccessPopup" onclick="closeSubmitSuccessPopup(event)">
-        <div class="contact-popup">
-          <button class="contact-popup-close" onclick="closeSubmitSuccessPopup()">&times;</button>
-          <h3 class="contact-popup-title">送信完了</h3>
-          <p class="contact-popup-message">ご依頼ありがとうございます！<br>お手数ですが、XまたはDiscordのDMにて<br>依頼を送信した旨をご連絡ください。</p>
-          <div class="contact-popup-icons">
-            <a href="#" class="contact-popup-link" onclick="copyDiscordId(event)">
-              <div class="contact-popup-icon discord">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-                </svg>
-              </div>
-              <span class="contact-popup-label">Discord</span>
-              <span class="contact-popup-badge">推奨</span>
-            </a>
-            <a href="https://x.com/DOSUKOI_JK" target="_blank" class="contact-popup-link">
-              <div class="contact-popup-icon x-twitter">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </div>
-              <span class="contact-popup-label">X (Twitter)</span>
-            </a>
+          <div class="mt-18">
+            <p class="form-note">※ <a href="https://gigafile.nu/" target="_blank" rel="noopener">ギガファイル便</a>にアップロードしてURLを貼り付けてください</p>
+            <p class="form-note">※ 複数曲ご依頼の場合は、曲ごとにフォルダ分けをお願いします</p>
+            <p class="form-note indent">- フォルダ名：曲名＋尺（例：曲名_Short）</p>
+            <p class="form-note indent">- zipファイル名：活動者名</p>
+            <p class="form-note indent">- 1つのzipファイルにまとめてください</p>
           </div>
         </div>
       </div>
+
+      <div class="submit-area">
+        <div class="est">
+          <span class="est-k">概算見積り金額</span>
+          <span class="est-v" id="estimateAmount">¥0~</span>
+          <p class="est-n">※ トラック数や作業の工数によって金額が上下する場合があります</p>
+        </div>
+        <div class="submit-row">
+          <button type="submit" class="btn" id="submitBtn">送信する<span class="btn-arrow">→</span></button>
+        </div>
+      </div>
+      <div id="uploadProgress" class="upload-progress" style="display:none;">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <p class="progress-text" id="progressText">アップロード中...</p>
+      </div>
+    </form>
+
+    <div id="formMessage" class="form-message"></div>
+  </section>
+</main>
+
+<!-- Submit Success Popup -->
+<div class="pop-overlay" id="submitSuccessPopup">
+  <div class="pop">
+    <button type="button" class="pop-close" data-close-success aria-label="閉じる">&times;</button>
+    <div class="pop-k">Thank you</div>
+    <h3 class="pop-t">送信完了</h3>
+    <p class="pop-m">ご依頼ありがとうございます。<br>お手数ですが、XまたはDiscordのDMにて<br>依頼を送信した旨をご連絡ください。</p>
+    <div class="pop-actions">
+      <button type="button" class="btn ghost" data-discord-copy>Discord<span class="pop-badge">推奨</span></button>
+      <a class="btn ghost" href="https://x.com/DOSUKOI_JK" target="_blank" rel="noopener">X (Twitter)<span class="btn-arrow">→</span></a>
     </div>
   </div>
+</div>
 
-  <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRJgSS8wavzPcFXkktF9WwnAkL2XBKpUHqHyOKVMRwWqNA3w12-fOPHkvy5Oeo9wJPPg/exec';
-
-    // 数量データを保持
-    const quantities = {
-      plans: {},
-      delivery: {},
-      options: {},
-      tracks: {}
-    };
-
-    // プランカードをタップ
-    function tapPlan(card) {
-      const plan = card.getAttribute('data-plan');
-      quantities.plans[plan] = (quantities.plans[plan] || 0) + 1;
-      updateDisplay(plan, quantities.plans[plan], '.contact-card');
-      calculateEstimate();
-    }
-
-    // プラン数量変更
-    function changePlanQty(plan, delta, event) {
-      event.stopPropagation();
-      quantities.plans[plan] = Math.max(0, (quantities.plans[plan] || 0) + delta);
-      updateDisplay(plan, quantities.plans[plan], '.contact-card');
-      calculateEstimate();
-    }
-
-    // 納期カードをタップ
-    function tapDelivery(card) {
-      const delivery = card.getAttribute('data-delivery');
-      quantities.delivery[delivery] = (quantities.delivery[delivery] || 0) + 1;
-      updateDisplay(delivery, quantities.delivery[delivery], '.contact-card');
-      calculateEstimate();
-    }
-
-    // 納期数量変更
-    function changeDeliveryQty(delivery, delta, event) {
-      event.stopPropagation();
-      quantities.delivery[delivery] = Math.max(0, (quantities.delivery[delivery] || 0) + delta);
-      updateDisplay(delivery, quantities.delivery[delivery], '.contact-card');
-      calculateEstimate();
-    }
-
-    // オプションカードをタップ
-    function tapOption(card) {
-      const option = card.getAttribute('data-option');
-      quantities.options[option] = (quantities.options[option] || 0) + 1;
-      updateDisplay(option, quantities.options[option], '.contact-card');
-      calculateEstimate();
-    }
-
-    // オプション数量変更
-    function changeOptionQty(option, delta, event) {
-      event.stopPropagation();
-      quantities.options[option] = Math.max(0, (quantities.options[option] || 0) + delta);
-      updateDisplay(option, quantities.options[option], '.contact-card');
-      calculateEstimate();
-    }
-
-    // 表示を更新
-    function updateDisplay(key, value, cardSelector) {
-      const display = document.querySelector(`.qty-display[data-for="${key}"] .qty-value`);
-      if (display) {
-        display.textContent = value;
-      }
-      // カードのselected状態を更新
-      const card = document.querySelector(`${cardSelector}[data-plan="${key}"], ${cardSelector}[data-delivery="${key}"], ${cardSelector}[data-option="${key}"]`);
-      if (card) {
-        if (value > 0) {
-          card.classList.add('selected');
-        } else {
-          card.classList.remove('selected');
-        }
-      }
-    }
-
-    // 見積金額計算
-    function calculateEstimate() {
-      let total = 0;
-      let hasVariable = false;
-
-      // プラン料金
-      const planPrices = { 'Short': 4000, 'One Chorus': 6000, 'Full Chorus': 10000 };
-      for (const [plan, qty] of Object.entries(quantities.plans)) {
-        if (qty > 0) {
-          total += (planPrices[plan] || 0) * qty;
-        }
-      }
-
-      // コラボ料金（プラン料金 × 追加人数）
-      const collabCount = quantities.options['コラボ'] || 0;
-      if (collabCount > 0) {
-        let planTotal = 0;
-        for (const [plan, qty] of Object.entries(quantities.plans)) {
-          if (qty > 0) planTotal += (planPrices[plan] || 0) * qty;
-        }
-        total += collabCount * planTotal;
-      }
-
-      // 納期オプション料金
-      for (const [delivery, qty] of Object.entries(quantities.delivery)) {
-        if (qty > 0) {
-          const card = document.querySelector(`.contact-card[data-delivery="${delivery}"]`);
-          if (card) {
-            const price = parseInt(card.getAttribute('data-price')) || 0;
-            total += price * qty;
-          }
-        }
-      }
-
-      // その他オプション料金（コラボは上で計算済みなのでスキップ）
-      for (const [option, qty] of Object.entries(quantities.options)) {
-        if (qty > 0 && option !== 'コラボ') {
-          const card = document.querySelector(`.contact-card[data-option="${option}"]`);
-          if (card) {
-            const price = parseInt(card.getAttribute('data-price')) || 0;
-            const isVariable = card.getAttribute('data-variable') === 'true';
-            total += price * qty;
-            if (isVariable) {
-              hasVariable = true;
-            }
-          }
-        }
-      }
-
-      // 表示更新
-      const display = document.getElementById('estimateAmount');
-      if (total > 0) {
-        display.textContent = '¥' + total.toLocaleString() + (hasVariable ? '~' : '');
-      } else {
-        display.textContent = '¥0~';
-      }
-    }
-
-    // URLパラメータから選択状態を復元
-    function restoreFromUrlParams() {
-      var search = window.location.search;
-      if (!search) {
-        return;
-      }
-
-      var urlParams = new URLSearchParams(search);
-      var planValue = urlParams.get('plan');
-      var deliveryValue = urlParams.get('delivery');
-      var optionsValue = urlParams.get('options');
-
-      // 数量付きフォーマットをパース（例: "Short x2, One Chorus x1"）
-      if (planValue) {
-        var planItems = planValue.split(',');
-        for (var i = 0; i < planItems.length; i++) {
-          var item = planItems[i].trim();
-          var match = item.match(/^(.+)\s+x(\d+)$/);
-          if (match) {
-            var name = match[1].trim();
-            var qty = parseInt(match[2]);
-            quantities.plans[name] = qty;
-            updateDisplay(name, qty, '.contact-card');
-          } else if (item) {
-            // 旧フォーマット（数量なし）
-            quantities.plans[item] = 1;
-            updateDisplay(item, 1, '.contact-card');
-          }
-        }
-      }
-
-      if (deliveryValue) {
-        var deliveryItems = deliveryValue.split(',');
-        for (var i = 0; i < deliveryItems.length; i++) {
-          var item = deliveryItems[i].trim();
-          var match = item.match(/^(.+)\s+x(\d+)$/);
-          if (match) {
-            var name = match[1].trim();
-            var qty = parseInt(match[2]);
-            // standard-XXX または short-XXX の形式で保存
-            // URLからは "2週間 x1" のような形式なので、適切なキーを探す
-            var deliveryCards = document.querySelectorAll('.contact-card[data-delivery]');
-            for (var j = 0; j < deliveryCards.length; j++) {
-              var cardDelivery = deliveryCards[j].getAttribute('data-delivery');
-              if (cardDelivery.endsWith(name)) {
-                quantities.delivery[cardDelivery] = qty;
-                updateDisplay(cardDelivery, qty, '.contact-card');
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      if (optionsValue) {
-        var optionItems = optionsValue.split(',');
-        for (var i = 0; i < optionItems.length; i++) {
-          var item = optionItems[i].trim();
-          var match = item.match(/^(.+)\s+x(\d+)$/);
-          if (match) {
-            var name = match[1].trim();
-            var qty = parseInt(match[2]);
-            quantities.options[name] = qty;
-            updateDisplay(name, qty, '.contact-card');
-          } else if (item) {
-            quantities.options[item] = 1;
-            updateDisplay(item, 1, '.contact-card');
-          }
-        }
-      }
-
-      calculateEstimate();
-    }
-
-    // ページ読み込み完了後に実行
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', restoreFromUrlParams);
-    } else {
-      restoreFromUrlParams();
-    }
-
-    // 選択データを文字列に変換
-    function getSelectedPlans() {
-      var plans = [];
-      for (var plan in quantities.plans) {
-        if (quantities.plans[plan] > 0) {
-          plans.push(plan + ' x' + quantities.plans[plan]);
-        }
-      }
-      return plans.join(', ');
-    }
-
-    function getSelectedDeliveries() {
-      var deliveries = [];
-      for (var delivery in quantities.delivery) {
-        if (quantities.delivery[delivery] > 0) {
-          var name = delivery.split('-').slice(1).join('-');
-          deliveries.push(name + ' x' + quantities.delivery[delivery]);
-        }
-      }
-
-      // 納期が未選択の場合、プランに応じてデフォルト値を設定
-      if (deliveries.length === 0) {
-        var shortCount = quantities.plans['Short'] || 0;
-        var oneChorusCount = quantities.plans['One Chorus'] || 0;
-        var fullChorusCount = quantities.plans['Full Chorus'] || 0;
-        var standardCount = oneChorusCount + fullChorusCount;
-
-        // One Chorus / Full Chorus がある場合は「2週間」をデフォルト
-        if (standardCount > 0) {
-          deliveries.push('2週間 x' + standardCount);
-        }
-        // Short がある場合は「3日」をデフォルト
-        if (shortCount > 0) {
-          deliveries.push('3日 x' + shortCount);
-        }
-      }
-
-      return deliveries.join(', ');
-    }
-
-    function getSelectedOptions() {
-      var options = [];
-      for (var option in quantities.options) {
-        if (quantities.options[option] > 0) {
-          options.push(option + ' x' + quantities.options[option]);
-        }
-      }
-      return options.join(', ');
-    }
-
-    // フォーム送信
-    document.getElementById('estimateForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      // プランが選択されているかチェック
-      var selectedPlans = getSelectedPlans();
-      if (!selectedPlans) {
-        alert('プランを選択してください');
-        return;
-      }
-
-      var submitBtn = document.getElementById('submitBtn');
-      var uploadProgress = document.getElementById('uploadProgress');
-      var progressFill = document.getElementById('progressFill');
-      var progressText = document.getElementById('progressText');
-      var formMessage = document.getElementById('formMessage');
-
-      // UI更新
-      submitBtn.disabled = true;
-      submitBtn.textContent = '送信中...';
-      uploadProgress.style.display = 'block';
-      formMessage.style.display = 'none';
-      progressFill.style.width = '30%';
-      progressText.textContent = '送信中...';
-
-      try {
-        // フォームデータ取得
-        var formData = new FormData(this);
-
-        progressFill.style.width = '50%';
-
-        // GASに送信
-        var response = await fetch(GAS_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            formInfo: {
-              name: formData.get('name'),
-              songName: formData.get('songName'),
-              plan: selectedPlans,
-              deliveryOption: getSelectedDeliveries(),
-              otherOptions: getSelectedOptions(),
-              fileUrl: formData.get('fileUrl') || '',
-              remarks: formData.get('remarks') || ''
-            }
-          })
-        });
-
-        progressFill.style.width = '100%';
-        progressText.textContent = '完了！';
-
-        // フォームリセット
-        document.getElementById('estimateForm').reset();
-        // 数量もリセット
-        quantities.plans = {};
-        quantities.delivery = {};
-        quantities.options = {};
-        document.querySelectorAll('.qty-value').forEach(function(el) { el.textContent = '0'; });
-        document.querySelectorAll('.contact-card.selected').forEach(function(el) { el.classList.remove('selected'); });
-        calculateEstimate();
-
-        // 進捗バーを非表示
-        setTimeout(function() {
-          uploadProgress.style.display = 'none';
-          progressFill.style.width = '0%';
-        }, 1000);
-
-        // 送信完了ポップアップを表示
-        setTimeout(function() {
-          openSubmitSuccessPopup();
-        }, 500);
-
-      } catch (error) {
-        console.error('送信エラー:', error);
-        formMessage.className = 'form-message error';
-        formMessage.textContent = '送信に失敗しました。もう一度お試しください。';
-        formMessage.style.display = 'block';
-        uploadProgress.style.display = 'none';
-      }
-
-      // ボタンを戻す
-      submitBtn.disabled = false;
-      submitBtn.textContent = '送信する';
-    });
-
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-      const hamburger = document.querySelector('.hamburger-menu');
-      const overlay = document.getElementById('mobileMenuOverlay');
-      hamburger.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-
-    // Contact popup functions
-    function openContactPopup() {
-      document.getElementById('contactPopupOverlay').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeContactPopup(event) {
-      // If event exists and click was on the popup content, don't close
-      if (event && event.target !== event.currentTarget) return;
-      document.getElementById('contactPopupOverlay').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    // Submit success popup functions
-    function openSubmitSuccessPopup() {
-      document.getElementById('submitSuccessPopup').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeSubmitSuccessPopup(event) {
-      if (event && event.target !== event.currentTarget) return;
-      document.getElementById('submitSuccessPopup').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    // Close popup with Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeContactPopup();
-        closeSubmitSuccessPopup();
-      }
-    });
-  </script>
-
-  <!-- Discord Copy Popup -->
-  <div class="discord-popup-overlay" id="discordPopup" style="display:none;">
-    <div class="discord-popup">
-      <div class="discord-popup-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-      </div>
-      <div class="discord-popup-check">&#10003;</div>
-      <div class="discord-popup-title">Discord IDをコピーしました</div>
-      <div class="discord-popup-id">.okazaki</div>
-      <p class="discord-popup-message">フレンド申請やDMを送る際にお使いください</p>
-      <div class="discord-popup-actions">
-        <a href="https://discord.com/users/528093170484117518" target="_blank" class="discord-popup-btn open-discord">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-          Discordを開く
-        </a>
-        <button class="discord-popup-btn close-popup" onclick="closeDiscordPopup()">閉じる</button>
-      </div>
+<!-- Discord Copy Popup -->
+<div class="pop-overlay" id="discordPopup">
+  <div class="pop">
+    <button type="button" class="pop-close" data-close-discord aria-label="閉じる">&times;</button>
+    <div class="pop-k">Copied</div>
+    <h3 class="pop-t">Discord IDをコピーしました</h3>
+    <div class="pop-id">.okazaki</div>
+    <p class="pop-m">フレンド申請やDMを送る際にお使いください</p>
+    <div class="pop-actions">
+      <a class="btn ghost" href="https://discord.com/users/528093170484117518" target="_blank" rel="noopener">Discordを開く<span class="btn-arrow">→</span></a>
+      <button type="button" class="btn ghost" data-close-discord>閉じる</button>
     </div>
   </div>
+</div>
 
-  <script>
-    function copyDiscordId(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      // Close any open contact popups first
-      var contactPopup = document.getElementById('contactPopupOverlay');
-      var successPopup = document.getElementById('submitSuccessPopup');
-      if (contactPopup) contactPopup.classList.remove('active');
-      if (successPopup) successPopup.classList.remove('active');
-      document.body.style.overflow = '';
+<footer>NOUMENON</footer>
 
-      var popup = document.getElementById('discordPopup');
-      navigator.clipboard.writeText('.okazaki').then(function() {
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
-      }).catch(function() {
-        var tmp = document.createElement('textarea');
-        tmp.value = '.okazaki';
-        document.body.appendChild(tmp);
-        tmp.select();
-        document.execCommand('copy');
-        document.body.removeChild(tmp);
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
+<script>
+  const cur=document.getElementById('cursor');
+  window.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+  document.querySelectorAll('a,button,.opt-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+
+  // 音の波紋(クリック) — indexと同じ気配だけ残す
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    addEventListener('pointerdown',e=>{
+      for(let i=0;i<2;i++){
+        const r=document.createElement('div');
+        r.className='ripple';
+        r.style.left=e.clientX+'px';
+        r.style.top=e.clientY+'px';
+        r.style.animationDelay=(i*130)+'ms';
+        document.body.appendChild(r);
+        setTimeout(()=>r.remove(),1100+i*130);
+      }
+    });
+    // マグネティックボタン
+    document.querySelectorAll('.btn').forEach(b=>{
+      b.addEventListener('mousemove',e=>{
+        const r=b.getBoundingClientRect();
+        const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+        b.style.transform=`translate(${dx*.18}px,${dy*.3}px)`;
       });
-    }
-
-    function closeDiscordPopup() {
-      var popup = document.getElementById('discordPopup');
-      popup.classList.remove('active');
-      setTimeout(function() { popup.style.display = 'none'; }, 300);
-    }
-
-    document.getElementById('discordPopup').addEventListener('click', function(e) {
-      if (e.target === this) closeDiscordPopup();
+      b.addEventListener('mouseleave',()=>{b.style.transform='';});
     });
-  </script>
+  }
+
+  // スクロールリビール + ?still(検証用: 即時in・transition無効)
+  const STILL=new URLSearchParams(location.search).has('still');
+  const io=new IntersectionObserver((es)=>{es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.15});
+  if(STILL){
+    const ns=document.createElement('style');
+    ns.textContent='.rv{transition:none!important}';
+    document.head.appendChild(ns);
+    document.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
+  }else{
+    document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));
+  }
+
+  /* ============================================================
+     以下、本番contact.htmlのフォーム機能を完全移植
+     (料金はprice.html準拠: standard-1週間のみ +¥2,000 に更新)
+     ============================================================ */
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRJgSS8wavzPcFXkktF9WwnAkL2XBKpUHqHyOKVMRwWqNA3w12-fOPHkvy5Oeo9wJPPg/exec';
+
+  // 数量データを保持
+  const quantities = {
+    plans: {},
+    delivery: {},
+    options: {},
+    tracks: {}
+  };
+
+  // 表示を更新(数量+カードのselected状態+optのactive)
+  function updateDisplay(key, value) {
+    const display = document.querySelector(`.qty[data-for="${key}"] .qty-value`);
+    if (display) {
+      display.textContent = value;
+      display.closest('.opt').classList.toggle('active', value > 0);
+    }
+    const card = document.querySelector(`.opt-card[data-plan="${key}"], .opt-card[data-delivery="${key}"], .opt-card[data-option="${key}"]`);
+    if (card) {
+      card.classList.toggle('selected', value > 0);
+    }
+  }
+
+  function changeQty(bucket, key, delta) {
+    quantities[bucket][key] = Math.max(0, (quantities[bucket][key] || 0) + delta);
+    updateDisplay(key, quantities[bucket][key]);
+    calculateEstimate();
+  }
+
+  // カードタップ = +1、qtyボタン = ±1(本番のtapXxx/changeXxxQtyと同挙動)
+  document.querySelectorAll('.opt').forEach(opt => {
+    const card = opt.querySelector('.opt-card');
+    const key = card.dataset.plan ?? card.dataset.delivery ?? card.dataset.option;
+    const bucket = card.dataset.plan !== undefined ? 'plans' : card.dataset.delivery !== undefined ? 'delivery' : 'options';
+    card.addEventListener('click', () => changeQty(bucket, key, 1));
+    opt.querySelector('.qty-btn.minus').addEventListener('click', e => { e.stopPropagation(); changeQty(bucket, key, -1); });
+    opt.querySelector('.qty-btn.plus').addEventListener('click', e => { e.stopPropagation(); changeQty(bucket, key, 1); });
+  });
+
+  // 見積金額計算(本番と同ロジック)
+  function calculateEstimate() {
+    let total = 0;
+    let hasVariable = false;
+
+    // プラン料金
+    const planPrices = { 'Short': 4000, 'One Chorus': 6000, 'Full Chorus': 10000 };
+    for (const [plan, qty] of Object.entries(quantities.plans)) {
+      if (qty > 0) {
+        total += (planPrices[plan] || 0) * qty;
+      }
+    }
+
+    // コラボ料金（プラン料金 × 追加人数）
+    const collabCount = quantities.options['コラボ'] || 0;
+    if (collabCount > 0) {
+      let planTotal = 0;
+      for (const [plan, qty] of Object.entries(quantities.plans)) {
+        if (qty > 0) planTotal += (planPrices[plan] || 0) * qty;
+      }
+      total += collabCount * planTotal;
+    }
+
+    // 納期オプション料金
+    for (const [delivery, qty] of Object.entries(quantities.delivery)) {
+      if (qty > 0) {
+        const card = document.querySelector(`.opt-card[data-delivery="${delivery}"]`);
+        if (card) {
+          const price = parseInt(card.getAttribute('data-price')) || 0;
+          total += price * qty;
+        }
+      }
+    }
+
+    // その他オプション料金（コラボは上で計算済みなのでスキップ）
+    for (const [option, qty] of Object.entries(quantities.options)) {
+      if (qty > 0 && option !== 'コラボ') {
+        const card = document.querySelector(`.opt-card[data-option="${option}"]`);
+        if (card) {
+          const price = parseInt(card.getAttribute('data-price')) || 0;
+          const isVariable = card.getAttribute('data-variable') === 'true';
+          total += price * qty;
+          if (isVariable) {
+            hasVariable = true;
+          }
+        }
+      }
+    }
+
+    const display = document.getElementById('estimateAmount');
+    if (total > 0) {
+      display.textContent = '¥' + total.toLocaleString() + (hasVariable ? '~' : '');
+    } else {
+      display.textContent = '¥0~';
+    }
+  }
+
+  // URLパラメータから選択状態を復元(price.html「依頼する」からの遷移用)
+  function restoreFromUrlParams() {
+    var search = window.location.search;
+    if (!search) {
+      return;
+    }
+
+    var urlParams = new URLSearchParams(search);
+    var planValue = urlParams.get('plan');
+    var deliveryValue = urlParams.get('delivery');
+    var optionsValue = urlParams.get('options');
+
+    // 数量付きフォーマットをパース（例: "Short x2, One Chorus x1"）
+    if (planValue) {
+      var planItems = planValue.split(',');
+      for (var i = 0; i < planItems.length; i++) {
+        var item = planItems[i].trim();
+        var match = item.match(/^(.+)\s+x(\d+)$/);
+        if (match) {
+          var name = match[1].trim();
+          var qty = parseInt(match[2]);
+          quantities.plans[name] = qty;
+          updateDisplay(name, qty);
+        } else if (item) {
+          // 旧フォーマット（数量なし）
+          quantities.plans[item] = 1;
+          updateDisplay(item, 1);
+        }
+      }
+    }
+
+    if (deliveryValue) {
+      var deliveryItems = deliveryValue.split(',');
+      for (var i = 0; i < deliveryItems.length; i++) {
+        var item = deliveryItems[i].trim();
+        var match = item.match(/^(.+)\s+x(\d+)$/);
+        if (match) {
+          var name = match[1].trim();
+          var qty = parseInt(match[2]);
+          // URLからは "2週間 x1" のような形式なので、standard-XXX/short-XXXのキーを探す
+          var deliveryCards = document.querySelectorAll('.opt-card[data-delivery]');
+          for (var j = 0; j < deliveryCards.length; j++) {
+            var cardDelivery = deliveryCards[j].getAttribute('data-delivery');
+            if (cardDelivery.endsWith(name)) {
+              quantities.delivery[cardDelivery] = qty;
+              updateDisplay(cardDelivery, qty);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if (optionsValue) {
+      var optionItems = optionsValue.split(',');
+      for (var i = 0; i < optionItems.length; i++) {
+        var item = optionItems[i].trim();
+        var match = item.match(/^(.+)\s+x(\d+)$/);
+        if (match) {
+          var name = match[1].trim();
+          var qty = parseInt(match[2]);
+          quantities.options[name] = qty;
+          updateDisplay(name, qty);
+        } else if (item) {
+          quantities.options[item] = 1;
+          updateDisplay(item, 1);
+        }
+      }
+    }
+
+    calculateEstimate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', restoreFromUrlParams);
+  } else {
+    restoreFromUrlParams();
+  }
+
+  // 選択データを文字列に変換
+  function getSelectedPlans() {
+    var plans = [];
+    for (var plan in quantities.plans) {
+      if (quantities.plans[plan] > 0) {
+        plans.push(plan + ' x' + quantities.plans[plan]);
+      }
+    }
+    return plans.join(', ');
+  }
+
+  function getSelectedDeliveries() {
+    var deliveries = [];
+    for (var delivery in quantities.delivery) {
+      if (quantities.delivery[delivery] > 0) {
+        var name = delivery.split('-').slice(1).join('-');
+        deliveries.push(name + ' x' + quantities.delivery[delivery]);
+      }
+    }
+
+    // 納期が未選択の場合、プランに応じてデフォルト値を設定
+    if (deliveries.length === 0) {
+      var shortCount = quantities.plans['Short'] || 0;
+      var oneChorusCount = quantities.plans['One Chorus'] || 0;
+      var fullChorusCount = quantities.plans['Full Chorus'] || 0;
+      var standardCount = oneChorusCount + fullChorusCount;
+
+      // One Chorus / Full Chorus がある場合は「2週間」をデフォルト
+      if (standardCount > 0) {
+        deliveries.push('2週間 x' + standardCount);
+      }
+      // Short がある場合は「3日」をデフォルト
+      if (shortCount > 0) {
+        deliveries.push('3日 x' + shortCount);
+      }
+    }
+
+    return deliveries.join(', ');
+  }
+
+  function getSelectedOptions() {
+    var options = [];
+    for (var option in quantities.options) {
+      if (quantities.options[option] > 0) {
+        options.push(option + ' x' + quantities.options[option]);
+      }
+    }
+    return options.join(', ');
+  }
+
+  // フォーム送信(本番と同処理: GASへno-cors POST)
+  document.getElementById('estimateForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // プランが選択されているかチェック
+    var selectedPlans = getSelectedPlans();
+    if (!selectedPlans) {
+      alert('プランを選択してください');
+      return;
+    }
+
+    var submitBtn = document.getElementById('submitBtn');
+    var uploadProgress = document.getElementById('uploadProgress');
+    var progressFill = document.getElementById('progressFill');
+    var progressText = document.getElementById('progressText');
+    var formMessage = document.getElementById('formMessage');
+
+    // UI更新
+    submitBtn.disabled = true;
+    submitBtn.firstChild.textContent = '送信中...';
+    uploadProgress.style.display = 'block';
+    formMessage.style.display = 'none';
+    progressFill.style.width = '30%';
+    progressText.textContent = '送信中...';
+
+    try {
+      var formData = new FormData(this);
+
+      progressFill.style.width = '50%';
+
+      // GASに送信
+      var response = await fetch(GAS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formInfo: {
+            name: formData.get('name'),
+            songName: formData.get('songName'),
+            plan: selectedPlans,
+            deliveryOption: getSelectedDeliveries(),
+            otherOptions: getSelectedOptions(),
+            fileUrl: formData.get('fileUrl') || '',
+            remarks: formData.get('remarks') || ''
+          }
+        })
+      });
+
+      progressFill.style.width = '100%';
+      progressText.textContent = '完了！';
+
+      // フォームリセット
+      document.getElementById('estimateForm').reset();
+      quantities.plans = {};
+      quantities.delivery = {};
+      quantities.options = {};
+      document.querySelectorAll('.qty-value').forEach(function(el) { el.textContent = '0'; });
+      document.querySelectorAll('.opt-card.selected').forEach(function(el) { el.classList.remove('selected'); });
+      document.querySelectorAll('.opt.active').forEach(function(el) { el.classList.remove('active'); });
+      calculateEstimate();
+
+      setTimeout(function() {
+        uploadProgress.style.display = 'none';
+        progressFill.style.width = '0%';
+      }, 1000);
+
+      setTimeout(function() {
+        openSubmitSuccessPopup();
+      }, 500);
+
+    } catch (error) {
+      console.error('送信エラー:', error);
+      formMessage.className = 'form-message error';
+      formMessage.textContent = '送信に失敗しました。もう一度お試しください。';
+      formMessage.style.display = 'block';
+      uploadProgress.style.display = 'none';
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.firstChild.textContent = '送信する';
+  });
+
+  // 送信完了ポップアップ
+  function openSubmitSuccessPopup() {
+    document.getElementById('submitSuccessPopup').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSubmitSuccessPopup(event) {
+    if (event && event.target !== event.currentTarget) return;
+    document.getElementById('submitSuccessPopup').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('submitSuccessPopup').addEventListener('click', closeSubmitSuccessPopup);
+  document.querySelectorAll('[data-close-success]').forEach(function(el) {
+    el.addEventListener('click', function() { closeSubmitSuccessPopup(); });
+  });
+
+  // Discord IDコピー
+  function copyDiscordId(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    var successPopup = document.getElementById('submitSuccessPopup');
+    if (successPopup) successPopup.classList.remove('active');
+    document.body.style.overflow = '';
+
+    var popup = document.getElementById('discordPopup');
+    function show() {
+      popup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    navigator.clipboard.writeText('.okazaki').then(show).catch(function() {
+      var tmp = document.createElement('textarea');
+      tmp.value = '.okazaki';
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand('copy');
+      document.body.removeChild(tmp);
+      show();
+    });
+  }
+  document.querySelectorAll('[data-discord-copy]').forEach(function(el) {
+    el.addEventListener('click', copyDiscordId);
+  });
+  function closeDiscordPopup() {
+    document.getElementById('discordPopup').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('discordPopup').addEventListener('click', function(e) {
+    if (e.target === this) closeDiscordPopup();
+  });
+  document.querySelectorAll('[data-close-discord]').forEach(function(el) {
+    el.addEventListener('click', closeDiscordPopup);
+  });
+
+  // Escapeでポップアップを閉じる
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeSubmitSuccessPopup();
+      closeDiscordPopup();
+    }
+  });
+</script>
 </body>
 </html>

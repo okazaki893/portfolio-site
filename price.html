@@ -1,588 +1,364 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Price</title>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VSVT7TT4R"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-0VSVT7TT4R');
-  </script>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <!-- OGP -->
-  <meta property="og:title" content="Price - Noumenon">
-  <meta property="og:description" content="料金表">
-  <meta property="og:image" content="https://noumenon.jp/OGP.png">
-  <meta property="og:url" content="https://noumenon.jp/price">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Price - Noumenon">
-  <meta name="twitter:description" content="料金表">
-  <meta name="twitter:image" content="https://noumenon.jp/OGP.png">
-  <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/price.css?v=20260412b">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price — NOUMENON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/StarShinesStill.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+  @font-face{
+    font-family:'Star Shines Still';
+    src:url('fonts/StarShinesStill.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal;
+  }
+  :root{
+    --bg:#0D0D0D;
+    --bg-2:#141414;
+    --ink:#F4F4F2;
+    --muted:#9C9C98;
+    --faint:#6C6C68;
+    --line:rgba(244,244,242,.14);
+    --gold:#F4F4F2;
+    --serif:'Shippori Mincho', serif;
+    --disp:'Cormorant Garamond', serif;
+    --gothic:'Zen Kaku Gothic New', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--gothic);
+    font-weight:300;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--ink);color:#0D0D0D}
+
+  /* atmospheric layers */
+  .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 90% at 78% 22%, rgba(244,244,242,.055), transparent 45%),
+               radial-gradient(120% 120% at 10% 100%, rgba(244,244,242,.03), transparent 46%);}
+  .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* custom cursor */
+  .cursor{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid rgba(242,236,226,.5);border-radius:50%;
+    transform:translate(-50%,-50%);z-index:100;pointer-events:none;transition:width .25s,height .25s,background .25s,border-color .25s;mix-blend-mode:difference}
+  .cursor.big{width:64px;height:64px;background:rgba(242,236,226,.12);border-color:transparent}
+  @media (hover:none){.cursor{display:none} body{cursor:auto}}
+
+  .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 clamp(22px,5vw,64px)}
+
+  /* header */
+  header{position:fixed;top:0;left:0;right:0;z-index:40;padding:22px clamp(22px,5vw,64px);
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(180deg,rgba(16,12,10,.82),transparent)}
+  .brand{font-family:'Star Shines Still','Times New Roman',Times,serif;font-size:22px;letter-spacing:4px}
+  nav{display:flex;gap:30px;font-family:var(--disp);font-size:15px;letter-spacing:.18em;text-transform:uppercase}
+  nav a{position:relative;color:var(--muted);transition:color .35s}
+  nav a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:1px;background:var(--gold);transition:width .35s}
+  nav a:hover{color:var(--ink)}nav a:hover::after{width:100%}
+  nav a.on{color:var(--ink)}
+  @media(max-width:720px){
+    .brand{font-size:17px;letter-spacing:3px}
+    nav{gap:13px;font-size:11px;letter-spacing:.1em}
+    nav a.hide-sp{display:none}
+  }
+  @media(max-width:460px){
+    header{padding:18px 16px}
+    .brand{font-size:14px;letter-spacing:2px}
+    nav{gap:10px;font-size:10px;letter-spacing:.06em}
+  }
+
+  /* page head */
+  .page-head{padding:158px 0 34px}
+  .eyebrow{font-family:var(--disp);font-style:italic;font-size:19px;letter-spacing:.12em;color:var(--muted);margin-bottom:18px}
+  .eyebrow .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--muted);vertical-align:middle;margin:0 12px 3px}
+  .page-head h1{font-family:var(--disp);font-weight:500;font-size:clamp(52px,9vw,104px);letter-spacing:.14em;
+    text-transform:uppercase;line-height:1.05;color:var(--ink)}
+  .page-head .sub{margin-top:18px;font-family:var(--serif);font-size:clamp(16px,2vw,20px);color:var(--ink);letter-spacing:.06em}
+  .page-head .lead{margin-top:10px;font-size:14px;color:var(--muted);max-width:36em;line-height:2.05}
+  @media(max-width:720px){.page-head{padding:126px 0 26px}}
+
+  /* sections */
+  section{padding:clamp(26px,3.4vw,44px) 0}
+  .label{font-family:var(--disp);font-style:italic;font-size:20px;color:var(--muted);letter-spacing:.08em;margin-bottom:8px}
+  .label .num{font-style:normal;font-size:13px;color:var(--faint);letter-spacing:.2em;margin-right:14px}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:34px;flex-wrap:wrap;gap:16px}
+  .sec-head h2{font-family:var(--disp);font-weight:500;font-size:clamp(28px,4.2vw,46px);color:var(--ink);letter-spacing:.16em;text-transform:uppercase;line-height:1.1}
+  .sec-head .jp{font-family:var(--serif);font-size:14px;color:var(--muted);letter-spacing:.1em;padding-bottom:6px}
+
+  /* plans */
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  @media(max-width:820px){.plans{grid-template-columns:1fr}}
+  .plan{position:relative;background:var(--bg);padding:36px 32px 32px;display:flex;flex-direction:column;gap:6px;transition:background .4s}
+  .plan:hover{background:var(--bg-2)}
+  .plan .k{font-family:var(--disp);font-style:italic;font-size:14px;color:var(--faint);letter-spacing:.12em;margin-bottom:10px}
+  .plan h3{font-family:var(--disp);font-weight:500;font-size:29px;color:var(--ink);letter-spacing:.08em;line-height:1.2}
+  .plan .amt{font-family:var(--disp);font-weight:500;font-size:clamp(46px,4.6vw,58px);color:var(--ink);letter-spacing:.03em;line-height:1.15;
+    font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1;margin-top:6px}
+  .plan .amt .yen{font-size:.44em;color:var(--muted);margin-right:.08em;vertical-align:.12em}
+  .plan .amt .tilde{font-size:.5em;color:var(--muted);margin-left:.06em}
+  .plan .due{margin-top:10px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--muted);letter-spacing:.08em}
+  .plan .due b{font-weight:400;color:var(--ink)}
+  .plan::before{content:attr(data-no);position:absolute;top:24px;right:28px;font-family:var(--disp);font-style:italic;
+    font-size:52px;color:rgba(244,244,242,.09);line-height:1}
+
+  /* included strip */
+  .included{margin-top:26px;border:1px solid var(--line);border-radius:2px;padding:20px 26px;
+    display:flex;align-items:baseline;gap:26px;flex-wrap:wrap}
+  .included .ik{font-family:var(--disp);font-style:italic;font-size:15px;color:var(--faint);letter-spacing:.1em;white-space:nowrap}
+  .included ul{display:flex;flex-wrap:wrap;gap:8px 0;list-style:none}
+  .included li{font-family:var(--serif);font-size:14px;color:var(--ink);letter-spacing:.06em;white-space:nowrap}
+  .included li+li::before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--faint);
+    vertical-align:middle;margin:0 16px 3px}
+
+  /* fine print */
+  .fine{margin-top:18px;font-size:12px;color:var(--faint);line-height:2.1;letter-spacing:.03em}
+  .fine p{padding-left:1.3em;text-indent:-1.3em}
+
+  /* info rows (subscribe / referral) */
+  .info-rows{margin-top:30px;border-top:1px solid var(--line)}
+  .info-row{display:flex;align-items:baseline;gap:20px;padding:16px 6px;border-bottom:1px solid var(--line);transition:background .3s}
+  .info-row:hover{background:var(--bg-2)}
+  .info-tag{font-family:var(--disp);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--line);border-radius:2px;padding:1px 12px;white-space:nowrap}
+  .info-text{font-size:13.5px;color:var(--muted);letter-spacing:.03em}
+  .info-text b{font-weight:400;color:var(--ink);font-family:var(--serif)}
+  .info-text .n{font-family:var(--disp);font-size:1.18em;color:var(--ink);letter-spacing:.04em;
+    font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+  @media(max-width:720px){.info-row{flex-wrap:wrap;gap:8px 14px}}
+
+  /* rate tables */
+  .tbl-group{margin-bottom:34px}
+  .tbl-group:last-child{margin-bottom:0}
+  .tbl-cap{font-family:var(--disp);font-style:italic;font-size:17px;color:var(--muted);letter-spacing:.08em;margin-bottom:10px}
+  .tbl-cap .base{font-style:normal;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-left:16px}
+  .rows{border-top:1px solid var(--line)}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:17px 6px;
+    border-bottom:1px solid var(--line);transition:background .3s}
+  .row:hover{background:var(--bg-2)}
+  .row .nm{font-family:var(--serif);font-size:15px;color:var(--ink);letter-spacing:.05em}
+  .row .nm small{display:block;font-family:var(--gothic);font-size:11.5px;color:var(--faint);letter-spacing:.03em;line-height:1.7;margin-top:2px}
+  .row .pr{font-family:var(--disp);font-weight:500;font-size:23px;color:var(--ink);letter-spacing:.04em;white-space:nowrap;
+    font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1}
+  .row .pr .sgn{font-size:.68em;color:var(--muted);margin-right:.1em}
+  .row .pr .tilde{font-size:.6em;color:var(--muted)}
+  .row .pr.zero{color:var(--muted)}
+  .row .pr .word{font-family:var(--serif);font-size:15px;letter-spacing:.05em}
+
+  /* CTA — index「Request」の移植 */
+  .cta{border:1px solid var(--line);border-radius:2px;padding:clamp(32px,4.5vw,52px);
+    display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;
+    transition:border-color .5s}
+  .cta:hover{border-color:rgba(244,244,242,.3)}
+  .cta-k{font-family:var(--disp);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+  .cta-h{font-family:var(--serif);font-weight:500;font-size:clamp(20px,2.6vw,30px);color:var(--ink);letter-spacing:.04em;margin-bottom:12px}
+  .cta-p{font-size:13px;color:var(--muted);letter-spacing:.04em}
+  .cta-btns{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:12px;padding:15px 26px;border:1px solid rgba(244,244,242,.45);border-radius:2px;
+    font-family:var(--gothic);font-size:13px;letter-spacing:.12em;color:var(--ink);
+    transition:background .35s,color .35s,border-color .35s,transform .35s cubic-bezier(.2,.7,.3,1)}
+  .btn .btn-arrow{font-family:var(--disp);transition:transform .35s}
+  .btn:hover{background:var(--ink);color:#0D0D0D;border-color:var(--ink)}
+  .btn:hover .btn-arrow{transform:translateX(4px)}
+  @media(max-width:820px){
+    .cta{flex-direction:column;align-items:flex-start}
+    .cta-btns{width:100%}
+    .btn{flex:1;justify-content:center}
+  }
+  @media(max-width:460px){
+    .cta-h{font-size:18px;letter-spacing:.02em}
+  }
+
+  footer{text-align:center;padding:44px 0 30px;color:var(--faint);font-family:'Star Shines Still','Times New Roman',Times,serif;letter-spacing:3px;font-size:15px}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .page-head .d1{transition-delay:.1s}.page-head .d2{transition-delay:.22s}.page-head .d3{transition-delay:.34s}.page-head .d4{transition-delay:.46s}
+</style>
 </head>
 <body>
-  <div class="price-page">
-    <!-- Hamburger Menu Button -->
-    <div class="hamburger-menu" onclick="toggleMobileMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
+<div class="glow"></div>
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-      <ul class="mobile-menu-list">
-        <li><a href="/">Top</a></li>
-        <li><a href="works">Works</a></li>
-        <li><a href="price" class="active">Price</a></li>
-        <li><a href="subscribe">Subscribe</a></li>
-        <li><a href="contact">Contact</a></li>
-      </ul>
-    </div>
+<header>
+  <a class="brand" href="index.html">NOUMENON</a>
+  <nav>
+    <a href="index.html" class="hide-sp">Index</a>
+    <a href="works.html">Works</a>
+    <a href="news.html">News</a>
+    <a href="contact.html" class="on">Contact</a>
+  </nav>
+</header>
 
-    <!-- Side menu -->
-    <nav class="side-menu">
-      <ul class="menu-list">
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="/" class="menu-link">Top</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="works" class="menu-link">Works</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet active"></span>
-          <span class="menu-line"></span>
-          <a href="price" class="menu-link active">Price</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <span class="menu-line"></span>
-          <a href="subscribe" class="menu-link">Subscribe</a>
-        </li>
-        <li class="menu-item">
-          <span class="menu-bullet"></span>
-          <a href="contact" class="menu-link">Contact</a>
-        </li>
-      </ul>
-      <!-- Social Links -->
-      <div class="social-icons">
-        <a href="https://x.com/okazaki_yuki01" target="_blank" class="social-link">X (main)</a>
-        <a href="https://x.com/DOSUKOI_JK" target="_blank" class="social-link">X (mix)</a>
-        <a href="#" class="social-link" onclick="copyDiscordId(event)">Discord</a>
-        <a href="https://okazakiyuki.booth.pm/" target="_blank" class="social-link">BOOTH</a>
-      </div>
-    </nav>
-
-    <!-- Animated gradient background -->
-    <div class="gradient-bg"></div>
-
-    <!-- Grid pattern overlay -->
-    <div class="grid-pattern"></div>
-
-    <!-- Floating orbs -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-    <!-- Main content -->
-    <div class="content">
-      <h1 class="page-title">PRICE</h1>
-      <p class="price-subtitle">歌ってみたMIX料金表</p>
-
-      <!-- サブスク誘導バナー -->
-      <a href="subscribe" class="subscribe-banner">
-        <span class="subscribe-banner-tag">NEW</span>
-        <span class="subscribe-banner-text">SHORT MIX サブスクプラン登場 — 月4本 ¥12,000〜</span>
-        <span class="subscribe-banner-arrow">→</span>
-      </a>
-
-      <!-- お友達紹介バナー -->
-      <a href="referral" class="subscribe-banner" style="margin-top: -20px;">
-        <span class="subscribe-banner-tag">紹介</span>
-        <span class="subscribe-banner-text">お友達紹介で双方 ¥1,000 OFF（サブスク加入者は ¥2,000 OFF）</span>
-        <span class="subscribe-banner-arrow">→</span>
-      </a>
-
-      <!-- 基本料金 -->
-      <div class="price-cards">
-        <!-- Short -->
-        <div class="price-card-wrapper">
-          <div class="price-card tap-select" data-plan="Short" data-price="4000" onclick="tapCard(this)">
-            <div class="card-header">
-              <span class="plan-name">Short</span>
-              <div class="price">
-                <span class="currency">¥</span>
-                <span class="amount">4,000</span>
-                <span class="period">~</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <ul class="features">
-                <li>基本納期: 3日</li>
-              </ul>
-            </div>
-          </div>
-          <div class="qty-display" data-for="Short">
-            <button type="button" class="qty-btn minus" onclick="changeQty('Short', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeQty('Short', 1, event)">+</button>
-          </div>
-        </div>
-
-        <!-- One Chorus -->
-        <div class="price-card-wrapper">
-          <div class="price-card tap-select" data-plan="One Chorus" data-price="6000" onclick="tapCard(this)">
-            <div class="card-header">
-              <span class="plan-name">One Chorus</span>
-              <div class="price">
-                <span class="currency">¥</span>
-                <span class="amount">6,000</span>
-                <span class="period">~</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <ul class="features">
-                <li>基本納期: 2週間</li>
-              </ul>
-            </div>
-          </div>
-          <div class="qty-display" data-for="One Chorus">
-            <button type="button" class="qty-btn minus" onclick="changeQty('One Chorus', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeQty('One Chorus', 1, event)">+</button>
-          </div>
-        </div>
-
-        <!-- Full Chorus -->
-        <div class="price-card-wrapper">
-          <div class="price-card tap-select" data-plan="Full Chorus" data-price="10000" onclick="tapCard(this)">
-            <div class="card-header">
-              <span class="plan-name">Full Chorus</span>
-              <div class="price">
-                <span class="currency">¥</span>
-                <span class="amount">10,000</span>
-                <span class="period">~</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <ul class="features">
-                <li>基本納期: 2週間</li>
-              </ul>
-            </div>
-          </div>
-          <div class="qty-display" data-for="Full Chorus">
-            <button type="button" class="qty-btn minus" onclick="changeQty('Full Chorus', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeQty('Full Chorus', 1, event)">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="price-note">
-        <p>※ すべてのプランにピッチ補正、タイミング補正、ハモリ生成、マスタリングが含まれています</p>
-        <p>※ ハモリ・ダブルはメインボーカル1ラインにつき最大+50%、掛け声・コーラスなどは最大+20%の追加料金が発生します（1人あたり上限150%）</p>
-      </div>
-
-      <!-- 納期短縮オプション -->
-      <h2 class="section-title">納期短縮オプション</h2>
-
-      <div class="option-section delivery-section" id="deliveryStandard">
-        <h3 class="option-subtitle">One Chorus / Full Chorus</h3>
-        <div class="option-cards delivery-options four-cols" data-for="standard">
-          <div class="option-card-wrapper">
-            <div class="option-card tap-select" data-delivery="standard-2週間" data-price="0" onclick="tapDelivery(this, 'standard')">
-              <span class="option-name">2週間</span>
-              <span class="option-price">¥0</span>
-            </div>
-            <div class="qty-display small" data-for="standard-2週間">
-              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-2週間', -1, event)">-</button>
-              <span class="qty-value">0</span>
-              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-2週間', 1, event)">+</button>
-            </div>
-          </div>
-          <div class="option-card-wrapper">
-            <div class="option-card tap-select" data-delivery="standard-1週間" data-price="2000" onclick="tapDelivery(this, 'standard')">
-              <span class="option-name">1週間</span>
-              <span class="option-price">+¥2,000</span>
-            </div>
-            <div class="qty-display small" data-for="standard-1週間">
-              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-1週間', -1, event)">-</button>
-              <span class="qty-value">0</span>
-              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-1週間', 1, event)">+</button>
-            </div>
-          </div>
-          <div class="option-card-wrapper">
-            <div class="option-card tap-select" data-delivery="standard-3日" data-price="4000" onclick="tapDelivery(this, 'standard')">
-              <span class="option-name">3日</span>
-              <span class="option-price">+¥4,000</span>
-            </div>
-            <div class="qty-display small" data-for="standard-3日">
-              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-3日', -1, event)">-</button>
-              <span class="qty-value">0</span>
-              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-3日', 1, event)">+</button>
-            </div>
-          </div>
-          <div class="option-card-wrapper">
-            <div class="option-card tap-select" data-delivery="standard-24時間以内" data-price="6000" onclick="tapDelivery(this, 'standard')">
-              <span class="option-name">24時間以内</span>
-              <span class="option-price">+¥6,000</span>
-            </div>
-            <div class="qty-display small" data-for="standard-24時間以内">
-              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('standard-24時間以内', -1, event)">-</button>
-              <span class="qty-value">0</span>
-              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('standard-24時間以内', 1, event)">+</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="option-section delivery-section" id="deliveryShort">
-        <h3 class="option-subtitle">Short</h3>
-        <div class="option-cards delivery-options" data-for="short">
-          <div class="option-card-wrapper">
-            <div class="option-card tap-select" data-delivery="short-3日" data-price="0" onclick="tapDelivery(this, 'short')">
-              <span class="option-name">3日</span>
-              <span class="option-price">¥0</span>
-            </div>
-            <div class="qty-display small" data-for="short-3日">
-              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-3日', -1, event)">-</button>
-              <span class="qty-value">0</span>
-              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-3日', 1, event)">+</button>
-            </div>
-          </div>
-          <div class="option-card-wrapper">
-            <div class="option-card tap-select" data-delivery="short-24時間以内" data-price="1000" onclick="tapDelivery(this, 'short')">
-              <span class="option-name">24時間以内</span>
-              <span class="option-price">+¥1,000</span>
-            </div>
-            <div class="qty-display small" data-for="short-24時間以内">
-              <button type="button" class="qty-btn minus" onclick="changeDeliveryQty('short-24時間以内', -1, event)">-</button>
-              <span class="qty-value">0</span>
-              <button type="button" class="qty-btn plus" onclick="changeDeliveryQty('short-24時間以内', 1, event)">+</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- その他オプション -->
-      <div class="option-section" style="margin-bottom: 0;">
-      <h3 class="option-subtitle">その他オプション</h3>
-      <div class="option-cards delivery-options four-cols">
-        <div class="option-card-wrapper">
-          <div class="option-card tap-select" data-option="コラボ" data-price="collab" onclick="tapOption(this)">
-            <span class="option-name">コラボ</span>
-            <span class="option-price">+1人分</span>
-          </div>
-          <div class="qty-display small" data-for="コラボ">
-            <button type="button" class="qty-btn minus" onclick="changeOptionQty('コラボ', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeOptionQty('コラボ', 1, event)">+</button>
-          </div>
-        </div>
-        <div class="option-card-wrapper">
-          <div class="option-card tap-select" data-option="カットアップ" data-price="2000" data-variable="true" onclick="tapOption(this)">
-            <span class="option-name">カットアップ</span>
-            <span class="option-price">¥2,000~</span>
-          </div>
-          <div class="qty-display small" data-for="カットアップ">
-            <button type="button" class="qty-btn minus" onclick="changeOptionQty('カットアップ', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeOptionQty('カットアップ', 1, event)">+</button>
-          </div>
-        </div>
-        <div class="option-card-wrapper">
-          <div class="option-card tap-select" data-option="エンコード" data-price="1000" onclick="tapOption(this)">
-            <span class="option-name">エンコード</span>
-            <span class="option-price">¥1,000</span>
-          </div>
-          <div class="qty-display small" data-for="エンコード">
-            <button type="button" class="qty-btn minus" onclick="changeOptionQty('エンコード', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeOptionQty('エンコード', 1, event)">+</button>
-          </div>
-        </div>
-        <div class="option-card-wrapper">
-          <div class="option-card tap-select" data-option="ハモリガイドメロ作成" data-price="3000" data-variable="true" onclick="tapOption(this)">
-            <span class="option-name">ハモリガイドメロ作成</span>
-            <span class="option-price">¥3,000~</span>
-          </div>
-          <div class="qty-display small" data-for="ハモリガイドメロ作成">
-            <button type="button" class="qty-btn minus" onclick="changeOptionQty('ハモリガイドメロ作成', -1, event)">-</button>
-            <span class="qty-value">0</span>
-            <button type="button" class="qty-btn plus" onclick="changeOptionQty('ハモリガイドメロ作成', 1, event)">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="price-note" style="margin-bottom: 0;">
-        <p>※ ハモリガイドメロ作成はハモリを歌唱したい方向けのオプションです（補正込み）</p>
-      </div>
-      </div>
-
-      <!-- 概算見積り金額表示 -->
-      <div class="estimate-total" id="estimateTotal">
-        <span class="estimate-label">概算見積り金額</span>
-        <span class="estimate-amount" id="estimateAmount">¥0~</span>
-      </div>
-      <p class="estimate-note">※ ハモリ等の追加トラックがある場合、工数に応じて料金が変動します</p>
-
-      <!-- 依頼するボタン -->
-      <div class="estimate-button-container">
-        <a href="contact" class="estimate-btn" id="estimateBtn">依頼する</a>
-      </div>
-    </div>
+<div class="wrap">
+  <div class="page-head">
+    <div class="eyebrow rv d1">Mix <span class="dot"></span> Price List</div>
+    <h1 class="rv d2">Price</h1>
+    <p class="sub rv d3">歌ってみたMIXの料金表です。</p>
+    <p class="lead rv d4">ハモリ等の追加トラックがある場合、工数に応じて料金が変動します。まずは楽曲の内容とあわせてご相談ください。</p>
   </div>
 
-  <script>
-    // 数量データを保持
-    const quantities = {
-      plans: {},
-      delivery: {},
-      options: {},
-      tracks: {}
-    };
-
-    // プランカードをタップ
-    function tapCard(card) {
-      const plan = card.getAttribute('data-plan');
-      quantities.plans[plan] = (quantities.plans[plan] || 0) + 1;
-      updateDisplay(plan, quantities.plans[plan], '.price-card');
-      calculateEstimate();
-    }
-
-    // プラン数量変更
-    function changeQty(plan, delta, event) {
-      event.stopPropagation();
-      quantities.plans[plan] = Math.max(0, (quantities.plans[plan] || 0) + delta);
-      updateDisplay(plan, quantities.plans[plan], '.price-card');
-      calculateEstimate();
-    }
-
-    // 納期カードをタップ
-    function tapDelivery(card, type) {
-      const delivery = card.getAttribute('data-delivery');
-      quantities.delivery[delivery] = (quantities.delivery[delivery] || 0) + 1;
-      updateDisplay(delivery, quantities.delivery[delivery], '.option-card');
-      calculateEstimate();
-    }
-
-    // 納期数量変更
-    function changeDeliveryQty(delivery, delta, event) {
-      event.stopPropagation();
-      quantities.delivery[delivery] = Math.max(0, (quantities.delivery[delivery] || 0) + delta);
-      updateDisplay(delivery, quantities.delivery[delivery], '.option-card');
-      calculateEstimate();
-    }
-
-    // オプションカードをタップ
-    function tapOption(card) {
-      const option = card.getAttribute('data-option');
-      quantities.options[option] = (quantities.options[option] || 0) + 1;
-      updateDisplay(option, quantities.options[option], '.option-card');
-      calculateEstimate();
-    }
-
-    // オプション数量変更
-    function changeOptionQty(option, delta, event) {
-      event.stopPropagation();
-      quantities.options[option] = Math.max(0, (quantities.options[option] || 0) + delta);
-      updateDisplay(option, quantities.options[option], '.option-card');
-      calculateEstimate();
-    }
-
-    // 表示を更新
-    function updateDisplay(key, value, cardSelector) {
-      const display = document.querySelector(`.qty-display[data-for="${key}"] .qty-value`);
-      if (display) {
-        display.textContent = value;
-      }
-      // カードのselected状態を更新
-      const card = document.querySelector(`${cardSelector}[data-plan="${key}"], ${cardSelector}[data-delivery="${key}"], ${cardSelector}[data-option="${key}"]`);
-      if (card) {
-        if (value > 0) {
-          card.classList.add('selected');
-        } else {
-          card.classList.remove('selected');
-        }
-      }
-    }
-
-    // 見積金額計算
-    function calculateEstimate() {
-      let total = 0;
-      let hasVariable = false;
-
-      // プラン料金
-      const planPrices = { 'Short': 4000, 'One Chorus': 6000, 'Full Chorus': 10000 };
-      for (const [plan, qty] of Object.entries(quantities.plans)) {
-        if (qty > 0) {
-          total += (planPrices[plan] || 0) * qty;
-        }
-      }
-
-      // コラボ料金（プラン料金 × 追加人数）
-      const collabCount = quantities.options['コラボ'] || 0;
-      if (collabCount > 0) {
-        let planTotal = 0;
-        for (const [plan, qty] of Object.entries(quantities.plans)) {
-          if (qty > 0) planTotal += (planPrices[plan] || 0) * qty;
-        }
-        total += collabCount * planTotal;
-      }
-
-      // 納期オプション料金
-      for (const [delivery, qty] of Object.entries(quantities.delivery)) {
-        if (qty > 0) {
-          const card = document.querySelector(`.option-card[data-delivery="${delivery}"]`);
-          if (card) {
-            const price = parseInt(card.getAttribute('data-price')) || 0;
-            total += price * qty;
-          }
-        }
-      }
-
-      // その他オプション料金（コラボは上で計算済みなのでスキップ）
-      for (const [option, qty] of Object.entries(quantities.options)) {
-        if (qty > 0 && option !== 'コラボ') {
-          const card = document.querySelector(`.option-card[data-option="${option}"]`);
-          if (card) {
-            const price = parseInt(card.getAttribute('data-price')) || 0;
-            const isVariable = card.getAttribute('data-variable') === 'true';
-            total += price * qty;
-            if (isVariable) {
-              hasVariable = true;
-            }
-          }
-        }
-      }
-
-      // 表示更新
-      const display = document.getElementById('estimateAmount');
-      if (total > 0) {
-        display.textContent = '¥' + total.toLocaleString() + (hasVariable ? '~' : '');
-      } else {
-        display.textContent = '¥0~';
-      }
-    }
-
-    // 依頼するボタンのリンクを動的に変更
-    document.getElementById('estimateBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-
-      // 選択されたプランを収集
-      const plans = [];
-      for (const [plan, qty] of Object.entries(quantities.plans)) {
-        if (qty > 0) {
-          plans.push(plan + ' x' + qty);
-        }
-      }
-
-      // 選択された納期を収集
-      const deliveries = [];
-      for (const [delivery, qty] of Object.entries(quantities.delivery)) {
-        if (qty > 0) {
-          // "standard-2週間" -> "2週間" のように変換
-          const name = delivery.split('-').slice(1).join('-');
-          deliveries.push(name + ' x' + qty);
-        }
-      }
-
-      // 選択されたオプションを収集
-      const options = [];
-      for (const [option, qty] of Object.entries(quantities.options)) {
-        if (qty > 0) {
-          options.push(option + ' x' + qty);
-        }
-      }
-
-      var params = new URLSearchParams();
-      if (plans.length > 0) {
-        params.append('plan', plans.join(', '));
-      }
-      if (deliveries.length > 0) {
-        params.append('delivery', deliveries.join(', '));
-      }
-      if (options.length > 0) {
-        params.append('options', options.join(', '));
-      }
-
-      // 見積もり金額も追加
-      const estimateAmount = document.getElementById('estimateAmount').textContent;
-      params.append('estimate', estimateAmount);
-
-      var queryString = params.toString();
-      var url = 'contact.html' + (queryString ? '?' + queryString : '');
-
-      window.location.href = url;
-    });
-
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-      const hamburger = document.querySelector('.hamburger-menu');
-      const overlay = document.getElementById('mobileMenuOverlay');
-      hamburger.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-  </script>
-
-  <!-- Discord Copy Popup -->
-  <div class="discord-popup-overlay" id="discordPopup" style="display:none;">
-    <div class="discord-popup">
-      <div class="discord-popup-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+  <section id="plans">
+    <div class="sec-head rv">
+      <div>
+        <div class="label"><span class="num">01</span>Base</div>
+        <h2>Plans</h2>
       </div>
-      <div class="discord-popup-check">&#10003;</div>
-      <div class="discord-popup-title">Discord IDをコピーしました</div>
-      <div class="discord-popup-id">.okazaki</div>
-      <p class="discord-popup-message">フレンド申請やDMを送る際にお使いください</p>
-      <div class="discord-popup-actions">
-        <a href="https://discord.com/users/528093170484117518" target="_blank" class="discord-popup-btn open-discord">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-          Discordを開く
-        </a>
-        <button class="discord-popup-btn close-popup" onclick="closeDiscordPopup()">閉じる</button>
+      <div class="jp">基本料金</div>
+    </div>
+    <div class="plans rv">
+      <div class="plan" data-no="S">
+        <span class="k">Plan</span>
+        <h3>Short</h3>
+        <div class="amt"><span class="yen">&yen;</span>4,000<span class="tilde">&#12316;</span></div>
+        <div class="due">基本納期：<b>3日</b></div>
+      </div>
+      <div class="plan" data-no="O">
+        <span class="k">Plan</span>
+        <h3>One Chorus</h3>
+        <div class="amt"><span class="yen">&yen;</span>6,000<span class="tilde">&#12316;</span></div>
+        <div class="due">基本納期：<b>2週間</b></div>
+      </div>
+      <div class="plan" data-no="F">
+        <span class="k">Plan</span>
+        <h3>Full Chorus</h3>
+        <div class="amt"><span class="yen">&yen;</span>10,000<span class="tilde">&#12316;</span></div>
+        <div class="due">基本納期：<b>2週間</b></div>
       </div>
     </div>
-  </div>
+    <div class="included rv">
+      <span class="ik">All plans include</span>
+      <ul>
+        <li>ピッチ補正</li>
+        <li>タイミング補正</li>
+        <li>ハモリ生成</li>
+        <li>マスタリング</li>
+      </ul>
+    </div>
+    <div class="fine rv">
+      <p>※すべてのプランにピッチ補正、タイミング補正、ハモリ生成、マスタリングが含まれています</p>
+      <p>※ハモリ・ダブルはメインボーカル1ラインにつき最大+50%、掛け声・コーラスなどは最大+20%の追加料金が発生します（1人あたり上限150%）</p>
+    </div>
+    <div class="info-rows rv">
+      <div class="info-row">
+        <span class="info-tag">New</span>
+        <span class="info-text"><b>SHORT MIX サブスクプラン</b>登場 — 月4本<span class="n">&yen;12,000</span>〜</span>
+      </div>
+      <div class="info-row">
+        <span class="info-tag">紹介</span>
+        <span class="info-text">お友達紹介で双方<span class="n">&yen;1,000</span>OFF（サブスク加入者は<span class="n">&yen;2,000</span>OFF）</span>
+      </div>
+    </div>
+  </section>
 
-  <script>
-    function copyDiscordId(e) {
-      e.preventDefault();
-      var popup = document.getElementById('discordPopup');
-      navigator.clipboard.writeText('.okazaki').then(function() {
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
-      }).catch(function() {
-        var tmp = document.createElement('textarea');
-        tmp.value = '.okazaki';
-        document.body.appendChild(tmp);
-        tmp.select();
-        document.execCommand('copy');
-        document.body.removeChild(tmp);
-        popup.style.display = 'flex';
-        requestAnimationFrame(function() { popup.classList.add('active'); });
+  <section id="delivery">
+    <div class="sec-head rv">
+      <div>
+        <div class="label"><span class="num">02</span>Express</div>
+        <h2>Delivery</h2>
+      </div>
+      <div class="jp">納期短縮オプション</div>
+    </div>
+    <div class="tbl-group rv">
+      <div class="tbl-cap">One Chorus / Full Chorus<span class="base">Base 2週間</span></div>
+      <div class="rows">
+        <div class="row"><span class="nm">2週間</span><span class="pr zero"><span class="sgn">&yen;</span>0</span></div>
+        <div class="row"><span class="nm">1週間</span><span class="pr"><span class="sgn">+&yen;</span>2,000</span></div>
+        <div class="row"><span class="nm">3日</span><span class="pr"><span class="sgn">+&yen;</span>4,000</span></div>
+        <div class="row"><span class="nm">24時間以内</span><span class="pr"><span class="sgn">+&yen;</span>6,000</span></div>
+      </div>
+    </div>
+    <div class="tbl-group rv">
+      <div class="tbl-cap">Short<span class="base">Base 3日</span></div>
+      <div class="rows">
+        <div class="row"><span class="nm">3日</span><span class="pr zero"><span class="sgn">&yen;</span>0</span></div>
+        <div class="row"><span class="nm">24時間以内</span><span class="pr"><span class="sgn">+&yen;</span>1,000</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="options">
+    <div class="sec-head rv">
+      <div>
+        <div class="label"><span class="num">03</span>Add-on</div>
+        <h2>Options</h2>
+      </div>
+      <div class="jp">その他オプション</div>
+    </div>
+    <div class="rows rv">
+      <div class="row"><span class="nm">コラボ</span><span class="pr"><span class="word">+1人分</span></span></div>
+      <div class="row"><span class="nm">カットアップ</span><span class="pr"><span class="sgn">&yen;</span>2,000<span class="tilde">&#12316;</span></span></div>
+      <div class="row"><span class="nm">エンコード</span><span class="pr"><span class="sgn">&yen;</span>1,000</span></div>
+      <div class="row">
+        <span class="nm">ハモリガイドメロ作成<small>ハモリを歌唱したい方向けのオプションです（補正込み）</small></span>
+        <span class="pr"><span class="sgn">&yen;</span>3,000<span class="tilde">&#12316;</span></span>
+      </div>
+    </div>
+    <div class="fine rv">
+      <p>※ハモリ等の追加トラックがある場合、工数に応じて料金が変動します</p>
+    </div>
+  </section>
+
+  <section id="request">
+    <div class="cta rv">
+      <div class="cta-left">
+        <div class="cta-k">Request</div>
+        <h2 class="cta-h">MIXのご依頼、承っています。</h2>
+        <p class="cta-p">プランや納期のご相談も含めて、お問い合わせフォームからお気軽にどうぞ。</p>
+      </div>
+      <div class="cta-btns">
+        <a class="btn" href="contact.html">依頼はこちら<span class="btn-arrow">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>NOUMENON</footer>
+
+<script>
+  const cur=document.getElementById('cursor');
+  window.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+  document.querySelectorAll('a,.plan,.row,.info-row').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+
+  // マグネティックボタン(indexと同作法・reduced-motion時は無効)
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('.btn').forEach(b=>{
+      b.addEventListener('mousemove',e=>{
+        const r=b.getBoundingClientRect();
+        const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+        b.style.transform=`translate(${dx*.18}px,${dy*.3}px)`;
       });
-    }
-
-    function closeDiscordPopup() {
-      var popup = document.getElementById('discordPopup');
-      popup.classList.remove('active');
-      setTimeout(function() { popup.style.display = 'none'; }, 300);
-    }
-
-    document.getElementById('discordPopup').addEventListener('click', function(e) {
-      if (e.target === this) closeDiscordPopup();
+      b.addEventListener('mouseleave',()=>{b.style.transform='';});
     });
-  </script>
+  }
+
+  // reveal + ?still(検証用: 即時in・transition無効)
+  const STILL=new URLSearchParams(location.search).has('still');
+  const io=new IntersectionObserver((es)=>{es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.15});
+  if(STILL){
+    const ns=document.createElement('style');
+    ns.textContent='.rv{transition:none!important}';
+    document.head.appendChild(ns);
+    document.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
+  }else{
+    document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+  }
+</script>
 </body>
 </html>
