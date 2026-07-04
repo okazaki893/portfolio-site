@@ -188,6 +188,32 @@
     transition:transform .55s cubic-bezier(.2,.7,.2,1)}
   .card:hover .u{transform:scaleX(1)}
 
+  /* works carousel — 横スクロール(スナップ)。縦に伸ばさず枠を増やす */
+  .sec-head-r{display:flex;align-items:center;gap:20px}
+  .rail-ctrls{display:flex;gap:9px}
+  .rail-nav{width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);
+    font-family:var(--disp);font-size:24px;line-height:1;cursor:pointer;
+    transition:border-color .3s,color .3s,background .3s,opacity .3s}
+  .rail-nav:hover{border-color:rgba(244,244,242,.5);background:rgba(244,244,242,.05)}
+  .rail-nav:disabled{opacity:.28;cursor:default}
+  .rail-nav span{display:block;transform:translateY(-1px)}
+  .works-carousel{position:relative}
+  .works-rail{display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;
+    scroll-behavior:smooth;padding-bottom:4px;scrollbar-width:none;-ms-overflow-style:none}
+  .works-rail::-webkit-scrollbar{display:none}
+  .works-rail>.card{flex:0 0 auto;width:calc((100% - 4 * 18px) / 5);scroll-snap-align:start}
+  .works-carousel::after{content:'';position:absolute;top:0;right:0;width:60px;bottom:4px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--bg));transition:opacity .35s}
+  .works-carousel.at-end::after{opacity:0}
+  @media(max-width:820px){
+    .rail-ctrls{display:none}
+    .sec-head-r{width:100%;justify-content:flex-end;gap:0}
+    .works-rail{gap:14px}
+    .works-rail>.card{width:74%}
+    .works-carousel::after{width:38px}
+  }
+
   /* news — Works追加を自動記録する罫線リスト */
   .news-row{display:flex;align-items:baseline;gap:28px;padding:22px 6px;border-bottom:1px solid var(--line);transition:background .3s}
   .news-row:hover{background:var(--bg-2)}
@@ -323,9 +349,17 @@
         <div class="label"><span class="num">02</span></div>
         <h2>Selected Works</h2>
       </div>
-      <a href="works" class="more" style="margin:0">View all <span>&rarr;</span></a>
+      <div class="sec-head-r">
+        <div class="rail-ctrls">
+          <button class="rail-nav rail-prev" type="button" aria-label="前の作品へ"><span>&lsaquo;</span></button>
+          <button class="rail-nav rail-next" type="button" aria-label="次の作品へ"><span>&rsaquo;</span></button>
+        </div>
+        <a href="works" class="more" style="margin:0">View all <span>&rarr;</span></a>
+      </div>
     </div>
-    <div class="grid" id="worksGrid"></div>
+    <div class="works-carousel">
+      <div class="works-rail" id="worksGrid"></div>
+    </div>
   </section>
 
   <section id="news">
@@ -1915,33 +1949,12 @@
     for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
     return a;
   }
-  // レイアウト5パターン(12カラム/明示配置)。k: feat=大枠 wide=全幅21:9 half=中枠 sm=小
-  const PATTERNS=[
-    {name:'feat-left',slots:[
-      {k:'feat',c:'1/9',r:'1/3'},{k:'sm',c:'9/13',r:'1/2'},{k:'sm',c:'9/13',r:'2/3'},
-      {k:'sm',c:'1/5',r:'3/4'},{k:'sm',c:'5/9',r:'3/4'},{k:'sm',c:'9/13',r:'3/4'}]},
-    {name:'feat-right',slots:[
-      {k:'feat',c:'5/13',r:'1/3'},{k:'sm',c:'1/5',r:'1/2'},{k:'sm',c:'1/5',r:'2/3'},
-      {k:'sm',c:'1/5',r:'3/4'},{k:'sm',c:'5/9',r:'3/4'},{k:'sm',c:'9/13',r:'3/4'}]},
-    {name:'twin',slots:[
-      {k:'half',c:'1/7',r:'1/2'},{k:'half',c:'7/13',r:'1/2'},
-      {k:'sm',c:'1/5',r:'2/3'},{k:'sm',c:'5/9',r:'2/3'},{k:'sm',c:'9/13',r:'2/3'}]},
-    {name:'cinema',slots:[
-      {k:'wide',c:'1/13',r:'1/2'},
-      {k:'sm',c:'1/4',r:'2/3'},{k:'sm',c:'4/7',r:'2/3'},{k:'sm',c:'7/10',r:'2/3'},{k:'sm',c:'10/13',r:'2/3'}]},
-    {name:'mosaic',slots:[
-      {k:'sm',c:'1/5',r:'1/2'},{k:'sm',c:'5/9',r:'1/2'},{k:'sm',c:'9/13',r:'1/2'},
-      {k:'feat',c:'1/9',r:'2/4'},{k:'sm',c:'9/13',r:'2/3'},{k:'sm',c:'9/13',r:'3/4'}]}
-  ];
+  // 均一カード(サムネ16:9 + タイトル/役割)。横スクロールのカルーセルに並べる
   function buildCard(w,i){
-    const slot=w.slot;
-    const isOv=slot.k!=='sm';
     const a=document.createElement('a');
-    a.className='card rv'+(isOv?' card--ov card--'+slot.k:' card--sm')+(STILL?' in':'');
+    a.className='card rv'+(STILL?' in':'');
     a.href=w.link;a.target='_blank';a.rel='noopener';
-    a.style.gridColumn=slot.c;
-    a.style.gridRow=slot.r;
-    a.style.transitionDelay=(i*70)+'ms';
+    a.style.transitionDelay=(i*55)+'ms';
     const frame=document.createElement('div');
     frame.className='frame';
     if(w.img){
@@ -1964,45 +1977,60 @@
       ph.innerHTML='<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>';
       frame.appendChild(ph);
     }
+    a.appendChild(frame);
+    const meta=document.createElement('div');
+    meta.className='meta';
     const t=document.createElement('div');t.className='t';t.textContent=w.title;
     const r=document.createElement('div');r.className='r';r.textContent=w.role;
-    if(isOv){
-      const ovl=document.createElement('div');
-      ovl.className='ovl';ovl.append(t,r);
-      frame.appendChild(ovl);
-      a.appendChild(frame);
-    }else{
-      a.appendChild(frame);
-      const meta=document.createElement('div');
-      meta.className='meta';
-      const u=document.createElement('div');u.className='u';
-      meta.append(t,r,u);
-      a.appendChild(meta);
-    }
+    const u=document.createElement('div');u.className='u';
+    meta.append(t,r,u);
+    a.appendChild(meta);
     return a;
   }
-  async function renderWorks(patternIndex){
-    const grid=document.getElementById('worksGrid');
+  // 固定作品(works_fixed)とMIX(videos)を統合し、追加日の新しい順に最大15件。
+  // TOPではショート(TikTok含む)は除外。プロデュース/LIVEを常に上に固定しない。
+  const WORKS_MAX=15;
+  async function renderWorks(){
+    const rail=document.getElementById('worksGrid');
+    if(!rail) return;
     const [pool,FIXED_WORKS]=await Promise.all([loadPool(),loadFixed()]);
-    const pattern=PATTERNS[patternIndex??Math.floor(Math.random()*PATTERNS.length)];
-    grid.dataset.pattern=pattern.name;
-    const ovSlots=pattern.slots.filter(s=>s.k!=='sm');
-    const smSlots=pattern.slots.filter(s=>s.k==='sm');
-    const need=ovSlots.length+Math.max(0,smSlots.length-FIXED_WORKS.length);
-    const mixes=shuffle(pool.filter(v=>v.platform!=='tiktok'&&!v.isShort&&ytId(v)))
-      .slice(0,need)
-      .map(v=>({role:'Mix',title:v.title,link:/^https?:/.test(v.link)?v.link:'https://'+v.link,id:ytId(v)}));
-    // 大枠(サムネ必須)→MIX、末尾の小枠→固定2件(TRANSITION/YMW)
-    ovSlots.forEach(s=>s.work=mixes.shift());
-    smSlots.forEach((s,i)=>{
-      const fixedStart=smSlots.length-FIXED_WORKS.length;
-      s.work=i>=fixedStart?FIXED_WORKS[i-fixedStart]:mixes.shift();
-    });
-    const works=pattern.slots.filter(s=>s.work).map(s=>({...s.work,slot:s}));
-    grid.replaceChildren(...works.map(buildCard));
+    const fromFixed=(Array.isArray(FIXED_WORKS)?FIXED_WORKS:[]).map(w=>({
+      role:w.role,title:w.title,link:w.link,id:w.id||null,img:w.img||null,added:w.added||''
+    }));
+    const fromMix=(Array.isArray(pool)?pool:[])
+      .filter(v=>v.platform!=='tiktok'&&!v.isShort&&ytId(v))
+      .map(v=>({role:'Mix',title:v.title,link:/^https?:/.test(v.link)?v.link:'https://'+v.link,id:ytId(v),img:null,added:v.added||''}));
+    const seen=new Set();
+    const works=[...fromFixed,...fromMix]
+      .filter(w=>{const k=w.id?('id:'+w.id):('t:'+w.title);if(seen.has(k))return false;seen.add(k);return true;})
+      .sort((a,b)=>(b.added||'').localeCompare(a.added||''))
+      .slice(0,WORKS_MAX);
+    rail.replaceChildren(...works.map(buildCard));
     if(ioStarted) observeAll();
+    initRail();
   }
   renderWorks();
+
+  // カルーセル操作: 前後ボタン・右端フェード・ボタンの活性/非活性
+  function initRail(){
+    const rail=document.getElementById('worksGrid');
+    if(!rail) return;
+    const carousel=rail.closest('.works-carousel');
+    const prev=document.querySelector('.rail-prev');
+    const next=document.querySelector('.rail-next');
+    const stepPx=()=>Math.max(240,rail.clientWidth*0.85);
+    const update=()=>{
+      const max=rail.scrollWidth-rail.clientWidth-2;
+      const x=rail.scrollLeft;
+      if(carousel) carousel.classList.toggle('at-end',x>=max);
+      if(prev) prev.disabled=x<=2;
+      if(next) next.disabled=x>=max;
+    };
+    if(prev&&!prev.dataset.wired){prev.dataset.wired='1';prev.addEventListener('click',()=>rail.scrollBy({left:-stepPx(),behavior:'smooth'}));}
+    if(next&&!next.dataset.wired){next.dataset.wired='1';next.addEventListener('click',()=>rail.scrollBy({left:stepPx(),behavior:'smooth'}));}
+    if(!rail.dataset.wired){rail.dataset.wired='1';rail.addEventListener('scroll',update,{passive:true});window.addEventListener('resize',update);}
+    update();
+  }
 
   // NEWS: 追加日(added)を持つ作品から自動生成。作品を追加すれば自動で記録される
   function fmtDate(d){return d.replaceAll('-','.');}
