@@ -2031,7 +2031,7 @@
     const list=document.getElementById('newsList');
     if(!list) return;
     const [pool,FIXED_WORKS]=await Promise.all([loadPool(),loadFixed()]);
-    const fromWorks=(Array.isArray(pool)?pool:[]).filter(v=>v.added).map(v=>({
+    const fromWorks=(Array.isArray(pool)?pool:[]).filter(v=>v.added&&!v.isShort).map(v=>({
       role:'Mix',title:v.title,date:v.added,
       link:/^https?:/.test(v.link||'')?v.link:'https://'+(v.link||'')
     }));

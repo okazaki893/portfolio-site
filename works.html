@@ -361,13 +361,15 @@
       title:v.title,
       link:normLink(v.link),
       id:ytId(v),
-      thumb:v.customThumbnail||null
+      thumb:v.customThumbnail||null,
+      added:v.added||''
     }));
     // works_fixed側は 新cats配列 / 旧cat単一 の両対応で正規化
     const fixed=(Array.isArray(fixedPool)?fixedPool:[]).map(w=>Object.assign({},w,{
       cats:(Array.isArray(w.cats)&&w.cats.length)?w.cats:(w.cat?[w.cat]:[])
     }));
-    const works=[...fixed,...mixes];
+    // 追加日(added)の新しい順に並べる。added無しは従来の並びのまま末尾へ(安定ソート)
+    const works=[...fixed,...mixes].sort((a,b)=>(b.added||'').localeCompare(a.added||''));
     if(works.length===0){
       const p=document.createElement('p');
       p.className='empty';p.textContent='No works yet.';
