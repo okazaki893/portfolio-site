@@ -2026,11 +2026,12 @@
   }
   renderWorks();
 
-  // カルーセル操作: 1面ずつ送る前後ボタン・右端フェード・ページ表示(01 / 05)
+  // カルーセル操作: 1面ずつ送る前後ボタン・右端フェード・ページ表示(01 / 05)・自動送り
   function initRail(nSec){
     const rail=document.getElementById('worksGrid');
     if(!rail) return;
     const carousel=rail.closest('.works-carousel');
+    const section=document.getElementById('works')||carousel;
     const prev=document.querySelector('.rail-prev');
     const next=document.querySelector('.rail-next');
     const pageno=document.getElementById('railPageno');
@@ -2046,14 +2047,43 @@
         pageno.textContent=String(cur).padStart(2,'0')+' / '+String(nSec).padStart(2,'0');
       }
     };
-    if(prev&&!prev.dataset.wired){prev.dataset.wired='1';prev.addEventListener('click',()=>rail.scrollBy({left:-stepPx(),behavior:'smooth'}));}
-    if(next&&!next.dataset.wired){next.dataset.wired='1';next.addEventListener('click',()=>rail.scrollBy({left:stepPx(),behavior:'smooth'}));}
-    if(!rail.dataset.wired){rail.dataset.wired='1';rail.addEventListener('scroll',update,{passive:true});window.addEventListener('resize',update);}
+    // 自動送り: 5.5秒ごとに次面へ、末尾で先頭へループ。
+    // ホバー/操作中・画面外・prefers-reduced-motion・?still では動かさない
+    const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const AUTO_MS=5500;
+    let autoT=null,hovered=false,visible=true;
+    const canAuto=()=>!reduce&&!STILL&&nSec>1;
+    const advance=()=>{
+      const max=rail.scrollWidth-rail.clientWidth-2;
+      if(rail.scrollLeft>=max) rail.scrollTo({left:0,behavior:'smooth'});
+      else rail.scrollBy({left:stepPx(),behavior:'smooth'});
+    };
+    const startAuto=()=>{
+      if(autoT){clearTimeout(autoT);autoT=null;}
+      if(!canAuto())return;
+      autoT=setTimeout(()=>{if(visible&&!hovered)advance();startAuto();},AUTO_MS);
+    };
+    if(prev&&!prev.dataset.wired){prev.dataset.wired='1';prev.addEventListener('click',()=>{rail.scrollBy({left:-stepPx(),behavior:'smooth'});startAuto();});}
+    if(next&&!next.dataset.wired){next.dataset.wired='1';next.addEventListener('click',()=>{rail.scrollBy({left:stepPx(),behavior:'smooth'});startAuto();});}
+    if(!rail.dataset.wired){
+      rail.dataset.wired='1';
+      rail.addEventListener('scroll',update,{passive:true});
+      window.addEventListener('resize',update);
+      section.addEventListener('mouseenter',()=>{hovered=true;});
+      section.addEventListener('mouseleave',()=>{hovered=false;startAuto();});
+      rail.addEventListener('pointerdown',()=>{hovered=true;});
+      rail.addEventListener('pointerup',()=>{hovered=false;startAuto();});
+      rail.addEventListener('wheel',()=>{startAuto();},{passive:true});
+      if('IntersectionObserver' in window && carousel){
+        new IntersectionObserver((es)=>{es.forEach(e=>{visible=e.isIntersecting;});},{threshold:0.2}).observe(carousel);
+      }
+    }
     // 1面のみなら操作系とページ表示を隠す
     const ctrls=prev?prev.parentElement:null;
     if(ctrls)ctrls.style.display=nSec>1?'':'none';
     if(pageno)pageno.style.display=nSec>1?'':'none';
     update();
+    startAuto();
   }
 
   // NEWS: 追加日(added)を持つ作品から自動生成。作品を追加すれば自動で記録される
