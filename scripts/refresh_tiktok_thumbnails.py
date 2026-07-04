@@ -52,6 +52,12 @@ def main() -> int:
         link = video.get("link")
         if not link:
             continue
+        # ローカル画像に固定したサムネ(images/... 等の非HTTPパス)は
+        # 期限切れしないので oEmbed 更新の対象外にする(上書き防止)。
+        ct = video.get("customThumbnail", "")
+        if ct and not ct.startswith("http"):
+            print(f"[{idx}] {video.get('title', '?')[:50]} -> pinned local thumbnail, skip")
+            continue
         print(f"[{idx}] {video.get('title', '?')[:50]}")
         data = fetch_oembed(link)
         if not data:
