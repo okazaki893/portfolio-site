@@ -65,7 +65,12 @@
   .day:disabled{color:rgba(150,150,150,.28);cursor:default}
   .day.today::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent-soft)}
   .day.sel.today::after{background:#0c0c10}
+  .day.pend{box-shadow:inset 0 0 0 1.8px var(--accent);color:var(--ink)}
   .cal-tip{text-align:center;color:var(--faint);font-size:12px;margin-top:12px}
+  .selmode{display:flex;gap:8px;margin-bottom:12px}
+  .selmode button{flex:1;padding:9px 10px;background:transparent;border:1px solid var(--line);border-radius:6px;
+    color:var(--muted);font-family:var(--serif);font-size:13px;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+  .selmode button.on{background:rgba(230,238,255,.1);border-color:var(--accent-soft);color:var(--ink)}
   .slot-preview{margin-top:12px;padding:11px 14px;background:var(--surface2);border:1px solid var(--line);border-radius:6px;
     color:var(--muted);font-size:13px;text-align:center}
   .slot-preview b{color:var(--ink)}
@@ -74,10 +79,19 @@
   .legend{display:flex;gap:16px;justify-content:center;color:var(--muted);font-size:12.5px;margin-bottom:4px;flex-wrap:wrap}
   .legend b{font-family:var(--serif)}
   .legend .lo{color:var(--ok)}.legend .lm{color:var(--mid)}.legend .ln{color:var(--ng)}
-  .dsec{margin-top:16px}
-  .dsec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:4px;flex-wrap:wrap}
-  .dsec-date{font-size:15px;font-weight:500}
-  .dsec-date .wd{color:var(--muted);font-size:12.5px;margin-left:5px}
+  .jump{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 8px}
+  .jump button{padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);
+    font-family:var(--serif);font-size:13px;cursor:pointer;transition:border-color .2s,color .2s}
+  .jump button:hover{border-color:var(--accent-soft);color:var(--ink)}
+  .jump button.jsun{color:var(--sun)}
+  .jump button.jsat{color:var(--sat)}
+  .dsec{margin-top:22px}
+  .dsec-head{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    background:#1a1a21;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:6px}
+  .dsec-date{font-size:clamp(17px,4.4vw,20px);font-weight:600;letter-spacing:.03em}
+  .dsec-date .wd{color:var(--muted);font-size:13px;margin-left:6px}
+  .dsec-date.sun,.dsec-date.sun .wd{color:var(--sun)}
+  .dsec-date.sat,.dsec-date.sat .wd{color:var(--sat)}
   .bulk{display:flex;gap:6px;align-items:center}
   .bulk .bt{width:34px;height:30px;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--muted);
     font-family:var(--serif);font-size:14px;cursor:pointer;transition:border-color .2s,color .2s;line-height:1}
@@ -149,7 +163,11 @@
 
       <div class="card">
         <h2>候補日</h2>
-        <div class="hint">候補にする日をタップで選択。もう一度タップで解除。</div>
+        <div class="hint" id="cCalHint">候補にする日をタップで選択。もう一度タップで解除。</div>
+        <div class="selmode">
+          <button type="button" id="modeSingle" class="on">1日ずつ</button>
+          <button type="button" id="modeRange">範囲で選択</button>
+        </div>
         <div class="cal-head">
           <button class="cal-nav" id="cCalPrev" aria-label="前の月">&lsaquo;</button>
           <div class="cal-title" id="cCalTitle">—</div>
@@ -247,10 +265,11 @@
   else if(params.get('new')===CREATE_KEY){ initCreate(); }
   else { $('lockedView').hidden=false; }
 
-  // ============ 共通: カレンダー(複数選択) ============
+  // ============ 共通: カレンダー(複数選択・範囲選択対応) ============
   function mountCalendar(ids, minD, maxD, selected, onChange){
     var view=new Date(minD.getFullYear(),minD.getMonth(),1);
     var today=todayMidnight();
+    var mode='single', pending=null;  // 範囲選択: 開始日を保持
     var dowHtml='';
     for(var i=0;i<7;i++){ dowHtml+='<div class="dow s'+i+'">'+WD[i]+'</div>'; }
     $(ids.dow).innerHTML=dowHtml;
@@ -263,7 +282,7 @@
       for(var b=0;b<startDow;b++) html+='<button class="day blank" disabled tabindex="-1"></button>';
       for(var n=1;n<=daysIn;n++){
         var d=new Date(view.getFullYear(),view.getMonth(),n), key=ymd(d);
-        var cls='day'+(selected.has(key)?' sel':'')+(+d===+today?' today':'');
+        var cls='day'+(selected.has(key)?' sel':'')+(+d===+today?' today':'')+(key===pending?' pend':'');
         html+='<button class="'+cls+'" data-d="'+key+'"'+(inRange(d)?'':' disabled')+'>'+n+'</button>';
       }
       $(ids.days).innerHTML=html;
@@ -273,12 +292,26 @@
     $(ids.days).addEventListener('click',function(e){
       var b=e.target.closest('.day'); if(!b||b.disabled||b.classList.contains('blank'))return;
       var k=b.getAttribute('data-d');
+      if(mode==='range'){
+        if(!pending){ pending=k; render(); return; }
+        // 開始日→終了日: 間の日をまとめて選択(過去日・範囲外はスキップ)
+        var a=parseYmd(pending), bb=parseYmd(k);
+        if(a>bb){ var t=a; a=bb; bb=t; }
+        for(var d=new Date(a); d<=bb; d.setDate(d.getDate()+1)){
+          if(inRange(d)) selected.add(ymd(d));
+        }
+        pending=null; render(); if(onChange)onChange();
+        return;
+      }
       if(selected.has(k)) selected.delete(k); else selected.add(k);
       render(); if(onChange)onChange();
     });
     $(ids.prev).addEventListener('click',function(){ view=new Date(view.getFullYear(),view.getMonth()-1,1); render(); });
     $(ids.next).addEventListener('click',function(){ view=new Date(view.getFullYear(),view.getMonth()+1,1); render(); });
     render();
+    return {
+      setMode:function(m){ mode=m; pending=null; render(); }
+    };
   }
 
   // ============ 作成モード ============
@@ -303,9 +336,20 @@
       if(!days||!perDay){ $('cPreview').textContent='候補日と時間帯を選ぶと、生成される枠数がここに表示されます。'; return; }
       $('cPreview').innerHTML='1日あたり <b>'+perDay+'枠</b>('+durLabel(dur)+'刻み) × <b>'+days+'日</b> = 合計 <b>'+(perDay*days)+'枠</b>';
     }
-    mountCalendar({dow:'cCalDow',days:'cCalDays',title:'cCalTitle',prev:'cCalPrev',next:'cCalNext'},
+    var cal=mountCalendar({dow:'cCalDow',days:'cCalDays',title:'cCalTitle',prev:'cCalPrev',next:'cCalNext'},
       today, maxD, selected, updatePreview);
     ['cFrom','cTo','cDur'].forEach(function(id){ $(id).addEventListener('change',updatePreview); });
+    // 選択モード切替(1日ずつ / 範囲で選択)
+    function setMode(m){
+      cal.setMode(m);
+      $('modeSingle').classList.toggle('on', m==='single');
+      $('modeRange').classList.toggle('on', m==='range');
+      $('cCalHint').textContent = m==='range'
+        ? '開始日→終了日の順にタップすると、間の日をまとめて選択します(例: 5日→11日)。外したい日は「1日ずつ」で解除。'
+        : '候補にする日をタップで選択。もう一度タップで解除。';
+    }
+    $('modeSingle').addEventListener('click',function(){ setMode('single'); });
+    $('modeRange').addEventListener('click',function(){ setMode('range'); });
 
     $('cGen').addEventListener('click', function(){
       var title=$('cTitle').value.trim(), tf=$('cFrom').value, tt=$('cTo').value, dur=+$('cDur').value, dl=$('cDeadline').value;
@@ -351,10 +395,21 @@
 
     function render(){
       var html='';
+      // 日付ジャンプ(2日以上のとき)
+      if(ev.d.length>1){
+        html+='<div class="jump">';
+        ev.d.forEach(function(d){
+          var dt=parseYmd(d), w=dt.getDay();
+          html+='<button type="button" data-j="'+d+'" class="'+(w===0?'jsun':w===6?'jsat':'')+'">'
+            +(dt.getMonth()+1)+'/'+dt.getDate()+'('+WD[w]+')</button>';
+        });
+        html+='</div>';
+      }
       ev.d.forEach(function(d){
         var dt=parseYmd(d);
-        html+='<div class="dsec" data-d="'+d+'">'
-          +'<div class="dsec-head"><div class="dsec-date">'+(dt.getMonth()+1)+'/'+dt.getDate()+'<span class="wd">('+WD[dt.getDay()]+')</span></div>'
+        var w=dt.getDay(), dcls='dsec-date'+(w===0?' sun':w===6?' sat':'');
+        html+='<div class="dsec" id="dsec'+d+'" data-d="'+d+'">'
+          +'<div class="dsec-head"><div class="'+dcls+'">'+(dt.getMonth()+1)+'/'+dt.getDate()+'<span class="wd">('+WD[dt.getDay()]+')</span></div>'
           +'<div class="bulk"><span class="lbl">一括:</span>'
           +'<button class="bt" data-bulk="○" data-d="'+d+'">○</button>'
           +'<button class="bt" data-bulk="△" data-d="'+d+'">△</button>'
@@ -374,6 +429,9 @@
     }
 
     $('gridBox').addEventListener('click', function(e){
+      var j=e.target.closest('[data-j]');
+      if(j){ var sec=$('dsec'+j.getAttribute('data-j'));
+        if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'}); return; }
       var bulk=e.target.closest('[data-bulk]');
       if(bulk){ var bd=bulk.getAttribute('data-d'), bm=bulk.getAttribute('data-bulk');
         marks[bd]=starts.map(function(){return bm;}); render(); return; }
