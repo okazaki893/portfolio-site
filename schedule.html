@@ -27,6 +27,7 @@
   .req{color:var(--accent);font-size:11px;margin-left:4px}
   input[type=text],input[type=date],select,textarea{width:100%;background:var(--surface2);color:var(--ink);border:1px solid var(--line);
     border-radius:6px;padding:12px 13px;font-family:var(--serif);font-size:15px;outline:none;transition:border-color .2s}
+  input[type=date]{cursor:pointer}
   input:focus,select:focus,textarea:focus{border-color:var(--accent-soft)}
   textarea{resize:vertical;min-height:64px}
   .row2{display:flex;gap:12px;flex-wrap:wrap}
@@ -350,6 +351,10 @@
     }
     $('modeSingle').addEventListener('click',function(){ setMode('single'); });
     $('modeRange').addEventListener('click',function(){ setMode('range'); });
+    // 締切: ボックスのどこをクリックしてもカレンダーを開く(アイコン限定の標準挙動を解消)
+    $('cDeadline').addEventListener('click',function(){
+      if(this.showPicker){ try{ this.showPicker(); }catch(e){} }
+    });
 
     $('cGen').addEventListener('click', function(){
       var title=$('cTitle').value.trim(), tf=$('cFrom').value, tt=$('cTo').value, dur=+$('cDur').value, dl=$('cDeadline').value;
