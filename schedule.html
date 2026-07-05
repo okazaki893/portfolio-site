@@ -69,6 +69,7 @@
   .day.today::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent-soft)}
   .day.sel.today::after{background:#0c0c10}
   .day.pend{box-shadow:inset 0 0 0 1.8px var(--accent);color:var(--ink)}
+  .day.sel.pend{background:rgba(230,238,255,.26);color:var(--ink);font-weight:400}
   .cal-tip{text-align:center;color:var(--faint);font-size:12px;margin-top:12px}
   .slot-preview{margin-top:12px;padding:11px 14px;background:var(--surface2);border:1px solid var(--line);border-radius:6px;
     color:var(--muted);font-size:13px;text-align:center}
@@ -162,7 +163,7 @@
 
       <div class="card">
         <h2>候補日</h2>
-        <div class="hint" id="cCalHint">タップで選択/解除。ドラッグでなぞる、または始点をタップして終点を長押しすると範囲でまとめて選択できます。</div>
+        <div class="hint" id="cCalHint">タップで選択/解除。ドラッグでなぞる、または始点をタップして終点を長押しすると範囲をまとめて選択できます。選択済みの日から始めると、まとめて解除になります。</div>
         <div class="cal-head">
           <button class="cal-nav" id="cCalPrev" aria-label="前の月">&lsaquo;</button>
           <div class="cal-title" id="cCalTitle">—</div>
@@ -293,12 +294,13 @@
       for(var d=new Date(a); d<=b; d.setDate(d.getDate()+1)){ if(inRange(d)) out.push(ymd(d)); }
       return out;
     }
-    function fillRange(k1,k2){
-      keysBetween(k1,k2).forEach(function(k){ selected.add(k); });
+    function rangeOp(k1,k2,remove){
+      keysBetween(k1,k2).forEach(function(k){ if(remove) selected.delete(k); else selected.add(k); });
       anchor=k2; pendSet.clear(); render(); if(onChange)onChange();
     }
-    // タップ=1日トグル / マウスはなぞって範囲 / 長押し=直近に選択した日からここまで
-    var downKey=null, downX=0, downY=0, dragging=false, dragKey=null, lpTimer=null, suppress=false;
+    // タップ=1日トグル / マウスはなぞって範囲 / 長押し=直近にタップした日からここまで
+    // 始点が選択済みなら範囲解除、未選択なら範囲選択
+    var downKey=null, downSel=false, downX=0, downY=0, dragging=false, dragKey=null, lpTimer=null, suppress=false;
     function clearLp(){ if(lpTimer){ clearTimeout(lpTimer); lpTimer=null; } }
     function unsuppressSoon(){ setTimeout(function(){ suppress=false; }, 350); }
     function dayFromPoint(x,y){
@@ -308,14 +310,15 @@
     }
     grid.addEventListener('pointerdown',function(e){
       var b=e.target.closest('.day'); if(!b||b.disabled||b.classList.contains('blank'))return;
-      downKey=b.getAttribute('data-d'); downX=e.clientX; downY=e.clientY;
+      downKey=b.getAttribute('data-d'); downSel=selected.has(downKey); downX=e.clientX; downY=e.clientY;
       dragging=false; dragKey=null;
       clearLp();
       lpTimer=setTimeout(function(){
         lpTimer=null;
         if(dragging||!downKey)return;
         suppress=true; unsuppressSoon();
-        if(anchor&&anchor!==downKey){ fillRange(anchor,downKey); }
+        if(anchor&&anchor!==downKey){ rangeOp(anchor,downKey,!selected.has(anchor)); }
+        else if(selected.has(downKey)){ selected.delete(downKey); anchor=downKey; render(); if(onChange)onChange(); }
         else{ selected.add(downKey); anchor=downKey; render(); if(onChange)onChange(); }
         if(navigator.vibrate){ try{ navigator.vibrate(15); }catch(err){} }
         downKey=null;
@@ -333,7 +336,8 @@
       var k=dayFromPoint(e.clientX,e.clientY);
       if(k&&k!==dragKey){
         dragKey=k;
-        pendSet=new Set(keysBetween(downKey,dragKey));
+        // プレビューは「実際に変化する日」だけに付ける(解除なら選択済みの日、選択なら未選択の日)
+        pendSet=new Set(keysBetween(downKey,dragKey).filter(function(kk){ return selected.has(kk)===downSel; }));
         render();
       }
     });
@@ -341,7 +345,7 @@
       clearLp();
       if(dragging&&downKey&&dragKey&&dragKey!==downKey){
         suppress=true; unsuppressSoon();
-        fillRange(downKey,dragKey);
+        rangeOp(downKey,dragKey,downSel);
       }else if(pendSet.size){ pendSet.clear(); render(); }
       dragging=false; downKey=null; dragKey=null;
     }
@@ -352,8 +356,8 @@
       if(suppress){ suppress=false; return; }
       var b=e.target.closest('.day'); if(!b||b.disabled||b.classList.contains('blank'))return;
       var k=b.getAttribute('data-d');
-      if(selected.has(k)){ selected.delete(k); if(anchor===k)anchor=null; }
-      else{ selected.add(k); anchor=k; }
+      if(selected.has(k)) selected.delete(k); else selected.add(k);
+      anchor=k;  // 解除した日も始点になる(そこから長押しで範囲解除)
       render(); if(onChange)onChange();
     });
     $(ids.prev).addEventListener('click',function(){ view=new Date(view.getFullYear(),view.getMonth()-1,1); render(); });
