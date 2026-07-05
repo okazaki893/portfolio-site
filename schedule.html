@@ -54,11 +54,13 @@
   .cal-nav:hover:not(:disabled){border-color:var(--accent-soft);background:rgba(230,238,255,.06)}
   .cal-nav:disabled{opacity:.28;cursor:default}
   .cal-title{font-family:var(--disp);font-size:19px;letter-spacing:.1em}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;
+    user-select:none;-webkit-user-select:none;touch-action:pan-y}
   .dow{text-align:center;font-family:var(--disp);font-size:12px;letter-spacing:.08em;color:var(--faint);padding:4px 0 8px}
   .dow.s0{color:var(--sun)}.dow.s6{color:var(--sat)}
   .day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--ink);
     font-family:var(--serif);font-size:15px;border-radius:50%;cursor:pointer;position:relative;
+    -webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;
     transition:background .15s,color .15s,box-shadow .15s}
   .day.blank{visibility:hidden;cursor:default}
   .day:hover:not(:disabled):not(.sel){box-shadow:inset 0 0 0 1.6px var(--accent-soft)}
@@ -68,10 +70,6 @@
   .day.sel.today::after{background:#0c0c10}
   .day.pend{box-shadow:inset 0 0 0 1.8px var(--accent);color:var(--ink)}
   .cal-tip{text-align:center;color:var(--faint);font-size:12px;margin-top:12px}
-  .selmode{display:flex;gap:8px;margin-bottom:12px}
-  .selmode button{flex:1;padding:9px 10px;background:transparent;border:1px solid var(--line);border-radius:6px;
-    color:var(--muted);font-family:var(--serif);font-size:13px;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
-  .selmode button.on{background:rgba(230,238,255,.1);border-color:var(--accent-soft);color:var(--ink)}
   .slot-preview{margin-top:12px;padding:11px 14px;background:var(--surface2);border:1px solid var(--line);border-radius:6px;
     color:var(--muted);font-size:13px;text-align:center}
   .slot-preview b{color:var(--ink)}
@@ -164,11 +162,7 @@
 
       <div class="card">
         <h2>候補日</h2>
-        <div class="hint" id="cCalHint">候補にする日をタップで選択。もう一度タップで解除。</div>
-        <div class="selmode">
-          <button type="button" id="modeSingle" class="on">1日ずつ</button>
-          <button type="button" id="modeRange">範囲で選択</button>
-        </div>
+        <div class="hint" id="cCalHint">タップで選択/解除。ドラッグでなぞる、または始点をタップして終点を長押しすると範囲でまとめて選択できます。</div>
         <div class="cal-head">
           <button class="cal-nav" id="cCalPrev" aria-label="前の月">&lsaquo;</button>
           <div class="cal-title" id="cCalTitle">—</div>
@@ -266,11 +260,13 @@
   else if(params.get('new')===CREATE_KEY){ initCreate(); }
   else { $('lockedView').hidden=false; }
 
-  // ============ 共通: カレンダー(複数選択・範囲選択対応) ============
+  // ============ 共通: カレンダー(タップ=1日 / ドラッグ・長押し=範囲まとめて) ============
   function mountCalendar(ids, minD, maxD, selected, onChange){
     var view=new Date(minD.getFullYear(),minD.getMonth(),1);
     var today=todayMidnight();
-    var mode='single', pending=null;  // 範囲選択: 開始日を保持
+    var grid=$(ids.days);
+    var pendSet=new Set();   // ドラッグ中の範囲プレビュー
+    var anchor=null;         // 直近に選択した日(長押し範囲選択の始点)
     var dowHtml='';
     for(var i=0;i<7;i++){ dowHtml+='<div class="dow s'+i+'">'+WD[i]+'</div>'; }
     $(ids.dow).innerHTML=dowHtml;
@@ -283,36 +279,86 @@
       for(var b=0;b<startDow;b++) html+='<button class="day blank" disabled tabindex="-1"></button>';
       for(var n=1;n<=daysIn;n++){
         var d=new Date(view.getFullYear(),view.getMonth(),n), key=ymd(d);
-        var cls='day'+(selected.has(key)?' sel':'')+(+d===+today?' today':'')+(key===pending?' pend':'');
+        var cls='day'+(selected.has(key)?' sel':'')+(+d===+today?' today':'')+(pendSet.has(key)?' pend':'');
         html+='<button class="'+cls+'" data-d="'+key+'"'+(inRange(d)?'':' disabled')+'>'+n+'</button>';
       }
-      $(ids.days).innerHTML=html;
+      grid.innerHTML=html;
       $(ids.prev).disabled = new Date(view.getFullYear(),view.getMonth(),0) < minD;
       $(ids.next).disabled = new Date(view.getFullYear(),view.getMonth()+1,1) > maxD;
     }
-    $(ids.days).addEventListener('click',function(e){
+    function keysBetween(k1,k2){
+      var a=parseYmd(k1), b=parseYmd(k2);
+      if(a>b){ var t=a; a=b; b=t; }
+      var out=[];
+      for(var d=new Date(a); d<=b; d.setDate(d.getDate()+1)){ if(inRange(d)) out.push(ymd(d)); }
+      return out;
+    }
+    function fillRange(k1,k2){
+      keysBetween(k1,k2).forEach(function(k){ selected.add(k); });
+      anchor=k2; pendSet.clear(); render(); if(onChange)onChange();
+    }
+    // タップ=1日トグル / マウスはなぞって範囲 / 長押し=直近に選択した日からここまで
+    var downKey=null, downX=0, downY=0, dragging=false, dragKey=null, lpTimer=null, suppress=false;
+    function clearLp(){ if(lpTimer){ clearTimeout(lpTimer); lpTimer=null; } }
+    function unsuppressSoon(){ setTimeout(function(){ suppress=false; }, 350); }
+    function dayFromPoint(x,y){
+      var el=document.elementFromPoint(x,y);
+      var b=el&&el.closest?el.closest('.day'):null;
+      return (b&&!b.disabled&&!b.classList.contains('blank'))?b.getAttribute('data-d'):null;
+    }
+    grid.addEventListener('pointerdown',function(e){
+      var b=e.target.closest('.day'); if(!b||b.disabled||b.classList.contains('blank'))return;
+      downKey=b.getAttribute('data-d'); downX=e.clientX; downY=e.clientY;
+      dragging=false; dragKey=null;
+      clearLp();
+      lpTimer=setTimeout(function(){
+        lpTimer=null;
+        if(dragging||!downKey)return;
+        suppress=true; unsuppressSoon();
+        if(anchor&&anchor!==downKey){ fillRange(anchor,downKey); }
+        else{ selected.add(downKey); anchor=downKey; render(); if(onChange)onChange(); }
+        if(navigator.vibrate){ try{ navigator.vibrate(15); }catch(err){} }
+        downKey=null;
+      },450);
+    });
+    grid.addEventListener('pointermove',function(e){
+      if(!downKey)return;
+      if(!dragging){
+        var dx=e.clientX-downX, dy=e.clientY-downY;
+        if(dx*dx+dy*dy<=49) return;
+        clearLp();
+        if(e.pointerType!=='mouse'){ downKey=null; return; }  // タッチはスクロール優先(範囲は長押しで)
+        dragging=true;
+      }
+      var k=dayFromPoint(e.clientX,e.clientY);
+      if(k&&k!==dragKey){
+        dragKey=k;
+        pendSet=new Set(keysBetween(downKey,dragKey));
+        render();
+      }
+    });
+    function endPointer(){
+      clearLp();
+      if(dragging&&downKey&&dragKey&&dragKey!==downKey){
+        suppress=true; unsuppressSoon();
+        fillRange(downKey,dragKey);
+      }else if(pendSet.size){ pendSet.clear(); render(); }
+      dragging=false; downKey=null; dragKey=null;
+    }
+    window.addEventListener('pointerup',endPointer);
+    window.addEventListener('pointercancel',endPointer);
+    grid.addEventListener('contextmenu',function(e){ e.preventDefault(); });
+    grid.addEventListener('click',function(e){
+      if(suppress){ suppress=false; return; }
       var b=e.target.closest('.day'); if(!b||b.disabled||b.classList.contains('blank'))return;
       var k=b.getAttribute('data-d');
-      if(mode==='range'){
-        if(!pending){ pending=k; render(); return; }
-        // 開始日→終了日: 間の日をまとめて選択(過去日・範囲外はスキップ)
-        var a=parseYmd(pending), bb=parseYmd(k);
-        if(a>bb){ var t=a; a=bb; bb=t; }
-        for(var d=new Date(a); d<=bb; d.setDate(d.getDate()+1)){
-          if(inRange(d)) selected.add(ymd(d));
-        }
-        pending=null; render(); if(onChange)onChange();
-        return;
-      }
-      if(selected.has(k)) selected.delete(k); else selected.add(k);
+      if(selected.has(k)){ selected.delete(k); if(anchor===k)anchor=null; }
+      else{ selected.add(k); anchor=k; }
       render(); if(onChange)onChange();
     });
     $(ids.prev).addEventListener('click',function(){ view=new Date(view.getFullYear(),view.getMonth()-1,1); render(); });
     $(ids.next).addEventListener('click',function(){ view=new Date(view.getFullYear(),view.getMonth()+1,1); render(); });
     render();
-    return {
-      setMode:function(m){ mode=m; pending=null; render(); }
-    };
   }
 
   // ============ 作成モード ============
@@ -337,20 +383,9 @@
       if(!days||!perDay){ $('cPreview').textContent='候補日と時間帯を選ぶと、生成される枠数がここに表示されます。'; return; }
       $('cPreview').innerHTML='1日あたり <b>'+perDay+'枠</b>('+durLabel(dur)+'刻み) × <b>'+days+'日</b> = 合計 <b>'+(perDay*days)+'枠</b>';
     }
-    var cal=mountCalendar({dow:'cCalDow',days:'cCalDays',title:'cCalTitle',prev:'cCalPrev',next:'cCalNext'},
+    mountCalendar({dow:'cCalDow',days:'cCalDays',title:'cCalTitle',prev:'cCalPrev',next:'cCalNext'},
       today, maxD, selected, updatePreview);
     ['cFrom','cTo','cDur'].forEach(function(id){ $(id).addEventListener('change',updatePreview); });
-    // 選択モード切替(1日ずつ / 範囲で選択)
-    function setMode(m){
-      cal.setMode(m);
-      $('modeSingle').classList.toggle('on', m==='single');
-      $('modeRange').classList.toggle('on', m==='range');
-      $('cCalHint').textContent = m==='range'
-        ? '開始日→終了日の順にタップすると、間の日をまとめて選択します(例: 5日→11日)。外したい日は「1日ずつ」で解除。'
-        : '候補にする日をタップで選択。もう一度タップで解除。';
-    }
-    $('modeSingle').addEventListener('click',function(){ setMode('single'); });
-    $('modeRange').addEventListener('click',function(){ setMode('range'); });
     // 締切: ボックスのどこをクリックしてもカレンダーを開く(アイコン限定の標準挙動を解消)
     $('cDeadline').addEventListener('click',function(){
       if(this.showPicker){ try{ this.showPicker(); }catch(e){} }
