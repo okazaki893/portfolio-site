@@ -1,0 +1,392 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>日程調整 — NOUMENON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Shippori+Mincho:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0D0D0D;--ink:#F4F4F2;--muted:#9C9C98;--faint:#6C6C68;--line:rgba(108,108,104,.32);
+    --surface:#151519;--surface2:#1c1c22;--accent:rgba(230,238,255,.95);--accent-soft:rgba(220,230,255,.5);
+    --disp:'Cormorant Garamond',serif;--serif:'Shippori Mincho',serif;--sun:#d98b8b;--sat:#8ba7d9}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.7;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(130% 80% at 50% -10%,#15151d,#0b0b0d 60%)}
+  .wrap{max-width:640px;margin:0 auto;padding:40px clamp(16px,5vw,32px) 96px}
+  .brand{font-family:var(--disp);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--faint);text-align:center}
+  h1{font-family:var(--disp);font-weight:500;font-size:clamp(26px,6vw,36px);letter-spacing:.1em;text-transform:uppercase;text-align:center;margin:12px 0 6px}
+  .sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:30px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:clamp(18px,4vw,26px);margin-top:18px}
+  .card h2{font-family:var(--disp);font-size:19px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+  .card .hint{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+  label.fld{display:block;margin:14px 0}
+  label.fld .lb{display:block;font-size:12.5px;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+  .req{color:var(--accent);font-size:11px;margin-left:4px}
+  input[type=text],input[type=date],select,textarea{width:100%;background:var(--surface2);color:var(--ink);border:1px solid var(--line);
+    border-radius:6px;padding:12px 13px;font-family:var(--serif);font-size:15px;outline:none;transition:border-color .2s}
+  input:focus,select,textarea:focus,input:focus-visible{border-color:var(--accent-soft)}
+  textarea{resize:vertical;min-height:44px}
+  .row2{display:flex;gap:12px;flex-wrap:wrap}
+  .row2>*{flex:1;min-width:130px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--disp);font-size:14px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:13px 22px;
+    cursor:pointer;transition:border-color .25s,background .25s;width:100%}
+  .btn:hover{border-color:var(--accent-soft);background:rgba(230,238,255,.06)}
+  .btn.primary{background:var(--accent);color:#0c0c10;border-color:var(--accent);font-weight:500}
+  .btn.primary:hover{background:#fff}
+  .btn:disabled{opacity:.5;cursor:default}
+  .err{color:#e79a9a;font-size:12.5px;margin-top:8px;min-height:1px}
+
+  /* イベント情報バナー(回答モード) */
+  .ev-banner{text-align:center;margin-bottom:6px}
+  .ev-title{font-size:clamp(19px,4.6vw,24px);font-weight:500;letter-spacing:.02em}
+  .ev-meta{color:var(--muted);font-size:12.5px;margin-top:6px}
+  .ev-meta b{color:var(--ink);font-weight:500}
+
+  /* カレンダー */
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .cal-nav{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);
+    font-family:var(--disp);font-size:22px;line-height:1;cursor:pointer;transition:border-color .25s,background .25s}
+  .cal-nav:hover:not(:disabled){border-color:var(--accent-soft);background:rgba(230,238,255,.06)}
+  .cal-nav:disabled{opacity:.28;cursor:default}
+  .cal-title{font-family:var(--disp);font-size:19px;letter-spacing:.1em}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .dow{text-align:center;font-family:var(--disp);font-size:12px;letter-spacing:.08em;color:var(--faint);padding:4px 0 8px}
+  .dow.s0{color:var(--sun)}.dow.s6{color:var(--sat)}
+  .day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--ink);
+    font-family:var(--serif);font-size:15px;border-radius:50%;cursor:pointer;position:relative;
+    transition:background .15s,color .15s,box-shadow .15s}
+  .day.blank{visibility:hidden;cursor:default}
+  .day:hover:not(:disabled):not(.sel){box-shadow:inset 0 0 0 1.6px var(--accent-soft)}
+  .day.sel{background:var(--accent);color:#0c0c10;font-weight:600}
+  .day:disabled{color:rgba(150,150,150,.28);cursor:default}
+  .day.today::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent-soft)}
+  .day.sel.today::after{background:#0c0c10}
+  .cal-tip{text-align:center;color:var(--faint);font-size:12px;margin-top:12px}
+
+  /* 選んだ日の時間 */
+  .slots{margin-top:8px}
+  .slots-empty{color:var(--faint);font-size:13px;text-align:center;padding:18px 0}
+  .slot{background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:12px 13px;margin-top:10px}
+  .slot-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .slot-date{font-size:14.5px;font-weight:500}
+  .slot-date .wd{color:var(--muted);font-size:12.5px;margin-left:6px}
+  .slot-x{background:transparent;border:0;color:var(--faint);font-size:19px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:4px}
+  .slot-x:hover{color:var(--ink)}
+  .slot-times{display:flex;align-items:center;gap:8px}
+  .slot-times select{flex:1;min-width:0}
+  .slot-times .tilde{color:var(--muted)}
+  .slot-times.dim{opacity:.4;pointer-events:none}
+  .slot-opts{display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}
+  .chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+  .chk input{width:17px;height:17px;accent-color:#c9d6ff;cursor:pointer}
+  .slot-note{flex:1;min-width:140px}
+  .slot-note input{padding:9px 11px;font-size:13.5px}
+
+  .submit-wrap{margin-top:22px}
+  .thanks{text-align:center;padding:40px 10px}
+  .thanks .mk{font-family:var(--disp);font-size:44px;color:var(--accent);line-height:1;margin-bottom:14px}
+  .thanks h2{font-family:var(--disp);font-size:22px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .thanks p{color:var(--muted);font-size:13.5px}
+  .thanks .btn{max-width:260px;margin:22px auto 0}
+
+  .share-out{margin-top:16px}
+  .share-out input{font-size:13px;color:var(--accent);font-family:var(--disp);letter-spacing:.02em}
+  .share-actions{display:flex;gap:10px;margin-top:10px}
+  .share-actions .btn{width:auto;flex:1}
+  .foot{text-align:center;margin-top:40px;font-family:var(--disp);font-size:11px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+  .foot a{color:var(--faint);text-decoration:none;border-bottom:1px solid rgba(108,108,104,.3)}
+  [hidden]{display:none!important}
+</style></head>
+<body>
+  <div class="wrap">
+    <div class="brand">NOUMENON</div>
+
+    <!-- ============ キーなしアクセス(ロック画面) ============ -->
+    <section id="lockedView" hidden>
+      <h1>日程調整</h1>
+      <p class="sub">このページを開くには、主催者から送られた回答リンクが必要です。</p>
+      <div class="card" style="text-align:center">
+        <div class="hint" style="margin-bottom:0">リンクの有効期限が切れているか、URLが正しくない可能性があります。<br>主催者にお問い合わせください。</div>
+      </div>
+    </section>
+
+    <!-- ============ 作成モード(主催者専用・秘密キー付きURLのみ) ============ -->
+    <section id="createView" hidden>
+      <h1>日程調整をつくる</h1>
+      <p class="sub">打ち合わせ名と候補期間を決めて、共有リンクを発行します。</p>
+      <div class="card">
+        <h2>イベント設定</h2>
+        <div class="hint">リンクをチームに送ると、相手は名前と空き日時を入力するだけ。回答はあなたのシートに集まります。</div>
+        <label class="fld"><span class="lb">打ち合わせ名<span class="req">必須</span></span>
+          <input type="text" id="cTitle" placeholder="例: 新曲ミックス打ち合わせ" maxlength="60"></label>
+        <div class="row2">
+          <label class="fld"><span class="lb">候補期間 開始(任意)</span><input type="date" id="cFrom"></label>
+          <label class="fld"><span class="lb">候補期間 終了(任意)</span><input type="date" id="cTo"></label>
+        </div>
+        <label class="fld"><span class="lb">回答締切(任意・表示のみ)</span><input type="date" id="cDeadline"></label>
+        <div class="err" id="cErr"></div>
+        <div class="submit-wrap"><button class="btn primary" id="cGen">リンクを生成</button></div>
+        <div class="share-out" id="cOut" hidden>
+          <label class="fld"><span class="lb">共有リンク(これをチームに送る)</span>
+            <input type="text" id="cUrl" readonly></label>
+          <div class="share-actions">
+            <button class="btn" id="cCopy">コピー</button>
+            <a class="btn" id="cOpen" target="_blank" rel="noopener">回答画面を確認</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 回答モード ============ -->
+    <section id="respondView" hidden>
+      <div class="ev-banner">
+        <div class="ev-title" id="rTitle">打ち合わせ</div>
+        <div class="ev-meta" id="rMeta"></div>
+      </div>
+
+      <div id="rForm">
+        <div class="card">
+          <label class="fld"><span class="lb">お名前<span class="req">必須</span></span>
+            <input type="text" id="rName" placeholder="例: 佐久間" maxlength="40" autocomplete="name"></label>
+        </div>
+
+        <div class="card">
+          <h2>空いている日</h2>
+          <div class="hint">空いている日をタップで○。もう一度タップで解除。</div>
+          <div class="cal-head">
+            <button class="cal-nav" id="calPrev" aria-label="前の月">&lsaquo;</button>
+            <div class="cal-title" id="calTitle">—</div>
+            <button class="cal-nav" id="calNext" aria-label="次の月">&rsaquo;</button>
+          </div>
+          <div class="cal-grid" id="calDow"></div>
+          <div class="cal-grid" id="calDays"></div>
+          <div class="cal-tip" id="calTip"></div>
+        </div>
+
+        <div class="card">
+          <h2>選んだ日の時間</h2>
+          <div class="hint">○を付けた日ごとに、空いている時間を入れてください。</div>
+          <div class="slots" id="slots"><div class="slots-empty">まだ日付が選ばれていません。上のカレンダーで空いている日をタップしてください。</div></div>
+        </div>
+
+        <div class="err" id="rErr"></div>
+        <div class="submit-wrap"><button class="btn primary" id="rSubmit">この内容で送る</button></div>
+      </div>
+
+      <div id="rThanks" class="thanks" hidden>
+        <div class="mk">&#10038;</div>
+        <h2>送信しました</h2>
+        <p>ご回答ありがとうございました。<br>追加や修正がある場合は、もう一度送信できます。</p>
+        <button class="btn" id="rAgain">続けて入力する</button>
+      </div>
+    </section>
+
+    <div class="foot"><a href="/">NOUMENON.JP</a></div>
+  </div>
+
+<script>
+  // ===== 設定 =====
+  // 受付用Googleフォーム(回答は5分おきの自動ジョブで打ち合わせ別シートへ振り分け)
+  var FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf85HSgapvI_mHifyh4TK6mXY330zobvH-fHKhDNbYLt4C7CQ/formResponse';
+  var ENTRY = {title:'entry.1435429225', id:'entry.1891993048', name:'entry.1535562234', slots:'entry.714444700'};
+  var SHARE_BASE = 'https://noumenon.jp/schedule';
+
+  // ===== 汎用 =====
+  function $(id){return document.getElementById(id);}
+  function pad(n){return (n<10?'0':'')+n;}
+  function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+  function parseYmd(s){var p=(s||'').split('-');return p.length===3?new Date(+p[0],+p[1]-1,+p[2]):null;}
+  var WD=['日','月','火','水','木','金','土'];
+  function b64urlEnc(str){return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+  function b64urlDec(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return decodeURIComponent(escape(atob(s)));}
+  function todayMidnight(){var d=new Date();d.setHours(0,0,0,0);return d;}
+
+  // 時間セレクトの選択肢(30分刻み)
+  function timeOptions(withEnd){
+    var html='';
+    for(var h=0;h<24;h++){for(var m=0;m<60;m+=30){var t=pad(h)+':'+pad(m);html+='<option value="'+t+'">'+t+'</option>';}}
+    if(withEnd) html+='<option value="24:00">24:00</option>';
+    return html;
+  }
+
+  // ===== モード判定 =====
+  // 作成画面は主催者専用: /schedule?new=CREATE_KEY のときだけ表示
+  var CREATE_KEY='nmn-w8k3xq';
+  var params=new URLSearchParams(location.search);
+  var eParam=params.get('e');
+
+  if(eParam){ initRespond(eParam); }
+  else if(params.get('new')===CREATE_KEY){ initCreate(); }
+  else { document.getElementById('lockedView').hidden=false; }
+
+  // ============ 作成モード ============
+  function initCreate(){
+    $('createView').hidden=false;
+    $('cGen').addEventListener('click', function(){
+      var title=$('cTitle').value.trim();
+      var from=$('cFrom').value, to=$('cTo').value, dl=$('cDeadline').value;
+      $('cErr').textContent='';
+      if(!title){ $('cErr').textContent='打ち合わせ名を入力してください。'; return; }
+      if(from && to && from>to){ $('cErr').textContent='候補期間の開始が終了より後になっています。'; return; }
+      var id=Math.random().toString(36).slice(2,8);
+      var ev={id:id,title:title};
+      if(from)ev.from=from; if(to)ev.to=to; if(dl)ev.deadline=dl;
+      var url=SHARE_BASE+'?e='+b64urlEnc(JSON.stringify(ev));
+      $('cUrl').value=url;
+      $('cOpen').href=url;
+      $('cOut').hidden=false;
+      $('cUrl').focus(); $('cUrl').select();
+    });
+    $('cCopy').addEventListener('click', function(){
+      var inp=$('cUrl'); inp.select();
+      var done=function(){ $('cCopy').textContent='コピー済み'; setTimeout(function(){$('cCopy').textContent='コピー';},1600); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(inp.value).then(done, function(){document.execCommand&&document.execCommand('copy');done();}); }
+      else { try{document.execCommand('copy');}catch(e){} done(); }
+    });
+  }
+
+  // ============ 回答モード ============
+  function initRespond(enc){
+    var ev;
+    try{ ev=JSON.parse(b64urlDec(enc)); }catch(e){ ev=null; }
+    if(!ev||!ev.title){ location.replace(location.pathname); return; } // 壊れたリンク→作成へ
+    $('respondView').hidden=false;
+    $('rTitle').textContent=ev.title;
+
+    // 範囲
+    var today=todayMidnight();
+    var minD=ev.from?parseYmd(ev.from):today;
+    if(minD<today)minD=today;
+    var maxD=ev.to?parseYmd(ev.to):new Date(today.getFullYear(),today.getMonth()+3,0);
+    // メタ表示
+    var meta=[];
+    if(ev.from||ev.to){ meta.push('候補期間: <b>'+(ev.from||'〜')+'</b> 〜 <b>'+(ev.to||'')+'</b>'); }
+    if(ev.deadline){ meta.push('締切: <b>'+ev.deadline+'</b>'); }
+    $('rMeta').innerHTML=meta.join('　/　');
+
+    // 曜日ヘッダ
+    var dowHtml='';
+    for(var i=0;i<7;i++){ dowHtml+='<div class="dow s'+i+'">'+WD[i]+'</div>'; }
+    $('calDow').innerHTML=dowHtml;
+
+    // 状態
+    var slots={}; // 'YYYY-MM-DD' -> {start,end,allday,note}
+    var view=new Date(minD.getFullYear(),minD.getMonth(),1);
+
+    function inRange(d){ return d>=minD && d<=maxD; }
+
+    function renderCal(){
+      $('calTitle').textContent=view.getFullYear()+'年 '+(view.getMonth()+1)+'月';
+      var first=new Date(view.getFullYear(),view.getMonth(),1);
+      var startDow=first.getDay();
+      var daysIn=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();
+      var html='';
+      for(var b=0;b<startDow;b++) html+='<button class="day blank" disabled tabindex="-1"></button>';
+      for(var dnum=1;dnum<=daysIn;dnum++){
+        var d=new Date(view.getFullYear(),view.getMonth(),dnum);
+        var key=ymd(d);
+        var cls='day';
+        var dis=!inRange(d);
+        if(slots[key]) cls+=' sel';
+        if(+d===+today) cls+=' today';
+        html+='<button class="'+cls+'" data-d="'+key+'"'+(dis?' disabled':'')+'>'+dnum+'</button>';
+      }
+      $('calDays').innerHTML=html;
+      // 前月/次月ボタンの可否
+      var prevLast=new Date(view.getFullYear(),view.getMonth(),0);
+      var nextFirst=new Date(view.getFullYear(),view.getMonth()+1,1);
+      $('calPrev').disabled = prevLast < minD;
+      $('calNext').disabled = nextFirst > maxD;
+      $('calTip').textContent = '選択中: '+Object.keys(slots).length+' 日';
+    }
+
+    function toggleDay(key){
+      if(slots[key]){ delete slots[key]; }
+      else { slots[key]={start:'10:00',end:'18:00',allday:false,note:''}; }
+      renderCal(); renderSlots();
+    }
+
+    $('calDays').addEventListener('click', function(e){
+      var b=e.target.closest('.day'); if(!b||b.disabled||b.classList.contains('blank'))return;
+      toggleDay(b.getAttribute('data-d'));
+    });
+    $('calPrev').addEventListener('click', function(){ view=new Date(view.getFullYear(),view.getMonth()-1,1); renderCal(); });
+    $('calNext').addEventListener('click', function(){ view=new Date(view.getFullYear(),view.getMonth()+1,1); renderCal(); });
+
+    function renderSlots(){
+      var keys=Object.keys(slots).sort();
+      var box=$('slots');
+      if(!keys.length){ box.innerHTML='<div class="slots-empty">まだ日付が選ばれていません。上のカレンダーで空いている日をタップしてください。</div>'; return; }
+      var html='';
+      keys.forEach(function(key){
+        var d=parseYmd(key), s=slots[key];
+        html+='<div class="slot" data-k="'+key+'">'
+          +'<div class="slot-top"><div class="slot-date">'+(d.getMonth()+1)+'/'+d.getDate()+'<span class="wd">('+WD[d.getDay()]+')</span></div>'
+          +'<button class="slot-x" data-x="'+key+'" aria-label="削除">&times;</button></div>'
+          +'<div class="slot-times'+(s.allday?' dim':'')+'"><select class="st" data-k="'+key+'">'+timeOptions(false)+'</select>'
+          +'<span class="tilde">〜</span><select class="en" data-k="'+key+'">'+timeOptions(true)+'</select></div>'
+          +'<div class="slot-opts"><label class="chk"><input type="checkbox" class="ad" data-k="'+key+'"'+(s.allday?' checked':'')+'>終日OK</label>'
+          +'<span class="slot-note"><input type="text" class="nt" data-k="'+key+'" placeholder="メモ(任意)" maxlength="60" value="'+(s.note||'').replace(/"/g,'&quot;')+'"></span></div>'
+          +'</div>';
+      });
+      box.innerHTML=html;
+      // 値を反映
+      keys.forEach(function(key){
+        var s=slots[key];
+        box.querySelector('.st[data-k="'+key+'"]').value=s.start;
+        box.querySelector('.en[data-k="'+key+'"]').value=s.end;
+      });
+    }
+
+    $('slots').addEventListener('click', function(e){
+      var x=e.target.closest('.slot-x'); if(x){ toggleDay(x.getAttribute('data-x')); }
+    });
+    $('slots').addEventListener('change', function(e){
+      var t=e.target, key=t.getAttribute('data-k'); if(!key||!slots[key])return;
+      if(t.classList.contains('st')) slots[key].start=t.value;
+      else if(t.classList.contains('en')) slots[key].end=t.value;
+      else if(t.classList.contains('ad')){ slots[key].allday=t.checked;
+        var tm=t.closest('.slot').querySelector('.slot-times'); if(tm)tm.classList.toggle('dim',t.checked); }
+    });
+    $('slots').addEventListener('input', function(e){
+      var t=e.target, key=t.getAttribute('data-k'); if(!key||!slots[key])return;
+      if(t.classList.contains('nt')) slots[key].note=t.value;
+    });
+
+    // 送信
+    var sending=false;
+    $('rSubmit').addEventListener('click', function(){
+      if(sending)return;
+      $('rErr').textContent='';
+      var name=$('rName').value.trim();
+      var keys=Object.keys(slots).sort();
+      if(!name){ $('rErr').textContent='お名前を入力してください。'; $('rName').focus(); return; }
+      if(!keys.length){ $('rErr').textContent='空いている日を1日以上えらんでください。'; return; }
+      for(var i=0;i<keys.length;i++){ var s=slots[keys[i]];
+        if(!s.allday && s.start>=s.end){ $('rErr').textContent=keys[i]+' の時間が正しくありません(開始が終了より前になるように)。'; return; } }
+      var payload={ eventId:ev.id||'', eventTitle:ev.title, name:name,
+        slots:keys.map(function(k){var s=slots[k];return {date:k,start:s.allday?'':s.start,end:s.allday?'':s.end,allday:!!s.allday,note:s.note||''};}) };
+
+      sending=true; $('rSubmit').disabled=true; $('rSubmit').textContent='送信中...';
+      var finish=function(){ $('rForm').hidden=true; $('rThanks').hidden=false; window.scrollTo({top:0,behavior:'smooth'}); };
+      var body=new URLSearchParams();
+      body.append(ENTRY.title, payload.eventTitle);
+      body.append(ENTRY.id, payload.eventId);
+      body.append(ENTRY.name, payload.name);
+      body.append(ENTRY.slots, JSON.stringify(payload.slots));
+      fetch(FORM_URL,{ method:'POST', mode:'no-cors', body:body })
+        .then(finish).catch(finish);
+    });
+    $('rAgain').addEventListener('click', function(){
+      sending=false; $('rSubmit').disabled=false; $('rSubmit').textContent='この内容で送る';
+      slots={}; renderCal(); renderSlots(); $('rThanks').hidden=true; $('rForm').hidden=false;
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+
+    renderCal(); renderSlots();
+  }
+</script>
+</body></html>
