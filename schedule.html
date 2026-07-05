@@ -75,10 +75,17 @@
   .slot-date .wd{color:var(--muted);font-size:12.5px;margin-left:6px}
   .slot-x{background:transparent;border:0;color:var(--faint);font-size:19px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:4px}
   .slot-x:hover{color:var(--ink)}
+  .slot-ranges{display:flex;flex-direction:column;gap:7px}
   .slot-times{display:flex;align-items:center;gap:8px}
   .slot-times select{flex:1;min-width:0}
   .slot-times .tilde{color:var(--muted)}
-  .slot-times.dim{opacity:.4;pointer-events:none}
+  .slot-ranges.dim{opacity:.4;pointer-events:none}
+  .rng-del{background:transparent;border:0;color:var(--faint);font-size:17px;cursor:pointer;line-height:1;padding:2px 5px;border-radius:4px}
+  .rng-del:hover{color:var(--ink)}
+  .rng-del[disabled]{visibility:hidden}
+  .add-rng{margin-top:8px;background:transparent;border:1px dashed var(--line);border-radius:6px;color:var(--muted);
+    font-family:var(--serif);font-size:12.5px;padding:7px 12px;cursor:pointer;transition:border-color .2s,color .2s}
+  .add-rng:hover{border-color:var(--accent-soft);color:var(--ink)}
   .slot-opts{display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}
   .chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
   .chk input{width:17px;height:17px;accent-color:#c9d6ff;cursor:pointer}
@@ -150,7 +157,7 @@
       <div id="rForm">
         <div class="card">
           <label class="fld"><span class="lb">お名前<span class="req">必須</span></span>
-            <input type="text" id="rName" placeholder="例: 佐久間" maxlength="40" autocomplete="name"></label>
+            <input type="text" id="rName" placeholder="例: 岡崎有希" maxlength="40" autocomplete="name"></label>
         </div>
 
         <div class="card">
@@ -305,7 +312,7 @@
 
     function toggleDay(key){
       if(slots[key]){ delete slots[key]; }
-      else { slots[key]={start:'10:00',end:'18:00',allday:false,note:''}; }
+      else { slots[key]={ranges:[{start:'10:00',end:'18:00'}],allday:false,note:''}; }
       renderCal(); renderSlots();
     }
 
@@ -323,11 +330,17 @@
       var html='';
       keys.forEach(function(key){
         var d=parseYmd(key), s=slots[key];
+        var rangesHtml='';
+        s.ranges.forEach(function(r,i){
+          rangesHtml+='<div class="slot-times"><select class="st" data-k="'+key+'" data-i="'+i+'">'+timeOptions(false)+'</select>'
+            +'<span class="tilde">〜</span><select class="en" data-k="'+key+'" data-i="'+i+'">'+timeOptions(true)+'</select>'
+            +'<button class="rng-del" data-rd="'+key+'" data-i="'+i+'" aria-label="この時間帯を削除"'+(s.ranges.length>1?'':' disabled')+'>&times;</button></div>';
+        });
         html+='<div class="slot" data-k="'+key+'">'
           +'<div class="slot-top"><div class="slot-date">'+(d.getMonth()+1)+'/'+d.getDate()+'<span class="wd">('+WD[d.getDay()]+')</span></div>'
           +'<button class="slot-x" data-x="'+key+'" aria-label="削除">&times;</button></div>'
-          +'<div class="slot-times'+(s.allday?' dim':'')+'"><select class="st" data-k="'+key+'">'+timeOptions(false)+'</select>'
-          +'<span class="tilde">〜</span><select class="en" data-k="'+key+'">'+timeOptions(true)+'</select></div>'
+          +'<div class="slot-ranges'+(s.allday?' dim':'')+'">'+rangesHtml
+          +'<button class="add-rng" data-ar="'+key+'">+ 時間帯を追加</button></div>'
           +'<div class="slot-opts"><label class="chk"><input type="checkbox" class="ad" data-k="'+key+'"'+(s.allday?' checked':'')+'>終日OK</label>'
           +'<span class="slot-note"><input type="text" class="nt" data-k="'+key+'" placeholder="メモ(任意)" maxlength="60" value="'+(s.note||'').replace(/"/g,'&quot;')+'"></span></div>'
           +'</div>';
@@ -335,21 +348,29 @@
       box.innerHTML=html;
       // 値を反映
       keys.forEach(function(key){
-        var s=slots[key];
-        box.querySelector('.st[data-k="'+key+'"]').value=s.start;
-        box.querySelector('.en[data-k="'+key+'"]').value=s.end;
+        slots[key].ranges.forEach(function(r,i){
+          box.querySelector('.st[data-k="'+key+'"][data-i="'+i+'"]').value=r.start;
+          box.querySelector('.en[data-k="'+key+'"][data-i="'+i+'"]').value=r.end;
+        });
       });
     }
 
     $('slots').addEventListener('click', function(e){
-      var x=e.target.closest('.slot-x'); if(x){ toggleDay(x.getAttribute('data-x')); }
+      var x=e.target.closest('.slot-x'); if(x){ toggleDay(x.getAttribute('data-x')); return; }
+      var ar=e.target.closest('.add-rng');
+      if(ar){ var k=ar.getAttribute('data-ar');
+        if(slots[k]&&slots[k].ranges.length<6){ slots[k].ranges.push({start:'10:00',end:'18:00'}); renderSlots(); } return; }
+      var rd=e.target.closest('.rng-del');
+      if(rd){ var k2=rd.getAttribute('data-rd'), i2=+rd.getAttribute('data-i');
+        if(slots[k2]&&slots[k2].ranges.length>1){ slots[k2].ranges.splice(i2,1); renderSlots(); } return; }
     });
     $('slots').addEventListener('change', function(e){
       var t=e.target, key=t.getAttribute('data-k'); if(!key||!slots[key])return;
-      if(t.classList.contains('st')) slots[key].start=t.value;
-      else if(t.classList.contains('en')) slots[key].end=t.value;
+      var ri=+(t.getAttribute('data-i')||0), rng=slots[key].ranges[ri];
+      if(t.classList.contains('st')&&rng) rng.start=t.value;
+      else if(t.classList.contains('en')&&rng) rng.end=t.value;
       else if(t.classList.contains('ad')){ slots[key].allday=t.checked;
-        var tm=t.closest('.slot').querySelector('.slot-times'); if(tm)tm.classList.toggle('dim',t.checked); }
+        var tm=t.closest('.slot').querySelector('.slot-ranges'); if(tm)tm.classList.toggle('dim',t.checked); }
     });
     $('slots').addEventListener('input', function(e){
       var t=e.target, key=t.getAttribute('data-k'); if(!key||!slots[key])return;
@@ -366,9 +387,14 @@
       if(!name){ $('rErr').textContent='お名前を入力してください。'; $('rName').focus(); return; }
       if(!keys.length){ $('rErr').textContent='空いている日を1日以上えらんでください。'; return; }
       for(var i=0;i<keys.length;i++){ var s=slots[keys[i]];
-        if(!s.allday && s.start>=s.end){ $('rErr').textContent=keys[i]+' の時間が正しくありません(開始が終了より前になるように)。'; return; } }
-      var payload={ eventId:ev.id||'', eventTitle:ev.title, name:name,
-        slots:keys.map(function(k){var s=slots[k];return {date:k,start:s.allday?'':s.start,end:s.allday?'':s.end,allday:!!s.allday,note:s.note||''};}) };
+        if(!s.allday){ for(var j=0;j<s.ranges.length;j++){ var r=s.ranges[j];
+          if(r.start>=r.end){ $('rErr').textContent=keys[i]+' の時間が正しくありません(開始が終了より前になるように)。'; return; } } } }
+      var flat=[];
+      keys.forEach(function(k){ var s=slots[k];
+        if(s.allday){ flat.push({date:k,start:'',end:'',allday:true,note:s.note||''}); }
+        else { s.ranges.forEach(function(r,j){ flat.push({date:k,start:r.start,end:r.end,allday:false,note:j===0?(s.note||''):''}); }); }
+      });
+      var payload={ eventId:ev.id||'', eventTitle:ev.title, name:name, slots:flat };
 
       sending=true; $('rSubmit').disabled=true; $('rSubmit').textContent='送信中...';
       var finish=function(){ $('rForm').hidden=true; $('rThanks').hidden=false; window.scrollTo({top:0,behavior:'smooth'}); };
