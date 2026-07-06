@@ -1,6 +1,16 @@
 [
   {
     "cats": [
+      "produce"
+    ],
+    "role": "Produce",
+    "title": "からあげバトル / まいたけ vs ありけん",
+    "link": "https://www.youtube.com/watch?v=2ndCj9UMbeY",
+    "id": "2ndCj9UMbeY",
+    "added": "2026-07-06"
+  },
+  {
+    "cats": [
       "mix",
       "produce"
     ],
