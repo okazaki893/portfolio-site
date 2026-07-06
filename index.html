@@ -1212,7 +1212,9 @@
           sctx.stroke();
         }
       }
-      if(L.annA>0.02) drawConLabel(L,P);
+      // 星座名の注記(引出線+名前+角距離目盛)は非表示(2026-07-06 要望)。
+      // drawConLabelは残置。再表示したい場合はこの行のコメントを外すだけ。
+      // if(L.annA>0.02) drawConLabel(L,P);
     }
     // 星座名の注記: 主星から細い引出線→英大文字Cormorant+小さな角距離目盛
     function drawConLabel(L,P){
