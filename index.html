@@ -1814,7 +1814,7 @@
     });
   })();
 
-  // ギミック(音の波紋/流れ星カメオ/マグネティックボタン) — GIMMICKS=false で無効化
+  // ギミック(音の波紋/流れ星カメオ) — GIMMICKS=false で無効化
   const GIMMICKS=true;
   (function(){
     if(!GIMMICKS||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -1868,15 +1868,6 @@
         {transform:`translate(${sx+780}px,${sy+150}px) rotate(9deg)`,opacity:.9}
       ],{duration:60000,easing:'linear',fill:'both'});
     }
-    // マグネティックボタン: カーソルに吸い付く
-    document.querySelectorAll('.btn').forEach(b=>{
-      b.addEventListener('mousemove',e=>{
-        const r=b.getBoundingClientRect();
-        const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
-        b.style.transform=`translate(${dx*.18}px,${dy*.3}px)`;
-      });
-      b.addEventListener('mouseleave',()=>{b.style.transform='';});
-    });
   })();
   document.querySelectorAll('a,.card,.do .cell').forEach(el=>{
     el.addEventListener('mouseenter',()=>cur.classList.add('big'));
